@@ -13,18 +13,16 @@ before_install:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - echo "$HEROKU_PASSWORD" | docker login -u "$HEROKU_USERNAME" --password-stdin registry.heroku.com
 
-# script:
-#   - docker build -t $DOCKER_USERNAME/$HEROKU_APP_NAME -f Dockerfile .
-#   - docker tag $DOCKER_USERNAME/$HEROKU_APP_NAME registry.heroku.com/$HEROKU_APP_NAME/web
+script:
+  - docker build -t $DOCKER_USERNAME/$HEROKU_APP_NAME -f Dockerfile .
+  - docker tag $DOCKER_USERNAME/$HEROKU_APP_NAME registry.heroku.com/$HEROKU_APP_NAME/web
 
-# deploy:
-#   provider: script
-#   script:
-#     # push to dockerhub & heroku
-#     docker push $DOCKER_USERNAME/$HEROKU_APP_NAME;
-#     docker push registry.heroku.com/$HEROKU_APP_NAME/web;
-#     heroku config:set API_URL=https://api-serverr.herokuapp.com;
-#     heroku config:set REACT_APP_API_URL=https://api-serverr.herokuapp.com;
-#     heroku container:release web --app $HEROKU_APP_NAME;
-#   on:
-#     branch: main
+deploy:
+  provider: script
+  script:
+    # push to dockerhub & heroku
+    docker push $DOCKER_USERNAME/$HEROKU_APP_NAME;
+    docker push registry.heroku.com/$HEROKU_APP_NAME/web;
+    heroku container:release web --app $HEROKU_APP_NAME;
+  on:
+    branch: main
