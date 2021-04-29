@@ -6,7 +6,6 @@ import {
   Post,
   HttpCode,
   Param,
-  Inject,
 } from '@nestjs/common';
 import { RestaurantService } from './restaurant.service';
 import {
@@ -24,13 +23,14 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { InternalServerErrorResponseDto } from 'src/shared/dto/internal-server-error.dto';
+
 @ApiTags('restaurants')
 @ApiInternalServerErrorResponse({ type: InternalServerErrorResponseDto })
 @Controller('restaurant')
 export class RestaurantController {
   private logger = new Logger('RestaurantController');
 
-  constructor(private readonly restaurantService: RestaurantService) {}
+  constructor(private readonly restaurantService: RestaurantService) { }
 
   // Danh sách 25 nhà hàng
   // Có thể lọc theo loại StreetFood,CafeDessert,Restaurant,Veterian

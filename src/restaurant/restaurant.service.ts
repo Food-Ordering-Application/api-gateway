@@ -20,12 +20,11 @@ export class RestaurantService {
   constructor(
     @Inject(constants.RESTAURANT_SERVICE)
     private restaurantServiceClient: ClientProxy,
-  ) {}
+  ) { }
 
   async getSomeRestaurant(
     getSomeRestaurantDto: GetSomeRestaurantDto,
   ): Promise<GetSomeRestaurantResponseDto> {
-    console.log(28, 'getSomeRestaurant');
     const getSomeRestaurantResponse: IRestaurantsResponse = await this.restaurantServiceClient
       .send('getSomeRestaurant', getSomeRestaurantDto)
       .toPromise();
