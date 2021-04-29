@@ -14,7 +14,7 @@ before_install:
   - echo "$HEROKU_PASSWORD" | docker login -u "$HEROKU_USERNAME" --password-stdin registry.heroku.com
 
 script:
-  - docker build -t $DOCKER_USERNAME/$HEROKU_APP_NAME -f Dockerfile .
+  - docker build -t $DOCKER_USERNAME/$HEROKU_APP_NAME .
   - docker tag $DOCKER_USERNAME/$HEROKU_APP_NAME registry.heroku.com/$HEROKU_APP_NAME/web
 
 deploy:
