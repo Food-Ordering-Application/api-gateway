@@ -27,7 +27,7 @@ export class RestaurantService {
   ): Promise<GetSomeRestaurantResponseDto> {
     console.log(28, 'getSomeRestaurant');
     const getSomeRestaurantResponse: IRestaurantsResponse = await this.restaurantServiceClient
-      .emit('getSomeRestaurant', getSomeRestaurantDto)
+      .send('getSomeRestaurant', getSomeRestaurantDto)
       .toPromise();
 
     if (getSomeRestaurantResponse.status !== HttpStatus.OK) {
