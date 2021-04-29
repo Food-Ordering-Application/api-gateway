@@ -6,6 +6,7 @@ import {
   Post,
   HttpCode,
   Param,
+  Inject,
 } from '@nestjs/common';
 import { RestaurantService } from './restaurant.service';
 import {
@@ -23,7 +24,6 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { InternalServerErrorResponseDto } from 'src/shared/dto/internal-server-error.dto';
-
 @ApiTags('restaurants')
 @ApiInternalServerErrorResponse({ type: InternalServerErrorResponseDto })
 @Controller('restaurant')

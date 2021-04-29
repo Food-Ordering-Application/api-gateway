@@ -25,6 +25,7 @@ export class RestaurantService {
   async getSomeRestaurant(
     getSomeRestaurantDto: GetSomeRestaurantDto,
   ): Promise<GetSomeRestaurantResponseDto> {
+    console.log(28, 'getSomeRestaurant');
     const getSomeRestaurantResponse: IRestaurantsResponse = await this.restaurantServiceClient
       .send('getSomeRestaurant', getSomeRestaurantDto)
       .toPromise();
