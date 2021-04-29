@@ -18,27 +18,36 @@ services:
     networks:
       - webnet
     depends_on:
-      - redis
-      - postgres
-  redis:
-    container_name: redis
-    image: redis:5
-    networks:
-      - webnet
-  postgres:
-    container_name: postgres
-    image: postgres:12
-    networks:
-      - webnet
-    environment:
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_DB: ${DB_DATABASE_NAME}
-      PG_DATA: /var/lib/postgresql/data
+      - rabbitmq
+      - userservice
+      - restaurantservice
+    #PGAdmin
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    restart: always
     ports:
-      - 5432:5432
+      - '7999:80'
+    # volumes:
+    #   - dataPgAdmin:/root/.pgadmin
+    env_file:
+      - ./env/docker.env
+
+  #RabbitMQ
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: 'rabbitmq'
+    tty: true
+    restart: always
+    env_file:
+      - ./docker.env
+    ports:
+      - 5672:5672
+      - 15672:15672
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - dataRabbitMQ:/var/lib/rabbitmq/
+      - logRabbitMQ:/var/log/rabbitmq
+
 networks:
   webnet:
 volumes:
