@@ -24,7 +24,6 @@ deploy:
     docker push $DOCKER_USERNAME/$HEROKU_APP_NAME;
     docker push registry.heroku.com/$HEROKU_APP_NAME/web;
     heroku update;
-    heroku login -i;
     heroku container:release web --app $HEROKU_APP_NAME;
   on:
     branch: main
