@@ -7,7 +7,7 @@ COPY package*.json ./
 RUN npm install --only=development; \ 
     npm i -g rimraf
 
-COPY . .
+COPY ./src .
 
 RUN npm run build
 
