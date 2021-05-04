@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, ValidateNested } from 'class-validator';
+import { IsOptional, IsString, ValidateNested } from 'class-validator';
 import { OrderItem } from './order-item.dto';
 
 export class CreateOrderDto {
@@ -35,8 +35,17 @@ export class CreateOrderDto {
 
   @ApiProperty({
     example: '6c94e9b7-aa4f-44c8-bf21-91dd1da2dc2d',
-    required: true,
+    nullable: true,
   })
   @IsString()
+  @IsOptional()
   customerId: string;
+
+  @ApiProperty({
+    example: '6c94e9b7-aa4f-44c8-bf21-91dd1da2dc2d',
+    nullable: true,
+  })
+  @IsString()
+  @IsOptional()
+  cashierId: string;
 }
