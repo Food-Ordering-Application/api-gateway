@@ -10,8 +10,12 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     ports:
-      - 8080:8080
+      - ${PORT}:${PORT}
       - 9229:9229
     command: npm run start:dev
     env_file:
-      - .development.env
+      - .env
+    environment: 
+      USERS_AMQP_QUEUE: users_queue
+      RESTAURANT_AMQP_QUEUE: restaurant_queue
+      ORDER_AMQP_QUEUE: order_queue
