@@ -10,8 +10,8 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     ports:
-      - 8080:8080
+      - ${PORT}:${PORT}
       - 9229:9229
     command: npm run start:dev
     env_file:
-      - .development.env
+      - ./development.env
