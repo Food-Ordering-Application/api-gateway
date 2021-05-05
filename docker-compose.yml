@@ -1,8 +1,36 @@
 version: '3.7'
 
 services:
-  main:
-    container_name: main
+  postgis:
+    container_name: postgis
+    restart: always
+    image: kartoza/postgis:11.0-2.5
+    volumes:
+      # - ./pg-init-scripts:/docker-entrypoint-initdb.d
+      - pg_data:/var/lib/postgresql
+    ports:
+      - '5432:5432'
+    restart: always
+    env_file: 
+      - ./docker.env
+    networks: 
+      - my-network
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    restart: always
+    ports:
+      - '7999:80'
+    # volumes:
+    #   - dataPgAdmin:/root/.pgadmin
+    env_file:
+      - ./docker.env
+    networks: 
+      - my-network
+
+  api_gateway:
+    container_name: api_gateway
     build:
       context: .
       target: development
@@ -14,3 +42,13 @@ services:
     command: npm run start:dev
     env_file:
       - ./development.env
+    networks: 
+      - my-network
+networks:
+  my-network:
+    driver: bridge
+    name: my-network
+volumes:
+  pg_data:
+  dataPostgres:
+  dataPgAdmin:
