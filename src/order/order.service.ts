@@ -14,8 +14,12 @@ import {
   IncreaseOrderItemQuantityResponseDto,
   RemoveOrderItemDto,
   RemoveOrderItemResponseDto,
+  GetAllRestaurantOrderDto,
+  GetAllRestaurantOrderResponseDto,
+  GetOrderDetailResponseDto,
 } from './dto';
 import { ICreateOrderResponse } from './interfaces';
+import { IOrdersResponse } from './interfaces/orders-response.interface';
 
 @Injectable()
 export class OrderService {
@@ -171,6 +175,56 @@ export class OrderService {
       .toPromise();
 
     const { message, order, status } = removeOrderItemResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message,
+        },
+        status,
+      );
+    }
+    return {
+      statusCode: status,
+      message,
+      data: {
+        order,
+      },
+    };
+  }
+
+  async getAllRestaurantOrder(
+    getAllRestaurantOrderDto: GetAllRestaurantOrderDto,
+  ): Promise<GetAllRestaurantOrderResponseDto> {
+    const getAllRestaurantOrderResponse: IOrdersResponse = await this.orderServiceClient
+      .send('getAllRestaurantOrder', { ...getAllRestaurantOrderDto })
+      .toPromise();
+
+    const { message, orders, status } = getAllRestaurantOrderResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message,
+        },
+        status,
+      );
+    }
+    return {
+      statusCode: status,
+      message,
+      data: {
+        orders,
+      },
+    };
+  }
+
+  async getOrderDetail(orderId: string): Promise<GetOrderDetailResponseDto> {
+    const getAllRestaurantOrderResponse: ICreateOrderResponse = await this.orderServiceClient
+      .send('getOrderDetail', { orderId })
+      .toPromise();
+
+    const { message, order, status } = getAllRestaurantOrderResponse;
 
     if (status !== HttpStatus.OK) {
       throw new HttpException(

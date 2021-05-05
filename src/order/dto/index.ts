@@ -10,3 +10,6 @@ export { IncreaseOrderItemQuantityResponseDto } from './increase-orderitem-quant
 export { IncreaseOrderItemQuantityDto } from './increase-orderitem-quantity.dto';
 export { RemoveOrderItemResponseDto } from './remove-order-item-response.dto';
 export { RemoveOrderItemDto } from './remove-order-item.dto';
+export { GetAllRestaurantOrderResponseDto } from './get-all-restaurant-orders-response.dto';
+export { GetAllRestaurantOrderDto } from './get-all-restaurant-orders.dto';
+export { GetOrderDetailResponseDto } from './get-order-detail-response.dto';

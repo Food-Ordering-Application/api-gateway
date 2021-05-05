@@ -6,6 +6,8 @@ import {
   UseGuards,
   HttpCode,
   Param,
+  Get,
+  Query,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import {
@@ -14,6 +16,7 @@ import {
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { InternalServerErrorResponseDto } from '../shared/dto/internal-server-error.dto';
@@ -31,6 +34,9 @@ import {
   IncreaseOrderItemQuantityDto,
   RemoveOrderItemResponseDto,
   RemoveOrderItemDto,
+  GetAllRestaurantOrderResponseDto,
+  GetAllRestaurantOrderDto,
+  GetOrderDetailResponseDto,
 } from './dto';
 
 @ApiTags('orders')
@@ -124,7 +130,7 @@ export class OrderController {
     );
   }
 
-  // Thêm item vào trong order
+  // Xóa 1 orderItem
   @ApiOkResponse({ type: RemoveOrderItemResponseDto })
   @ApiBody({ type: RemoveOrderItemDto })
   @ApiBearerAuth()
@@ -138,5 +144,32 @@ export class OrderController {
   ): Promise<RemoveOrderItemResponseDto> {
     const { orderId } = params;
     return this.orderService.removeOrderItem(removeOrderItemDto, orderId);
+  }
+
+  // Lấy tất cả order của nhà hàng
+  @ApiOkResponse({ type: GetAllRestaurantOrderResponseDto })
+  @ApiQuery({ type: GetAllRestaurantOrderDto })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(200)
+  @Get('/get-all-restaurant-orders')
+  async getAllRestaurantOrder(
+    @Query()
+    getAllRestaurantOrderDto: GetAllRestaurantOrderDto,
+  ): Promise<GetAllRestaurantOrderResponseDto> {
+    return this.orderService.getAllRestaurantOrder(getAllRestaurantOrderDto);
+  }
+
+  // Lấy thông tin order theo orderId
+  @ApiOkResponse({ type: GetOrderDetailResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(200)
+  @Get('/:orderId')
+  async getOrderDetail(
+    @Param() params: { orderId: string },
+  ): Promise<GetOrderDetailResponseDto> {
+    const { orderId } = params;
+    return this.orderService.getOrderDetail(orderId);
   }
 }
