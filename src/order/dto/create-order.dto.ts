@@ -36,6 +36,7 @@ export class CreateOrderDto {
   @ApiProperty({
     example: '6c94e9b7-aa4f-44c8-bf21-91dd1da2dc2d',
     nullable: true,
+    required: false,
   })
   @IsString()
   @IsOptional()
@@ -44,6 +45,7 @@ export class CreateOrderDto {
   @ApiProperty({
     example: '6c94e9b7-aa4f-44c8-bf21-91dd1da2dc2d',
     nullable: true,
+    required: false,
   })
   @IsString()
   @IsOptional()

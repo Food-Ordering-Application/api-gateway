@@ -29,6 +29,21 @@ services:
     networks: 
       - my-network
 
+  #RabbitMQ
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: 'rabbitmq'
+    tty: true
+    restart: always
+    env_file:
+      - ./docker.env
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - dataRabbitMQ:/var/lib/rabbitmq/
+      - logRabbitMQ:/var/log/rabbitmq
+
   api_gateway:
     container_name: api_gateway
     build:
@@ -52,3 +67,5 @@ volumes:
   pg_data:
   dataPostgres:
   dataPgAdmin:
+  dataRabbitMQ:
+  logRabbitMQ:
