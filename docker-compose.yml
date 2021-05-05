@@ -43,6 +43,8 @@ services:
     volumes:
       - dataRabbitMQ:/var/lib/rabbitmq/
       - logRabbitMQ:/var/log/rabbitmq
+    networks: 
+      - my-network
 
   api_gateway:
     container_name: api_gateway
