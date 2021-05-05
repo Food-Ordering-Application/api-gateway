@@ -8,6 +8,7 @@ import {
   Param,
   Get,
   Query,
+  Put,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import {
@@ -82,7 +83,7 @@ export class OrderController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @HttpCode(200)
-  @Post('/:orderId/add-new-item')
+  @Put('/:orderId/add-new-item')
   async addNewItemToOrder(
     @Body()
     addNewItemToOrderDto: AddNewItemToOrderDto,
@@ -98,7 +99,7 @@ export class OrderController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @HttpCode(200)
-  @Post('/:orderId/reduce-orditem-quantity')
+  @Put('/:orderId/reduce-orditem-quantity')
   async reduceOrderItemQuantity(
     @Body()
     reduceQuantityOrderItemResponseDto: ReduceOrderItemQuantityDto,
@@ -117,7 +118,7 @@ export class OrderController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @HttpCode(200)
-  @Post('/:orderId/increase-orditem-quantity')
+  @Put('/:orderId/increase-orditem-quantity')
   async increaseOrderItemQuantity(
     @Body()
     increaseOrderItemQuantityDto: IncreaseOrderItemQuantityDto,
@@ -136,7 +137,7 @@ export class OrderController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @HttpCode(200)
-  @Post('/:orderId/remove-orditem')
+  @Put('/:orderId/remove-orditem')
   async removeOrderItem(
     @Body()
     removeOrderItemDto: RemoveOrderItemDto,
