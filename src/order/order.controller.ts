@@ -38,6 +38,8 @@ import {
   GetAllRestaurantOrderResponseDto,
   GetAllRestaurantOrderDto,
   GetOrderDetailResponseDto,
+  UpdateOrderItemQuantityResponseDto,
+  UpdateOrderItemQuantityDto,
 } from './dto';
 
 @ApiTags('orders')
@@ -172,5 +174,23 @@ export class OrderController {
   ): Promise<GetOrderDetailResponseDto> {
     const { orderId } = params;
     return this.orderService.getOrderDetail(orderId);
+  }
+  /* Update số lượng của 1 orderItem */
+  @ApiOkResponse({ type: UpdateOrderItemQuantityResponseDto })
+  @ApiBody({ type: UpdateOrderItemQuantityDto })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(200)
+  @Put('/:orderId/update-orditem-quantity')
+  async updateOrderItemQuantity(
+    @Body()
+    updateOrderItemQuantityDto: UpdateOrderItemQuantityDto,
+    @Param() params,
+  ): Promise<UpdateOrderItemQuantityResponseDto> {
+    const { orderId } = params;
+    return this.orderService.updateOrderItemQuantity(
+      updateOrderItemQuantityDto,
+      orderId,
+    );
   }
 }

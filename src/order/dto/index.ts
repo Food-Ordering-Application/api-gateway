@@ -13,3 +13,5 @@ export { RemoveOrderItemDto } from './remove-order-item.dto';
 export { GetAllRestaurantOrderResponseDto } from './get-all-restaurant-orders-response.dto';
 export { GetAllRestaurantOrderDto } from './get-all-restaurant-orders.dto';
 export { GetOrderDetailResponseDto } from './get-order-detail-response.dto';
+export { UpdateOrderItemQuantityResponseDto } from './update-orderitem-quantity-response.dto';
+export { UpdateOrderItemQuantityDto } from './update-orderitem-quantity.dto';

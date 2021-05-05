@@ -17,6 +17,8 @@ import {
   GetAllRestaurantOrderDto,
   GetAllRestaurantOrderResponseDto,
   GetOrderDetailResponseDto,
+  UpdateOrderItemQuantityDto,
+  UpdateOrderItemQuantityResponseDto,
 } from './dto';
 import { ICreateOrderResponse } from './interfaces';
 import { IOrdersResponse } from './interfaces/orders-response.interface';
@@ -226,6 +228,34 @@ export class OrderService {
 
     const { message, order, status } = getAllRestaurantOrderResponse;
 
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message,
+        },
+        status,
+      );
+    }
+    return {
+      statusCode: status,
+      message,
+      data: {
+        order,
+      },
+    };
+  }
+
+  async updateOrderItemQuantity(
+    updateOrderItemQuantityDto: UpdateOrderItemQuantityDto,
+    orderId: string,
+  ): Promise<UpdateOrderItemQuantityResponseDto> {
+    const updateOrderItemQuantityResponse: ICreateOrderResponse = await this.orderServiceClient
+      .send('updateOrderItemQuantity', {
+        ...updateOrderItemQuantityDto,
+        orderId,
+      })
+      .toPromise();
+    const { message, order, status } = updateOrderItemQuantityResponse;
     if (status !== HttpStatus.OK) {
       throw new HttpException(
         {
