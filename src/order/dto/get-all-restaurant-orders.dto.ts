@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 import { GetRestaurantOrder } from '../enums';
 
 export class GetAllRestaurantOrderDto {
@@ -17,4 +17,11 @@ export class GetAllRestaurantOrderDto {
   })
   @IsString()
   query: string;
+
+  @ApiProperty({
+    example: 2,
+    required: true,
+  })
+  @IsNumber()
+  pageNumber: number;
 }
