@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer'
 import { OrderItem } from './order-item.dto';
 
 export class AddNewItemToOrderDto {
@@ -24,5 +25,6 @@ export class AddNewItemToOrderDto {
     required: true,
   })
   @ValidateNested()
+  @Type(()=> OrderItem)
   sendItem: OrderItem;
 }
