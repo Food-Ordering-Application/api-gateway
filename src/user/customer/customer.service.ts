@@ -6,15 +6,26 @@ import {
   SendPhoneNumberOTPVerifyResponseDto,
   VerifyCustomerPhoneNumberResponseDto,
   FindCustomerByIdResponseDto,
+  CreateCustomerAddressDto,
+  CreateCustomerAddressResponseDto,
+  UpdateCustomerAddressDto,
+  DeleteCustomerAddressResponseDto,
+  GetListCustomerAddressResponseDto,
 } from './dto/index';
 import * as constants from '../../constants';
-import { IUser, IUserServiceResponse, ISimpleResponse } from './interfaces/index';
+import {
+  ICustomer,
+  IUserServiceResponse,
+  ISimpleResponse,
+  ICustomerAddressResponse,
+  ICustomerAddressesResponse,
+} from './interfaces/index';
 
 @Injectable()
 export class CustomerService {
   constructor(
     @Inject(constants.USER_SERVICE) private userServiceClient: ClientProxy,
-  ) { }
+  ) {}
 
   async createCustomer(
     createCustomerDto: CreateCustomerDto,
@@ -41,7 +52,7 @@ export class CustomerService {
   }
 
   async sendPhoneNumberOTPVerify(
-    user: IUser,
+    user: ICustomer,
   ): Promise<SendPhoneNumberOTPVerifyResponseDto> {
     const sendPhoneNumberOTPVerifyResponse: ISimpleResponse = await this.userServiceClient
       .send('sendPhoneNumberOTPVerify', user)
@@ -61,7 +72,7 @@ export class CustomerService {
   }
 
   async verifyCustomerPhoneNumber(
-    user: IUser,
+    user: ICustomer,
     otp: string,
   ): Promise<VerifyCustomerPhoneNumberResponseDto> {
     const verifyCustomerPhoneNumberResponse: ISimpleResponse = await this.userServiceClient
@@ -81,7 +92,7 @@ export class CustomerService {
     };
   }
 
-  async findCustomerByPhoneNumber(phoneNumber: string): Promise<IUser> {
+  async findCustomerByPhoneNumber(phoneNumber: string): Promise<ICustomer> {
     const findCustomerResponse: IUserServiceResponse = await this.userServiceClient
       .send('findCustomerByPhoneNumber', phoneNumber)
       .toPromise();
@@ -115,6 +126,123 @@ export class CustomerService {
       message: findCustomerById.message,
       data: {
         user: findCustomerById.user,
+      },
+    };
+  }
+
+  async createCustomerAddress(
+    customerId: string,
+    createCustomerAddressDto: CreateCustomerAddressDto,
+  ): Promise<CreateCustomerAddressResponseDto> {
+    const createCustomerAddressResponse: ICustomerAddressResponse = await this.userServiceClient
+      .send('createCustomerAddress', {
+        customerId,
+        ...createCustomerAddressDto,
+      })
+      .toPromise();
+
+    const { address, message, status } = createCustomerAddressResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+    return {
+      statusCode: 200,
+      message: message,
+      data: {
+        customerAddress: address,
+      },
+    };
+  }
+
+  async updateCustomerAddress(
+    customerId: string,
+    customerAddressId: string,
+    updateCustomerAddressDto: UpdateCustomerAddressDto,
+  ): Promise<CreateCustomerAddressResponseDto> {
+    const updateCustomerAddressResponse: ICustomerAddressResponse = await this.userServiceClient
+      .send('updateCustomerAddress', {
+        customerId,
+        customerAddressId,
+        ...updateCustomerAddressDto,
+      })
+      .toPromise();
+
+    const { address, message, status } = updateCustomerAddressResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+    return {
+      statusCode: 200,
+      message: message,
+      data: {
+        customerAddress: address,
+      },
+    };
+  }
+
+  async deleteCustomerAddress(
+    customerId: string,
+    customerAddressId: string,
+  ): Promise<DeleteCustomerAddressResponseDto> {
+    const deleteCustomerAddressResponse: ICustomerAddressResponse = await this.userServiceClient
+      .send('deleteCustomerAddress', {
+        customerId,
+        customerAddressId,
+      })
+      .toPromise();
+
+    const { message, status } = deleteCustomerAddressResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+    return {
+      statusCode: 200,
+      message: message,
+    };
+  }
+
+  async getListCustomerAddress(
+    customerId: string,
+  ): Promise<GetListCustomerAddressResponseDto> {
+    const getListCustomerAddressResponse: ICustomerAddressesResponse = await this.userServiceClient
+      .send('getListCustomerAddress', {
+        customerId,
+      })
+      .toPromise();
+
+    const { message, status, addresses } = getListCustomerAddressResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+    return {
+      statusCode: 200,
+      message: message,
+      data: {
+        customerAddresses: addresses,
       },
     };
   }

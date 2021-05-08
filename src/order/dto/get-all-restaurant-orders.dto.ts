@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { GetRestaurantOrder } from '../enums';
 
 export class GetAllRestaurantOrderDto {
@@ -22,6 +22,20 @@ export class GetAllRestaurantOrderDto {
     example: 2,
     required: true,
   })
-  @IsNumber()
-  pageNumber: number;
+  @IsString()
+  pageNumber: string;
+
+  @ApiProperty({
+    example: '2021-05-22',
+  })
+  @IsString()
+  @IsOptional()
+  start?: string;
+
+  @ApiProperty({
+    example: '2021-07-22',
+  })
+  @IsString()
+  @IsOptional()
+  end?: string;
 }

@@ -8,7 +8,7 @@ import {
   Param,
   Get,
   Query,
-  Put,
+  Patch,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import {
@@ -21,7 +21,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { InternalServerErrorResponseDto } from '../shared/dto/internal-server-error.dto';
-import { JwtAuthGuard } from 'src/auth/guards/jwts/jwt-auth.guard';
+import { CustomerJwtAuthGuard } from 'src/auth/guards/jwts/jwt-auth.guard';
 import {
   CreateOrderResponseDto,
   CreateOrderDto,
@@ -54,7 +54,7 @@ export class OrderController {
   @ApiCreatedResponse({ type: CreateOrderResponseDto })
   @ApiBody({ type: CreateOrderDto })
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(CustomerJwtAuthGuard)
   @Post()
   async createOrderAndFirstOrderItem(
     @Body()
@@ -67,7 +67,7 @@ export class OrderController {
   @ApiOkResponse({ type: GetOrderAssociatedWithCusAndResResponseDto })
   @ApiBody({ type: GetOrderAssociatedWithCusAndResDto })
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(CustomerJwtAuthGuard)
   @HttpCode(200)
   @Post('/get-order-associated')
   async getOrderAssociatedWithCusAndRes(
@@ -83,9 +83,9 @@ export class OrderController {
   @ApiOkResponse({ type: AddNewItemToOrderResponseDto })
   @ApiBody({ type: AddNewItemToOrderDto })
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(CustomerJwtAuthGuard)
   @HttpCode(200)
-  @Put('/:orderId/add-new-item')
+  @Patch('/:orderId/add-new-item')
   async addNewItemToOrder(
     @Body()
     addNewItemToOrderDto: AddNewItemToOrderDto,
@@ -99,9 +99,9 @@ export class OrderController {
   @ApiOkResponse({ type: ReduceOrderItemQuantityResponseDto })
   @ApiBody({ type: ReduceOrderItemQuantityDto })
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(CustomerJwtAuthGuard)
   @HttpCode(200)
-  @Put('/:orderId/reduce-orditem-quantity')
+  @Patch('/:orderId/reduce-orditem-quantity')
   async reduceOrderItemQuantity(
     @Body()
     reduceQuantityOrderItemResponseDto: ReduceOrderItemQuantityDto,
@@ -118,9 +118,9 @@ export class OrderController {
   @ApiOkResponse({ type: IncreaseOrderItemQuantityResponseDto })
   @ApiBody({ type: IncreaseOrderItemQuantityDto })
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(CustomerJwtAuthGuard)
   @HttpCode(200)
-  @Put('/:orderId/increase-orditem-quantity')
+  @Patch('/:orderId/increase-orditem-quantity')
   async increaseOrderItemQuantity(
     @Body()
     increaseOrderItemQuantityDto: IncreaseOrderItemQuantityDto,
@@ -137,9 +137,9 @@ export class OrderController {
   @ApiOkResponse({ type: RemoveOrderItemResponseDto })
   @ApiBody({ type: RemoveOrderItemDto })
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(CustomerJwtAuthGuard)
   @HttpCode(200)
-  @Put('/:orderId/remove-orditem')
+  @Patch('/:orderId/remove-orditem')
   async removeOrderItem(
     @Body()
     removeOrderItemDto: RemoveOrderItemDto,
@@ -153,7 +153,7 @@ export class OrderController {
   @ApiOkResponse({ type: GetAllRestaurantOrderResponseDto })
   @ApiQuery({ type: GetAllRestaurantOrderDto })
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(CustomerJwtAuthGuard)
   @HttpCode(200)
   @Get('/get-all-restaurant-orders')
   async getAllRestaurantOrder(
@@ -166,7 +166,7 @@ export class OrderController {
   // Lấy thông tin order theo orderId
   @ApiOkResponse({ type: GetOrderDetailResponseDto })
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(CustomerJwtAuthGuard)
   @HttpCode(200)
   @Get('/:orderId')
   async getOrderDetail(
@@ -175,13 +175,14 @@ export class OrderController {
     const { orderId } = params;
     return this.orderService.getOrderDetail(orderId);
   }
+
   /* Update số lượng của 1 orderItem */
   @ApiOkResponse({ type: UpdateOrderItemQuantityResponseDto })
   @ApiBody({ type: UpdateOrderItemQuantityDto })
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(CustomerJwtAuthGuard)
   @HttpCode(200)
-  @Put('/:orderId/update-orditem-quantity')
+  @Patch('/:orderId/update-orditem-quantity')
   async updateOrderItemQuantity(
     @Body()
     updateOrderItemQuantityDto: UpdateOrderItemQuantityDto,

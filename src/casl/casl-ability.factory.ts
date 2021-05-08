@@ -6,10 +6,17 @@ import {
   InferSubjects,
 } from '@casl/ability';
 import { Injectable } from '@nestjs/common';
-import { Admin, Customer, GeneralUser } from 'src/shared/classes/index';
+import {
+  Admin,
+  Customer,
+  CustomerAddress,
+  GeneralUser,
+} from 'src/shared/classes/index';
 import { Action } from 'src/shared/enum/actions.enum';
 
-type Subjects = InferSubjects<typeof Customer | typeof Admin> | 'all';
+type Subjects =
+  | InferSubjects<typeof Customer | typeof Admin | typeof CustomerAddress>
+  | 'all';
 
 export type AppAbility = Ability<[Action, Subjects]>;
 
@@ -25,6 +32,7 @@ export class CaslAbilityFactory {
     } else if (user.isCustomer) {
       can(Action.Read, 'all'); // read-only access to everything
       can(Action.Update, Customer, { id: user.id }); // Có thể update tài khoản của chính họ
+      // can(Action.Update, CustomerAddress, { 'customer.id': ] });
     } else if (user.isMerchant) {
     } else if (user.isDeliver) {
     }

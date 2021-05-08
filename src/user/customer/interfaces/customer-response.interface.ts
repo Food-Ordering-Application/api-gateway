@@ -1,8 +1,8 @@
-import { IUser } from './user.interface';
+import { ICustomer } from './customer.interface';
 
 export interface IUserServiceResponse {
   status: number;
   message: string;
-  user: IUser | null;
+  user: ICustomer | null;
   // errors: { [key: string]: any };
 }

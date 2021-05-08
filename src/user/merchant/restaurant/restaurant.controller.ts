@@ -1,5 +1,5 @@
 import {
-  Body, Controller, Delete, Get, Logger, Param, Patch, Post, Query, Req, Request, UseGuards
+  Body, Controller, Delete, Get, Logger, Param, Patch, Post, Put, Query, Req, Request, UseGuards
 } from '@nestjs/common';
 import { Payload } from '@nestjs/microservices';
 import {
@@ -63,7 +63,7 @@ export class RestaurantController {
   @ApiNotFoundResponse({ type: UpdateStaffNotFoundResponseDto })
   @ApiBody({ type: UpdateStaffDto })
   @UseGuards(MerchantJwtAuthGuard)
-  @Patch(':restaurantId/staff/:staffId')
+  @Put(':restaurantId/staff/:staffId')
   async updateStaff(
     @Request() req: MerchantJwtRequest,
     @Param('merchantId') merchant,

@@ -1,5 +1,10 @@
-export { ICustomerData } from './create-customer-data.interface';
-export { ILoginCustomerData } from './login-customer-data.interface';
+export { ICustomerData } from './create-customer/create-customer-data.interface';
+export { ILoginCustomerData } from './login-customer/login-customer-data.interface';
 export { ISimpleResponse } from './simple-response.interface';
-export { IUserServiceResponse } from './user-service-response.interface';
-export { IUser } from './user.interface';
+export { IUserServiceResponse } from './customer-response.interface';
+export { ICustomer } from './customer.interface';
+export { ICustomerAddressData } from './customer-address/create-customer-address-data.interface';
+export { ICustomerAddress } from './customer-address.interface';
+export { ICustomerAddressResponse } from './customer-address/address-response.interface';
+export { ICustomerAddressesResponse } from './customer-address/addresses-response.interface';
+export { ICustomerAddressesData } from './customer-address/get-list-customer-address-data.interface';
