@@ -1,19 +1,31 @@
-import { RestaurantController } from './merchant/restaurant/restaurant.controller';
-import { PosController } from './pos/pos.controller';
+import { ToppingGroupService } from './merchant/restaurant/menu/topping-group/topping-group.service';
+import { ToppingGroupController } from './merchant/restaurant/menu/topping-group/topping-group.controller';
+import { MenuItemService } from './merchant/restaurant/menu/menu-item/menu-item.service';
+import { MenuItemController } from './merchant/restaurant/menu/menu-item/menu-item.controller';
+import { MenuService } from './merchant/restaurant/menu/menu.service';
+import { MenuGroupService } from './merchant/restaurant/menu/menu-group/menu-group.service';
+import { MenuGroupController } from './merchant/restaurant/menu/menu-group/menu-group.controller';
 import { forwardRef, Module } from '@nestjs/common';
-import { CustomerService } from './customer/customer.service';
-import { CustomerController } from './customer/customer.controller';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import * as constants from '../constants';
-import { AuthModule } from 'src/auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { AuthModule } from 'src/auth/auth.module';
 import { CaslModule } from 'src/casl/casl.module';
-import { MerchantController } from './merchant/merchant.controller';
-import { MerchantService } from './merchant/merchant.service';
+import * as constants from '../constants';
 import { AdminController } from './admin/admin.controller';
 import { AdminService } from './admin/admin.service';
-import { PosService } from './pos/pos.service';
+import { CustomerController } from './customer/customer.controller';
+import { CustomerService } from './customer/customer.service';
+import { MerchantController } from './merchant/merchant.controller';
+import { MerchantService } from './merchant/merchant.service';
+import { RestaurantController } from './merchant/restaurant/restaurant.controller';
 import { RestaurantService } from './merchant/restaurant/restaurant.service';
+import { StaffController } from './merchant/restaurant/staff/staff.controller';
+import { StaffService } from './merchant/restaurant/staff/staff.service';
+import { PosController } from './pos/pos.controller';
+import { PosService } from './pos/pos.service';
+import { MenuController } from './merchant/restaurant/menu/menu.controller';
+import { ToppingItemController } from './merchant/restaurant/menu/topping-item/topping-item.controller';
+import { ToppingItemService } from './merchant/restaurant/menu/topping-item/topping-item.service';
 
 @Module({
   imports: [
@@ -58,6 +70,12 @@ import { RestaurantService } from './merchant/restaurant/restaurant.service';
     AdminController,
     PosController,
     RestaurantController,
+    StaffController,
+    MenuController,
+    MenuGroupController,
+    MenuItemController,
+    ToppingGroupController,
+    ToppingItemController
   ],
   providers: [
     CustomerService,
@@ -65,6 +83,12 @@ import { RestaurantService } from './merchant/restaurant/restaurant.service';
     AdminService,
     PosService,
     RestaurantService,
+    StaffService,
+    MenuService,
+    MenuGroupService,
+    MenuItemService,
+    ToppingGroupService,
+    ToppingItemService
   ],
   exports: [
     CustomerService,
@@ -72,6 +96,12 @@ import { RestaurantService } from './merchant/restaurant/restaurant.service';
     AdminService,
     PosService,
     RestaurantService,
+    StaffService,
+    MenuService,
+    MenuGroupService,
+    MenuItemService,
+    ToppingGroupService,
+    ToppingItemService
   ],
 })
-export class UserModule {}
+export class UserModule { }

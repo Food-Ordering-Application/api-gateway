@@ -25,6 +25,6 @@ export class AddNewItemToOrderDto {
     required: true,
   })
   @ValidateNested()
-  @Type(()=> OrderItem)
+  @Type(() => OrderItem)
   sendItem: OrderItem;
 }

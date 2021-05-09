@@ -25,7 +25,7 @@ export class CreateOrderDto {
     required: true,
   })
   @ValidateNested()
-  @Type(()=> OrderItem)
+  @Type(() => OrderItem)
   orderItem: OrderItem;
 
   @ApiProperty({

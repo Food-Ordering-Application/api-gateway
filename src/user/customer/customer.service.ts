@@ -25,7 +25,7 @@ import {
 export class CustomerService {
   constructor(
     @Inject(constants.USER_SERVICE) private userServiceClient: ClientProxy,
-  ) {}
+  ) { }
 
   async createCustomer(
     createCustomerDto: CreateCustomerDto,

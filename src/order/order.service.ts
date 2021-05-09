@@ -28,7 +28,7 @@ export class OrderService {
   constructor(
     @Inject(constants.ORDER_SERVICE)
     private orderServiceClient: ClientProxy,
-  ) {}
+  ) { }
 
   async createOrderAndFirstOrderItem(
     createOrderDto: CreateOrderDto,
