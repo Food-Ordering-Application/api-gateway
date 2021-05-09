@@ -9,6 +9,8 @@ import {
   FetchMenuItemToppingsOfCurrentToppingItemResponseDto,
   FetchToppingItemByMenuResponseDto,
   FetchToppingItemQuery,
+  UpdateMenuItemToppingsOfCurrentToppingItemDto,
+  UpdateMenuItemToppingsOfCurrentToppingItemResponseDto,
   UpdateToppingItemDto,
   UpdateToppingItemResponseDto
 } from './dto';
@@ -121,6 +123,33 @@ export class ToppingItemService {
       data: {
         results
       }
+    };
+  }
+
+  async updateMenuToppingsOfCurrentToppingItem(
+    toppingItemId: string,
+    merchantId: string,
+    restaurantId: string,
+    menuId: string,
+    updateToppingItemDto: UpdateMenuItemToppingsOfCurrentToppingItemDto
+  ): Promise<UpdateMenuItemToppingsOfCurrentToppingItemResponseDto> {
+    const updateMenuItemToppingsOfCurrentToppingItemResponse: ISimpleResponse =
+      await this.toppingItemServiceClient.send('updateMenuItemToppingsOfCurrentToppingItem', {
+        toppingItemId,
+        merchantId,
+        restaurantId,
+        menuId,
+        data: updateToppingItemDto
+      }).toPromise();
+
+    const { status, message } = updateMenuItemToppingsOfCurrentToppingItemResponse;
+    if (status !== HttpStatus.OK) {
+      throw new HttpException({ message, }, status,);
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message,
     };
   }
 }
