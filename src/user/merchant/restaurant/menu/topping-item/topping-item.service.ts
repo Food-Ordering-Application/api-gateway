@@ -6,12 +6,13 @@ import {
   CreateToppingItemDto,
   CreateToppingItemResponseDto,
   DeleteToppingItemResponseDto,
+  FetchMenuItemToppingsOfCurrentToppingItemResponseDto,
   FetchToppingItemByMenuResponseDto,
   FetchToppingItemQuery,
   UpdateToppingItemDto,
   UpdateToppingItemResponseDto
 } from './dto';
-import { IRestaurantServiceCreateToppingItemResponse, IRestaurantServiceFetchToppingItemByMenuResponse } from './interfaces';
+import { IRestaurantServiceCreateToppingItemResponse, IRestaurantServiceFetchMenuItemToppingsOfCurrentToppingItemResponse, IRestaurantServiceFetchToppingItemByMenuResponse } from './interfaces';
 
 @Injectable()
 export class ToppingItemService {
@@ -94,6 +95,31 @@ export class ToppingItemService {
         results,
         size,
         total
+      }
+    };
+  }
+
+  async fetchMenuItemToppingsOfCurrentToppingItem(
+    merchantId: string, restaurantId: string, menuId: string, toppingItemId: string
+  ): Promise<FetchMenuItemToppingsOfCurrentToppingItemResponseDto> {
+    const fetchMenuItemToppingsOfCurrentToppingItemResponse: IRestaurantServiceFetchMenuItemToppingsOfCurrentToppingItemResponse =
+      await this.toppingItemServiceClient.send('fetchMenuItemToppingsOfCurrentToppingItem', {
+        merchantId,
+        restaurantId,
+        menuId,
+        toppingItemId,
+      }).toPromise();
+
+    const { status, message, data } = fetchMenuItemToppingsOfCurrentToppingItemResponse;
+    if (status !== HttpStatus.OK) {
+      throw new HttpException({ message, }, status,);
+    }
+    const { results } = data;
+    return {
+      statusCode: 200,
+      message,
+      data: {
+        results
       }
     };
   }

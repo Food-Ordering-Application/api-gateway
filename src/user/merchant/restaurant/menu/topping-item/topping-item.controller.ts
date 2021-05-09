@@ -12,11 +12,10 @@ import {
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger';
-import { InternalServerErrorResponseDto } from '../../../../../shared/dto/internal-server-error.dto';
 import { MerchantJwtAuthGuard } from '../../../../../auth/guards/jwts/merchant-jwt-auth.guard';
 import { MerchantJwtRequest } from '../../../../../auth/strategies/jwt-strategies/merchant-jwt-request.interface';
-import { DeleteToppingItemNotFoundResponseDto, DeleteToppingItemResponseDto, FetchToppingItemQuery, UpdateToppingItemDto, UpdateToppingItemNotFoundResponseDto, UpdateToppingItemResponseDto } from './dto';
-import { CreateToppingItemConflictResponseDto, CreateToppingItemDto, CreateToppingItemResponseDto, FetchToppingItemByMenuResponseDto, FetchToppingItemByMenuUnauthorizedResponseDto } from './dto';
+import { InternalServerErrorResponseDto } from '../../../../../shared/dto/internal-server-error.dto';
+import { CreateToppingItemConflictResponseDto, CreateToppingItemDto, CreateToppingItemResponseDto, DeleteToppingItemNotFoundResponseDto, DeleteToppingItemResponseDto, FetchMenuItemToppingsOfCurrentToppingItemResponseDto, FetchMenuItemToppingsOfCurrentToppingItemUnauthorizedResponseDto, FetchToppingItemByMenuResponseDto, FetchToppingItemByMenuUnauthorizedResponseDto, FetchToppingItemQuery, UpdateToppingItemDto, UpdateToppingItemNotFoundResponseDto, UpdateToppingItemResponseDto } from './dto';
 import { ToppingItemService } from './topping-item.service';
 
 @ApiTags('merchant/restaurant/menu/topping-item')
@@ -124,5 +123,28 @@ export class ToppingItemController {
       };
     }
     return await this.toppingItemService.deleteToppingItem(toppingItem, merchantId, restaurant, menu);
+  }
+
+  @ApiOkResponse({ type: FetchMenuItemToppingsOfCurrentToppingItemResponseDto })
+  @ApiUnauthorizedResponse({ type: FetchMenuItemToppingsOfCurrentToppingItemUnauthorizedResponseDto })
+  @UseGuards(MerchantJwtAuthGuard)
+  @Get(':toppingItemId/menu-item')
+  async fetchMenuItemToppingsOfCurrentToppingItem(
+    @Request() req: MerchantJwtRequest,
+    @Param('merchantId') merchant: string,
+    @Param('restaurantId') restaurant: string,
+    @Param('menuId') menu: string,
+    @Param('toppingItemId') toppingItem: string,
+  ): Promise<FetchMenuItemToppingsOfCurrentToppingItemResponseDto> {
+    const { user } = req;
+    const { merchantId } = user;
+    if (merchantId !== merchant) {
+      return {
+        statusCode: 403,
+        message: 'Unauthorized',
+        data: null,
+      };
+    }
+    return await this.toppingItemService.fetchMenuItemToppingsOfCurrentToppingItem(merchantId, restaurant, menu, toppingItem);
   }
 }
