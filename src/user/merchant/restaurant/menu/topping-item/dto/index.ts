@@ -11,3 +11,6 @@ export { UpdateToppingItemResponseDto } from './update-topping-item/update-toppi
 export { UpdateToppingItemDto } from './update-topping-item/update-topping-item.dto';
 export { FetchMenuItemToppingsOfCurrentToppingItemResponseDto } from './fetch-menu-item-topping-of-current-topping-item/fetch-menu-item-topping-of-current-topping-item-response.dto';
 export { FetchMenuItemToppingsOfCurrentToppingItemUnauthorizedResponseDto } from './fetch-menu-item-topping-of-current-topping-item/fetch-menu-item-topping-of-current-topping-item-unauthorized-response.dto';
+export { UpdateMenuItemToppingsOfCurrentToppingItemNotFoundResponseDto } from './update-menu-item-toppings-of-current-topping-item/update-menu-item-toppings-of-current-topping-item-not-found-response.dto';
+export { UpdateMenuItemToppingsOfCurrentToppingItemResponseDto } from './update-menu-item-toppings-of-current-topping-item/update-menu-item-toppings-of-current-topping-item-response.dto';
+export { UpdateMenuItemToppingsOfCurrentToppingItemDto } from './update-menu-item-toppings-of-current-topping-item/update-menu-item-toppings-of-current-topping-item.dto';
