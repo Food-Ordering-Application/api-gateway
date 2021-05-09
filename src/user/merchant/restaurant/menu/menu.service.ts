@@ -2,11 +2,11 @@ import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import * as constants from '../../../../constants';
 import { ISimpleResponse } from '../../interfaces';
-import { UpdateMenuDto, UpdateMenuResponseDto } from './dto';
+import { FetchMenuGroupsAndItemsResponseDto, UpdateMenuDto, UpdateMenuResponseDto } from './dto';
 import { CreateMenuDto } from './dto/create-menu/create-menu.dto';
 import { FetchMenuOfRestaurantResponseDto } from './dto/fetch-menu/fetch-menu-response.dto';
 import { FetchMenuDto } from './dto/fetch-menu/fetch-menu.dto';
-import { IRestaurantServiceFetchMenuOfRestaurantResponse } from './interfaces';
+import { IRestaurantServiceFetchMenuGroupsAndItemsResponse, IRestaurantServiceFetchMenuOfRestaurantResponse } from './interfaces';
 import { IRestaurantServiceCreateMenuResponse } from './interfaces/restaurant-service-create-menu-response.interface';
 
 @Injectable()
@@ -70,6 +70,28 @@ export class MenuService {
     return {
       statusCode: HttpStatus.OK,
       message,
+    };
+  }
+
+  async fetchMenuGroupsAndItems(merchantId: string, restaurantId: string, menuId: string): Promise<FetchMenuGroupsAndItemsResponseDto> {
+    const fetchMenuGroupsAndItemsResponse: IRestaurantServiceFetchMenuGroupsAndItemsResponse
+      = await this.menuServiceClient
+        .send('fetchMenuGroupsAndItems', {
+          merchantId,
+          restaurantId,
+          menuId
+        })
+        .toPromise();
+
+    const { status, message, data } = fetchMenuGroupsAndItemsResponse;
+    if (status !== HttpStatus.OK) {
+      throw new HttpException({ message, }, status,);
+    }
+
+    return {
+      statusCode: 200,
+      message,
+      data
     };
   }
 }

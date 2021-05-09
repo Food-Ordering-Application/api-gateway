@@ -17,7 +17,7 @@ import { MerchantJwtRequest } from 'src/auth/strategies/jwt-strategies/merchant-
 import { InternalServerErrorResponseDto } from '../../../../shared/dto/internal-server-error.dto';
 import { MerchantJwtAuthGuard } from '../../../../auth/guards/jwts/merchant-jwt-auth.guard';
 import { MerchantJwtPayload } from '../../../../auth/strategies/jwt-strategies/merchant-jwt-payload.interface';
-import { CreateMenuConflictResponseDto, CreateMenuDto, CreateMenuResponseDto, FetchMenuDto, FetchMenuOfRestaurantResponseDto, FetchMenuOfRestaurantUnauthorizedResponseDto, UpdateMenuDto, UpdateMenuNotFoundResponseDto, UpdateMenuResponseDto } from './dto';
+import { CreateMenuConflictResponseDto, CreateMenuDto, CreateMenuResponseDto, FetchMenuDto, FetchMenuGroupsAndItemsResponseDto, FetchMenuGroupsAndItemsUnauthorizedResponseDto, FetchMenuOfRestaurantResponseDto, FetchMenuOfRestaurantUnauthorizedResponseDto, UpdateMenuDto, UpdateMenuNotFoundResponseDto, UpdateMenuResponseDto } from './dto';
 import { MenuService } from './menu.service';
 
 @ApiTags('merchant/restaurant/menu')
@@ -98,5 +98,27 @@ export class MenuController {
       };
     }
     return await this.menuService.updateMenu(merchant, restaurant, menu, updateMenuDto);
+  }
+
+  @ApiOkResponse({ type: FetchMenuGroupsAndItemsResponseDto })
+  @ApiUnauthorizedResponse({ type: FetchMenuGroupsAndItemsUnauthorizedResponseDto })
+  @UseGuards(MerchantJwtAuthGuard)
+  @Get(':menuId/menu-groups-and-items')
+  async fetchMenuGroupsAndItems(
+    @Request() req: MerchantJwtRequest,
+    @Param('merchantId') merchant: string,
+    @Param('restaurantId') restaurant: string,
+    @Param('menuId') menu: string,
+  ): Promise<FetchMenuGroupsAndItemsResponseDto> {
+    const { user } = req;
+    const { merchantId } = user;
+    if (merchantId !== merchant) {
+      return {
+        statusCode: 403,
+        message: 'Unauthorized',
+        data: null,
+      };
+    }
+    return await this.menuService.fetchMenuGroupsAndItems(merchant, restaurant, menu);
   }
 }
