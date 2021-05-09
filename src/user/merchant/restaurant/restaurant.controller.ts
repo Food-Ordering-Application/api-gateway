@@ -1,14 +1,10 @@
-import {
-  Body, Controller, Delete, Get, Logger, Param, Patch, Post, Put, Query, Req, Request, UseGuards
-} from '@nestjs/common';
+import { Controller, Get, Logger, Param, Post, Query, Req, Request, UseGuards } from '@nestjs/common';
 import { Payload } from '@nestjs/microservices';
 import {
   ApiBearerAuth,
   ApiBody,
-  ApiConflictResponse,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
-  ApiNotFoundResponse,
   ApiOkResponse,
   ApiQuery,
   ApiTags,
@@ -18,10 +14,10 @@ import { MerchantJwtRequest } from 'src/auth/strategies/jwt-strategies/merchant-
 import { InternalServerErrorResponseDto } from '../../../shared/dto/internal-server-error.dto';
 import { MerchantJwtAuthGuard } from './../../../auth/guards/jwts/merchant-jwt-auth.guard';
 import { MerchantJwtPayload } from './../../../auth/strategies/jwt-strategies/merchant-jwt-payload.interface';
-import { DeleteStaffNotFoundResponseDto, DeleteStaffResponseDto, UpdateStaffDto, UpdateStaffResponseDto } from './dto';
-import { CreateStaffConflictResponseDto, CreateStaffDto, CreateStaffResponseDto, FetchStaffByMerchantDto, FetchStaffByMerchantResponseDto, FetchStaffByMerchantUnauthorizedResponseDto } from './dto/';
+import { CreateRestaurantResponseDto, FetchRestaurantDto } from './dto';
 import { CreateRestaurantDto } from './dto/create-restaurant/create-restaurant.dto';
-import { UpdateStaffNotFoundResponseDto } from './dto/update-staff/update-staff-not-found-response.dto';
+import { FetchRestaurantsOfMerchantResponseDto } from './dto/fetch-restaurant/fetch-restaurant-response.dto';
+import { FetchRestaurantsOfMerchantUnauthorizedResponseDto } from './dto/fetch-restaurant/fetch-restaurant-unauthorized-response.dto';
 import { RestaurantService } from './restaurant.service';
 
 @ApiTags('merchant/restaurant')
@@ -34,18 +30,16 @@ export class RestaurantController {
     private restaurantService: RestaurantService,
   ) { }
 
-  // Tao nhan vien
-  @ApiCreatedResponse({ type: CreateStaffResponseDto })
-  @ApiConflictResponse({ type: CreateStaffConflictResponseDto })
-  @ApiBody({ type: CreateStaffDto })
+  @ApiOkResponse({ type: FetchRestaurantsOfMerchantResponseDto })
+  @ApiUnauthorizedResponse({ type: FetchRestaurantsOfMerchantUnauthorizedResponseDto })
+  @ApiQuery({ type: FetchRestaurantDto, required: false })
   @UseGuards(MerchantJwtAuthGuard)
-  @Post(':restaurantId/staff')
-  async createStaff(
+  @Get()
+  async fetchRestaurantsOfMerchant(
     @Request() req: MerchantJwtRequest,
     @Param('merchantId') merchant,
-    @Param('restaurantId') restaurant,
-    @Body() createStaffDto: CreateStaffDto,
-  ): Promise<CreateStaffResponseDto> {
+    @Query() fetchRestaurantByMerchantDto: FetchRestaurantDto,
+  ): Promise<FetchRestaurantsOfMerchantResponseDto> {
     const { user } = req;
     const { merchantId } = user;
     if (merchantId !== merchant) {
@@ -55,85 +49,28 @@ export class RestaurantController {
         data: null,
       };
     }
-    return await this.restaurantService.createStaff(merchantId, restaurant, createStaffDto);
+    return await this.restaurantService.fetchRestaurantsOfMerchant(merchantId, fetchRestaurantByMerchantDto);
   }
 
-  // Update nhan vien
-  @ApiOkResponse({ type: UpdateStaffResponseDto })
-  @ApiNotFoundResponse({ type: UpdateStaffNotFoundResponseDto })
-  @ApiBody({ type: UpdateStaffDto })
-  @UseGuards(MerchantJwtAuthGuard)
-  @Put(':restaurantId/staff/:staffId')
-  async updateStaff(
-    @Request() req: MerchantJwtRequest,
-    @Param('merchantId') merchant,
-    @Param('restaurantId') restaurant,
-    @Param('staffId') staff,
-    @Body() updateStaffDto: UpdateStaffDto,
-  ): Promise<UpdateStaffResponseDto> {
-    const { user } = req;
-    const { merchantId } = user;
-    if (merchantId !== merchant) {
-      return {
-        statusCode: 403,
-        message: 'Unauthorized',
-      };
-    }
-    return await this.restaurantService.updateStaff(staff, merchantId, restaurant, updateStaffDto);
-  }
-
-  // Delete nhan vien
-  @ApiOkResponse({ type: DeleteStaffResponseDto })
-  @ApiNotFoundResponse({ type: DeleteStaffNotFoundResponseDto })
-  @UseGuards(MerchantJwtAuthGuard)
-  @Delete(':restaurantId/staff/:staffId')
-  async deleteStaff(
-    @Request() req: MerchantJwtRequest,
-    @Param('merchantId') merchant,
-    @Param('restaurantId') restaurant,
-    @Param('staffId') staff,
-  ): Promise<DeleteStaffResponseDto> {
-    const { user } = req;
-    const { merchantId } = user;
-    if (merchantId !== merchant) {
-      return {
-        statusCode: 403,
-        message: 'Unauthorized',
-      };
-    }
-    return await this.restaurantService.deleteStaff(staff, merchantId, restaurant);
-  }
-
-  @ApiOkResponse({ type: FetchStaffByMerchantResponseDto })
-  @ApiUnauthorizedResponse({ type: FetchStaffByMerchantUnauthorizedResponseDto })
-  @ApiQuery({ type: FetchStaffByMerchantDto, required: false })
-  @UseGuards(MerchantJwtAuthGuard)
-  @Get(':restaurantId/staff')
-  async fetchStaff(
-    @Request() req: MerchantJwtRequest,
-    @Param('merchantId') merchant,
-    @Param('restaurantId') restaurant,
-    @Query() fetchStaffByMerchantDto: FetchStaffByMerchantDto,
-  ): Promise<FetchStaffByMerchantResponseDto> {
-    const { user } = req;
-    const { merchantId } = user;
-    if (merchantId !== merchant) {
-      return {
-        statusCode: 403,
-        message: 'Unauthorized',
-        data: null,
-      };
-    }
-    return await this.restaurantService.fetchStaff(merchantId, restaurant, fetchStaffByMerchantDto);
-  }
-
+  @ApiCreatedResponse({ type: CreateRestaurantResponseDto })
   @ApiBody({ type: CreateRestaurantDto })
   @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Post()
-  createRestaurant(@Req() req, @Payload() createRestaurantDto: CreateRestaurantDto) {
+  async createRestaurant(
+    @Req() req,
+    @Payload() createRestaurantDto: CreateRestaurantDto,
+    @Param('merchantId') merchant,
+  ) {
     const merchantPayload: MerchantJwtPayload = req.user;
     const { merchantId } = merchantPayload;
-    return this.restaurantService.createRestaurant(merchantId, createRestaurantDto);
+    if (merchantId !== merchant) {
+      return {
+        statusCode: 403,
+        message: 'Unauthorized',
+        data: null,
+      };
+    }
+    return await this.restaurantService.createRestaurant(merchantId, createRestaurantDto);
   }
 }

@@ -22,6 +22,6 @@ export class OrderItem {
   discount?: number;
 
   @ValidateNested({ each: true })
-  @Type(()=>OrderItemTopping)
+  @Type(() => OrderItemTopping)
   orderItemToppings?: OrderItemTopping[];
 }

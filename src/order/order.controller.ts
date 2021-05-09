@@ -48,7 +48,7 @@ import {
 export class OrderController {
   private logger = new Logger('OrderController');
 
-  constructor(private readonly orderService: OrderService) {}
+  constructor(private readonly orderService: OrderService) { }
 
   // Tạo order và orderItem tương ứng
   @ApiCreatedResponse({ type: CreateOrderResponseDto })
