@@ -9,3 +9,5 @@ export { FetchToppingItemQuery } from './fetch-topping-item/fetch-topping-item.d
 export { UpdateToppingItemNotFoundResponseDto } from './update-topping-item/update-topping-item-not-found-response.dto';
 export { UpdateToppingItemResponseDto } from './update-topping-item/update-topping-item-response.dto';
 export { UpdateToppingItemDto } from './update-topping-item/update-topping-item.dto';
+export { FetchMenuItemToppingsOfCurrentToppingItemResponseDto } from './fetch-menu-item-topping-of-current-topping-item/fetch-menu-item-topping-of-current-topping-item-response.dto';
+export { FetchMenuItemToppingsOfCurrentToppingItemUnauthorizedResponseDto } from './fetch-menu-item-topping-of-current-topping-item/fetch-menu-item-topping-of-current-topping-item-unauthorized-response.dto';
