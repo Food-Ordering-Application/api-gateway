@@ -62,7 +62,7 @@ export class CustomerController {
   constructor(
     private customerService: CustomerService,
     private authService: AuthService,
-  ) { }
+  ) {}
 
   // Đăng ký Customer
   @ApiCreatedResponse({ type: CreateCustomerResponseDto })

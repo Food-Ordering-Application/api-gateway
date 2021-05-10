@@ -9,12 +9,14 @@ import {
   Get,
   Query,
   Patch,
+  Request,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import {
   ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiQuery,
@@ -40,7 +42,15 @@ import {
   GetOrderDetailResponseDto,
   UpdateOrderItemQuantityResponseDto,
   UpdateOrderItemQuantityDto,
+  PickCustomerAddressResponseDto,
+  PickCustomerAddressDto,
 } from './dto';
+import { ForbiddenResponseDto } from 'src/user/customer/dto';
+import { PoliciesGuard } from 'src/casl/guards/policy.guard';
+import { CheckPolicies } from 'src/casl/decorators/check-policy.decorator';
+import { AppAbility } from 'src/casl/casl-ability.factory';
+import { Action } from 'src/shared/enum/actions.enum';
+import { Customer } from 'src/shared/classes';
 
 @ApiTags('orders')
 @ApiInternalServerErrorResponse({ type: InternalServerErrorResponseDto })
@@ -48,7 +58,7 @@ import {
 export class OrderController {
   private logger = new Logger('OrderController');
 
-  constructor(private readonly orderService: OrderService) { }
+  constructor(private readonly orderService: OrderService) {}
 
   // Tạo order và orderItem tương ứng
   @ApiCreatedResponse({ type: CreateOrderResponseDto })
@@ -188,9 +198,44 @@ export class OrderController {
     updateOrderItemQuantityDto: UpdateOrderItemQuantityDto,
     @Param() params,
   ): Promise<UpdateOrderItemQuantityResponseDto> {
+    //! FIXME
     const { orderId } = params;
     return this.orderService.updateOrderItemQuantity(
       updateOrderItemQuantityDto,
+      orderId,
+    );
+  }
+
+  /* Update delivery address */
+  @ApiOkResponse({ type: PickCustomerAddressResponseDto })
+  @ApiForbiddenResponse({
+    type: ForbiddenResponseDto,
+  })
+  @ApiBody({ type: PickCustomerAddressDto })
+  @ApiBearerAuth()
+  @UseGuards(CustomerJwtAuthGuard, PoliciesGuard)
+  @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, Customer))
+  @Patch('/:orderId/pick-delivery-address')
+  async pickCustomerAddress(
+    @Request() req,
+    @Param() params,
+    @Body()
+    pickCustomerAddressDto: PickCustomerAddressDto,
+  ): Promise<PickCustomerAddressResponseDto> {
+    const { orderId } = params;
+    const { customerAddressId, customerId } = pickCustomerAddressDto;
+    // Nếu không phải chính user đó
+    if (req.user.userId !== customerId) {
+      return {
+        statusCode: 403,
+        message: 'Forbidden',
+        data: null,
+      };
+    }
+
+    return this.orderService.pickCustomerAddress(
+      customerId,
+      customerAddressId,
       orderId,
     );
   }
