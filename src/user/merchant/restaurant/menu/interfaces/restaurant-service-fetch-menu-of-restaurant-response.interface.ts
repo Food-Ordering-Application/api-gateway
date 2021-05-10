@@ -3,8 +3,8 @@ export interface IRestaurantServiceFetchMenuOfRestaurantResponse {
   status: number;
   message: string;
   data: {
-    results: IMenu[],
-    total: number,
-    size: number,
+    results: IMenu[];
+    total: number;
+    size: number;
   };
 }

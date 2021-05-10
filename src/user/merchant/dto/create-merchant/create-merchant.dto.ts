@@ -26,4 +26,3 @@ export class CreateMerchantDto {
   @IsString()
   IDNumber: string;
 }
-

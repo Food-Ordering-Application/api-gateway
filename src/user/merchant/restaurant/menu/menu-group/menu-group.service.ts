@@ -9,43 +9,71 @@ import {
   FetchMenuGroupByMenuResponseDto,
   FetchMenuGroupQuery,
   UpdateMenuGroupDto,
-  UpdateMenuGroupResponseDto
+  UpdateMenuGroupResponseDto,
 } from './dto';
-import { IRestaurantServiceCreateMenuGroupResponse, IRestaurantServiceFetchMenuGroupByMenuResponse } from './interfaces';
+import {
+  IRestaurantServiceCreateMenuGroupResponse,
+  IRestaurantServiceFetchMenuGroupByMenuResponse,
+} from './interfaces';
 
 @Injectable()
 export class MenuGroupService {
   constructor(
-    @Inject(constants.RESTAURANT_SERVICE) private menuGroupServiceClient: ClientProxy,
-  ) { }
+    @Inject(constants.RESTAURANT_SERVICE)
+    private menuGroupServiceClient: ClientProxy,
+  ) {}
 
-  async createMenuGroup(merchantId: string, restaurantId: string, menuId: string, createMenuGroupDto: CreateMenuGroupDto): Promise<CreateMenuGroupResponseDto> {
-    const createMenuGroupResponse: IRestaurantServiceCreateMenuGroupResponse = await this.menuGroupServiceClient
-      .send('createMenuGroup', { merchantId, restaurantId, menuId, data: createMenuGroupDto })
-      .toPromise();
+  async createMenuGroup(
+    merchantId: string,
+    restaurantId: string,
+    menuId: string,
+    createMenuGroupDto: CreateMenuGroupDto,
+  ): Promise<CreateMenuGroupResponseDto> {
+    const createMenuGroupResponse: IRestaurantServiceCreateMenuGroupResponse =
+      await this.menuGroupServiceClient
+        .send('createMenuGroup', {
+          merchantId,
+          restaurantId,
+          menuId,
+          data: createMenuGroupDto,
+        })
+        .toPromise();
 
     const { status, message, data } = createMenuGroupResponse;
     if (status !== HttpStatus.CREATED) {
-      throw new HttpException({ message, }, status,);
+      throw new HttpException({ message }, status);
     }
     const { menuGroup } = data;
     return {
       statusCode: 201,
       message,
       data: {
-        menuGroup
-      }
+        menuGroup,
+      },
     };
   }
 
-  async updateMenuGroup(menuGroupId: string, merchantId: string, restaurantId: string, menuId: string, updateMenuGroupDto: UpdateMenuGroupDto): Promise<UpdateMenuGroupResponseDto> {
-    const updateMenuGroupResponse: ISimpleResponse = await this.menuGroupServiceClient
-      .send('updateMenuGroup', { menuGroupId, merchantId, restaurantId, menuId, data: updateMenuGroupDto })
-      .toPromise();
+  async updateMenuGroup(
+    menuGroupId: string,
+    merchantId: string,
+    restaurantId: string,
+    menuId: string,
+    updateMenuGroupDto: UpdateMenuGroupDto,
+  ): Promise<UpdateMenuGroupResponseDto> {
+    const updateMenuGroupResponse: ISimpleResponse =
+      await this.menuGroupServiceClient
+        .send('updateMenuGroup', {
+          menuGroupId,
+          merchantId,
+          restaurantId,
+          menuId,
+          data: updateMenuGroupDto,
+        })
+        .toPromise();
 
     const { status, message } = updateMenuGroupResponse;
     if (status !== HttpStatus.OK) {
-      throw new HttpException({ message, }, status,);
+      throw new HttpException({ message }, status);
     }
 
     return {
@@ -54,14 +82,25 @@ export class MenuGroupService {
     };
   }
 
-  async deleteMenuGroup(menuGroupId: string, merchantId: string, restaurantId: string, menuId: string): Promise<DeleteMenuGroupResponseDto> {
-    const deleteMenuGroupResponse: ISimpleResponse = await this.menuGroupServiceClient
-      .send('deleteMenuGroup', { menuGroupId, merchantId, restaurantId, menuId })
-      .toPromise();
+  async deleteMenuGroup(
+    menuGroupId: string,
+    merchantId: string,
+    restaurantId: string,
+    menuId: string,
+  ): Promise<DeleteMenuGroupResponseDto> {
+    const deleteMenuGroupResponse: ISimpleResponse =
+      await this.menuGroupServiceClient
+        .send('deleteMenuGroup', {
+          menuGroupId,
+          merchantId,
+          restaurantId,
+          menuId,
+        })
+        .toPromise();
 
     const { status, message } = deleteMenuGroupResponse;
     if (status !== HttpStatus.OK) {
-      throw new HttpException({ message, }, status,);
+      throw new HttpException({ message }, status);
     }
 
     return {
@@ -70,21 +109,27 @@ export class MenuGroupService {
     };
   }
 
-  async fetchMenuGroup(merchantId: string, restaurantId: string, menuId: string, fetchMenuGroupByMenuQuery: FetchMenuGroupQuery): Promise<FetchMenuGroupByMenuResponseDto> {
-    const fetchMenuGroupResponse: IRestaurantServiceFetchMenuGroupByMenuResponse = await this.menuGroupServiceClient
-      .send('fetchMenuGroupOfMenu', {
-        merchantId,
-        restaurantId,
-        menuId,
-        page: parseInt(fetchMenuGroupByMenuQuery.page) || 0,
-        size: parseInt(fetchMenuGroupByMenuQuery.size) || 10,
-        search: fetchMenuGroupByMenuQuery.q
-      })
-      .toPromise();
+  async fetchMenuGroup(
+    merchantId: string,
+    restaurantId: string,
+    menuId: string,
+    fetchMenuGroupByMenuQuery: FetchMenuGroupQuery,
+  ): Promise<FetchMenuGroupByMenuResponseDto> {
+    const fetchMenuGroupResponse: IRestaurantServiceFetchMenuGroupByMenuResponse =
+      await this.menuGroupServiceClient
+        .send('fetchMenuGroupOfMenu', {
+          merchantId,
+          restaurantId,
+          menuId,
+          page: parseInt(fetchMenuGroupByMenuQuery.page) || 0,
+          size: parseInt(fetchMenuGroupByMenuQuery.size) || 10,
+          search: fetchMenuGroupByMenuQuery.q,
+        })
+        .toPromise();
 
     const { status, message, data } = fetchMenuGroupResponse;
     if (status !== HttpStatus.OK) {
-      throw new HttpException({ message, }, status,);
+      throw new HttpException({ message }, status);
     }
     const { results, size, total } = data;
     return {
@@ -93,8 +138,8 @@ export class MenuGroupService {
       data: {
         results,
         size,
-        total
-      }
+        total,
+      },
     };
   }
 }

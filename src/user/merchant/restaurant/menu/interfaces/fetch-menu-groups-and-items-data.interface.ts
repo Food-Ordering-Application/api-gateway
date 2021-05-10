@@ -1,4 +1,4 @@
-import { IMenu } from "./menu.interface";
+import { IMenu } from './menu.interface';
 
 export interface IFetchMenuGroupsAndItemsData {
   menuGroups: {
@@ -7,6 +7,6 @@ export interface IFetchMenuGroupsAndItemsData {
     menuItems: {
       id: string;
       name: string;
-    }[]
-  }
+    }[];
+  };
 }

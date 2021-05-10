@@ -6,47 +6,48 @@ export const OpenHoursDataExample: OpenHourDto[] = [
     fromMinute: 0,
     toHour: 22,
     toMinute: 0,
-    day: DaysOfWeek.Monday
+    day: DaysOfWeek.Monday,
   },
   {
     fromHour: 8,
     fromMinute: 0,
     toHour: 22,
     toMinute: 0,
-    day: DaysOfWeek.TuesDay
+    day: DaysOfWeek.TuesDay,
   },
   {
     fromHour: 8,
     fromMinute: 0,
     toHour: 22,
     toMinute: 0,
-    day: DaysOfWeek.Wednesday
+    day: DaysOfWeek.Wednesday,
   },
   {
     fromHour: 8,
     fromMinute: 0,
     toHour: 22,
     toMinute: 0,
-    day: DaysOfWeek.Thursday
-  }, {
-    fromHour: 8,
-    fromMinute: 0,
-    toHour: 22,
-    toMinute: 0,
-    day: DaysOfWeek.Friday
-  }
-  , {
-    fromHour: 8,
-    fromMinute: 0,
-    toHour: 22,
-    toMinute: 0,
-    day: DaysOfWeek.Saturday
+    day: DaysOfWeek.Thursday,
   },
   {
     fromHour: 8,
     fromMinute: 0,
     toHour: 22,
     toMinute: 0,
-    day: DaysOfWeek.Sunday
-  }
+    day: DaysOfWeek.Friday,
+  },
+  {
+    fromHour: 8,
+    fromMinute: 0,
+    toHour: 22,
+    toMinute: 0,
+    day: DaysOfWeek.Saturday,
+  },
+  {
+    fromHour: 8,
+    fromMinute: 0,
+    toHour: 22,
+    toMinute: 0,
+    day: DaysOfWeek.Sunday,
+  },
 ];

@@ -18,8 +18,8 @@ export class CreateMenuItemResponseDto {
         price: 40000,
         imageUrl: 'http://lorempixel.com/640/480',
         index: POSITION_GAP,
-        isActive: true
-      }
+        isActive: true,
+      },
     },
   })
   data: IMenuItemData;

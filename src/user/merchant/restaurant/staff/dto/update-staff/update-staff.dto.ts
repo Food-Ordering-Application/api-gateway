@@ -24,4 +24,4 @@ export class UpdateStaffFullDto {
   dateOfBirth?: Date;
 }
 
-export class UpdateStaffDto extends PartialType(UpdateStaffFullDto) { }
+export class UpdateStaffDto extends PartialType(UpdateStaffFullDto) {}

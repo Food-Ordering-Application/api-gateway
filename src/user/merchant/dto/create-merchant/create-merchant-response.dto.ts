@@ -9,13 +9,13 @@ export class CreateMerchantResponseDto {
   @ApiProperty({
     example: {
       user: {
-        id: "54a800a3-81a4-44d9-a79e-456660724000",
-        username: "merchant123",
-        email: "abc@gmail.com",
-        phone: "0949654744",
-        fullName: "Nguyễn Văn Phúc",
-        IDNumber: "272699300"
-      }
+        id: '54a800a3-81a4-44d9-a79e-456660724000',
+        username: 'merchant123',
+        email: 'abc@gmail.com',
+        phone: '0949654744',
+        fullName: 'Nguyễn Văn Phúc',
+        IDNumber: '272699300',
+      },
     },
     nullable: true,
   })

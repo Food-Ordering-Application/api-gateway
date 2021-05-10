@@ -18,8 +18,8 @@ export class CreateToppingItemResponseDto {
         price: 9000,
         maxQuantity: 2,
         index: POSITION_GAP,
-        isActive: true
-      }
+        isActive: true,
+      },
     },
   })
   data: IToppingItemData;

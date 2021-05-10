@@ -1,7 +1,5 @@
 import { IMerchantData } from './../../interfaces/create-merchant-data.interface';
 import { ApiProperty } from '@nestjs/swagger';
-;
-
 export class CreateMerchantConflictResponseDto {
   @ApiProperty({ example: 403 })
   statusCode: number;

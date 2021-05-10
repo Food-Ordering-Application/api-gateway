@@ -5,10 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { AdminJwtPayload } from './admin-jwt-payload.interface';
 
 @Injectable()
-export class AdminJwtStrategy extends PassportStrategy(
-  Strategy,
-  'admin-jwt',
-) {
+export class AdminJwtStrategy extends PassportStrategy(Strategy, 'admin-jwt') {
   constructor(private configService: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -21,7 +18,7 @@ export class AdminJwtStrategy extends PassportStrategy(
     const { adminId, adminUsername } = payload;
     return {
       adminId,
-      adminUsername
+      adminUsername,
     };
   }
 }

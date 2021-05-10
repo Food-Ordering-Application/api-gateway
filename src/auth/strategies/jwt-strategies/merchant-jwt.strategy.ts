@@ -21,7 +21,7 @@ export class MerchantJwtStrategy extends PassportStrategy(
     const { merchantId, merchantUsername } = payload;
     return {
       merchantId,
-      merchantUsername
+      merchantUsername,
     };
   }
 }

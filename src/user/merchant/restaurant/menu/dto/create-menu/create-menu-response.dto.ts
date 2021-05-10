@@ -18,6 +18,6 @@ export class CreateMenuResponseDto {
     nullable: true,
   })
   data: {
-    menu: IMenu
+    menu: IMenu;
   };
 }

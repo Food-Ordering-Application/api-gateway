@@ -23,5 +23,5 @@ export class Customer {
     public isPhoneNumberVerified: boolean,
     public verifyPhoneNumberOTP: string,
     public isCustomer: boolean,
-  ) { }
+  ) {}
 }

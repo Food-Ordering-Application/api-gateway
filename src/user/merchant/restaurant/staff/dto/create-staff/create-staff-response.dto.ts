@@ -9,14 +9,14 @@ export class CreateStaffResponseDto {
   @ApiProperty({
     example: {
       staff: {
-        id: "54a800a3-81a4-44d9-a79e-456660724000",
-        username: "staff123",
-        phone: "0949654744",
-        fullName: "Nguyễn Văn Phúc",
-        firstName: "Phúc",
-        lastName: "Nguyễn Văn",
-        IDNumber: "272699300"
-      }
+        id: '54a800a3-81a4-44d9-a79e-456660724000',
+        username: 'staff123',
+        phone: '0949654744',
+        fullName: 'Nguyễn Văn Phúc',
+        firstName: 'Phúc',
+        lastName: 'Nguyễn Văn',
+        IDNumber: '272699300',
+      },
     },
     nullable: true,
   })

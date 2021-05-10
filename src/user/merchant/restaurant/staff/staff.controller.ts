@@ -1,5 +1,15 @@
 import {
-  Body, Controller, Delete, Get, Logger, Param, Patch, Post, Query, Request, UseGuards
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Logger,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -10,13 +20,26 @@ import {
   ApiOkResponse,
   ApiQuery,
   ApiTags,
-  ApiUnauthorizedResponse
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { InternalServerErrorResponseDto } from '../../../../shared/dto/internal-server-error.dto';
 import { MerchantJwtAuthGuard } from './../../../../auth/guards/jwts/merchant-jwt-auth.guard';
 import { MerchantJwtRequest } from './../../../../auth/strategies/jwt-strategies/merchant-jwt-request.interface';
-import { DeleteStaffNotFoundResponseDto, DeleteStaffResponseDto, UpdateStaffDto, UpdateStaffNotFoundResponseDto, UpdateStaffResponseDto } from './dto';
-import { CreateStaffConflictResponseDto, CreateStaffDto, CreateStaffResponseDto, FetchStaffByMerchantResponseDto, FetchStaffByMerchantUnauthorizedResponseDto, FetchStaffDto } from './dto/';
+import {
+  DeleteStaffNotFoundResponseDto,
+  DeleteStaffResponseDto,
+  UpdateStaffDto,
+  UpdateStaffNotFoundResponseDto,
+  UpdateStaffResponseDto,
+} from './dto';
+import {
+  CreateStaffConflictResponseDto,
+  CreateStaffDto,
+  CreateStaffResponseDto,
+  FetchStaffByMerchantResponseDto,
+  FetchStaffByMerchantUnauthorizedResponseDto,
+  FetchStaffDto,
+} from './dto/';
 import { StaffService } from './staff.service';
 
 @ApiTags('merchant/restaurant/staff')
@@ -25,12 +48,12 @@ import { StaffService } from './staff.service';
 export class StaffController {
   private logger = new Logger('StaffController');
 
-  constructor(
-    private staffService: StaffService,
-  ) { }
+  constructor(private staffService: StaffService) {}
 
   @ApiOkResponse({ type: FetchStaffByMerchantResponseDto })
-  @ApiUnauthorizedResponse({ type: FetchStaffByMerchantUnauthorizedResponseDto })
+  @ApiUnauthorizedResponse({
+    type: FetchStaffByMerchantUnauthorizedResponseDto,
+  })
   @ApiQuery({ type: FetchStaffDto, required: false })
   @UseGuards(MerchantJwtAuthGuard)
   @Get()
@@ -49,7 +72,11 @@ export class StaffController {
         data: null,
       };
     }
-    return await this.staffService.fetchStaff(merchantId, restaurant, fetchStaffByMerchantDto);
+    return await this.staffService.fetchStaff(
+      merchantId,
+      restaurant,
+      fetchStaffByMerchantDto,
+    );
   }
 
   // Tao nhan vien
@@ -73,7 +100,11 @@ export class StaffController {
         data: null,
       };
     }
-    return await this.staffService.createStaff(merchantId, restaurant, createStaffDto);
+    return await this.staffService.createStaff(
+      merchantId,
+      restaurant,
+      createStaffDto,
+    );
   }
 
   // Update nhan vien
@@ -97,7 +128,12 @@ export class StaffController {
         message: 'Unauthorized',
       };
     }
-    return await this.staffService.updateStaff(staff, merchantId, restaurant, updateStaffDto);
+    return await this.staffService.updateStaff(
+      staff,
+      merchantId,
+      restaurant,
+      updateStaffDto,
+    );
   }
 
   // Delete nhan vien

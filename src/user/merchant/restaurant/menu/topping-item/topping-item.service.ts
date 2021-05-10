@@ -12,43 +12,72 @@ import {
   UpdateMenuItemToppingsOfCurrentToppingItemDto,
   UpdateMenuItemToppingsOfCurrentToppingItemResponseDto,
   UpdateToppingItemDto,
-  UpdateToppingItemResponseDto
+  UpdateToppingItemResponseDto,
 } from './dto';
-import { IRestaurantServiceCreateToppingItemResponse, IRestaurantServiceFetchMenuItemToppingsOfCurrentToppingItemResponse, IRestaurantServiceFetchToppingItemByMenuResponse } from './interfaces';
+import {
+  IRestaurantServiceCreateToppingItemResponse,
+  IRestaurantServiceFetchMenuItemToppingsOfCurrentToppingItemResponse,
+  IRestaurantServiceFetchToppingItemByMenuResponse,
+} from './interfaces';
 
 @Injectable()
 export class ToppingItemService {
   constructor(
-    @Inject(constants.RESTAURANT_SERVICE) private toppingItemServiceClient: ClientProxy,
-  ) { }
+    @Inject(constants.RESTAURANT_SERVICE)
+    private toppingItemServiceClient: ClientProxy,
+  ) {}
 
-  async createToppingItem(merchantId: string, restaurantId: string, menuId: string, createToppingItemDto: CreateToppingItemDto): Promise<CreateToppingItemResponseDto> {
-    const createToppingItemResponse: IRestaurantServiceCreateToppingItemResponse = await this.toppingItemServiceClient
-      .send('createToppingItem', { merchantId, restaurantId, menuId, data: createToppingItemDto })
-      .toPromise();
+  async createToppingItem(
+    merchantId: string,
+    restaurantId: string,
+    menuId: string,
+    createToppingItemDto: CreateToppingItemDto,
+  ): Promise<CreateToppingItemResponseDto> {
+    const createToppingItemResponse: IRestaurantServiceCreateToppingItemResponse =
+      await this.toppingItemServiceClient
+        .send('createToppingItem', {
+          merchantId,
+          restaurantId,
+          menuId,
+          data: createToppingItemDto,
+        })
+        .toPromise();
 
     const { status, message, data } = createToppingItemResponse;
     if (status !== HttpStatus.CREATED) {
-      throw new HttpException({ message, }, status,);
+      throw new HttpException({ message }, status);
     }
     const { toppingItem } = data;
     return {
       statusCode: 201,
       message,
       data: {
-        toppingItem
-      }
+        toppingItem,
+      },
     };
   }
 
-  async updateToppingItem(toppingItemId: string, merchantId: string, restaurantId: string, menuId: string, updateToppingItemDto: UpdateToppingItemDto): Promise<UpdateToppingItemResponseDto> {
-    const updateToppingItemResponse: ISimpleResponse = await this.toppingItemServiceClient
-      .send('updateToppingItem', { toppingItemId, merchantId, restaurantId, menuId, data: updateToppingItemDto })
-      .toPromise();
+  async updateToppingItem(
+    toppingItemId: string,
+    merchantId: string,
+    restaurantId: string,
+    menuId: string,
+    updateToppingItemDto: UpdateToppingItemDto,
+  ): Promise<UpdateToppingItemResponseDto> {
+    const updateToppingItemResponse: ISimpleResponse =
+      await this.toppingItemServiceClient
+        .send('updateToppingItem', {
+          toppingItemId,
+          merchantId,
+          restaurantId,
+          menuId,
+          data: updateToppingItemDto,
+        })
+        .toPromise();
 
     const { status, message } = updateToppingItemResponse;
     if (status !== HttpStatus.OK) {
-      throw new HttpException({ message, }, status,);
+      throw new HttpException({ message }, status);
     }
 
     return {
@@ -57,14 +86,25 @@ export class ToppingItemService {
     };
   }
 
-  async deleteToppingItem(toppingItemId: string, merchantId: string, restaurantId: string, menuId: string): Promise<DeleteToppingItemResponseDto> {
-    const deleteToppingItemResponse: ISimpleResponse = await this.toppingItemServiceClient
-      .send('deleteToppingItem', { toppingItemId, merchantId, restaurantId, menuId })
-      .toPromise();
+  async deleteToppingItem(
+    toppingItemId: string,
+    merchantId: string,
+    restaurantId: string,
+    menuId: string,
+  ): Promise<DeleteToppingItemResponseDto> {
+    const deleteToppingItemResponse: ISimpleResponse =
+      await this.toppingItemServiceClient
+        .send('deleteToppingItem', {
+          toppingItemId,
+          merchantId,
+          restaurantId,
+          menuId,
+        })
+        .toPromise();
 
     const { status, message } = deleteToppingItemResponse;
     if (status !== HttpStatus.OK) {
-      throw new HttpException({ message, }, status,);
+      throw new HttpException({ message }, status);
     }
 
     return {
@@ -73,21 +113,27 @@ export class ToppingItemService {
     };
   }
 
-  async fetchToppingItem(merchantId: string, restaurantId: string, menuId: string, fetchToppingItemByMenuQuery: FetchToppingItemQuery): Promise<FetchToppingItemByMenuResponseDto> {
-    const fetchToppingItemResponse: IRestaurantServiceFetchToppingItemByMenuResponse = await this.toppingItemServiceClient
-      .send('fetchToppingItemOfMenu', {
-        merchantId,
-        restaurantId,
-        menuId,
-        page: parseInt(fetchToppingItemByMenuQuery.page) || 0,
-        size: parseInt(fetchToppingItemByMenuQuery.size) || 10,
-        search: fetchToppingItemByMenuQuery.q
-      })
-      .toPromise();
+  async fetchToppingItem(
+    merchantId: string,
+    restaurantId: string,
+    menuId: string,
+    fetchToppingItemByMenuQuery: FetchToppingItemQuery,
+  ): Promise<FetchToppingItemByMenuResponseDto> {
+    const fetchToppingItemResponse: IRestaurantServiceFetchToppingItemByMenuResponse =
+      await this.toppingItemServiceClient
+        .send('fetchToppingItemOfMenu', {
+          merchantId,
+          restaurantId,
+          menuId,
+          page: parseInt(fetchToppingItemByMenuQuery.page) || 0,
+          size: parseInt(fetchToppingItemByMenuQuery.size) || 10,
+          search: fetchToppingItemByMenuQuery.q,
+        })
+        .toPromise();
 
     const { status, message, data } = fetchToppingItemResponse;
     if (status !== HttpStatus.OK) {
-      throw new HttpException({ message, }, status,);
+      throw new HttpException({ message }, status);
     }
     const { results, size, total } = data;
     return {
@@ -96,33 +142,39 @@ export class ToppingItemService {
       data: {
         results,
         size,
-        total
-      }
+        total,
+      },
     };
   }
 
   async fetchMenuItemToppingsOfCurrentToppingItem(
-    merchantId: string, restaurantId: string, menuId: string, toppingItemId: string
+    merchantId: string,
+    restaurantId: string,
+    menuId: string,
+    toppingItemId: string,
   ): Promise<FetchMenuItemToppingsOfCurrentToppingItemResponseDto> {
     const fetchMenuItemToppingsOfCurrentToppingItemResponse: IRestaurantServiceFetchMenuItemToppingsOfCurrentToppingItemResponse =
-      await this.toppingItemServiceClient.send('fetchMenuItemToppingsOfCurrentToppingItem', {
-        merchantId,
-        restaurantId,
-        menuId,
-        toppingItemId,
-      }).toPromise();
+      await this.toppingItemServiceClient
+        .send('fetchMenuItemToppingsOfCurrentToppingItem', {
+          merchantId,
+          restaurantId,
+          menuId,
+          toppingItemId,
+        })
+        .toPromise();
 
-    const { status, message, data } = fetchMenuItemToppingsOfCurrentToppingItemResponse;
+    const { status, message, data } =
+      fetchMenuItemToppingsOfCurrentToppingItemResponse;
     if (status !== HttpStatus.OK) {
-      throw new HttpException({ message, }, status,);
+      throw new HttpException({ message }, status);
     }
     const { results } = data;
     return {
       statusCode: 200,
       message,
       data: {
-        results
-      }
+        results,
+      },
     };
   }
 
@@ -131,20 +183,23 @@ export class ToppingItemService {
     merchantId: string,
     restaurantId: string,
     menuId: string,
-    updateToppingItemDto: UpdateMenuItemToppingsOfCurrentToppingItemDto
+    updateToppingItemDto: UpdateMenuItemToppingsOfCurrentToppingItemDto,
   ): Promise<UpdateMenuItemToppingsOfCurrentToppingItemResponseDto> {
     const updateMenuItemToppingsOfCurrentToppingItemResponse: ISimpleResponse =
-      await this.toppingItemServiceClient.send('updateMenuItemToppingsOfCurrentToppingItem', {
-        toppingItemId,
-        merchantId,
-        restaurantId,
-        menuId,
-        data: updateToppingItemDto
-      }).toPromise();
+      await this.toppingItemServiceClient
+        .send('updateMenuItemToppingsOfCurrentToppingItem', {
+          toppingItemId,
+          merchantId,
+          restaurantId,
+          menuId,
+          data: updateToppingItemDto,
+        })
+        .toPromise();
 
-    const { status, message } = updateMenuItemToppingsOfCurrentToppingItemResponse;
+    const { status, message } =
+      updateMenuItemToppingsOfCurrentToppingItemResponse;
     if (status !== HttpStatus.OK) {
-      throw new HttpException({ message, }, status,);
+      throw new HttpException({ message }, status);
     }
 
     return {

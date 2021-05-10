@@ -8,4 +8,3 @@ export class PaginationDto {
   @ApiPropertyOptional({ example: '10', required: false, default: '10' })
   size?: string;
 }
-

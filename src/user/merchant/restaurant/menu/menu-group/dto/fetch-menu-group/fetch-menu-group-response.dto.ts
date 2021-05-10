@@ -9,17 +9,17 @@ export class FetchMenuGroupByMenuResponseDto {
   message: string;
   @ApiProperty({
     example: {
-      "results": [
+      results: [
         {
           id: '54a800a3-81a4-44d9-a79e-456660724000',
           menuId: '148cd922-b73b-47d3-bada-facdf7b4ef54',
           name: 'Mì',
           index: POSITION_GAP,
-          isActive: true
-        }
+          isActive: true,
+        },
       ],
       size: 10,
-      total: 1
+      total: 1,
     },
     nullable: true,
   })

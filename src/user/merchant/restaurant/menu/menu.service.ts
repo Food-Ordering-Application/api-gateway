@@ -2,48 +2,63 @@ import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import * as constants from '../../../../constants';
 import { ISimpleResponse } from '../../interfaces';
-import { FetchMenuGroupsAndItemsResponseDto, UpdateMenuDto, UpdateMenuResponseDto } from './dto';
+import {
+  FetchMenuGroupsAndItemsResponseDto,
+  UpdateMenuDto,
+  UpdateMenuResponseDto,
+} from './dto';
 import { CreateMenuDto } from './dto/create-menu/create-menu.dto';
 import { FetchMenuOfRestaurantResponseDto } from './dto/fetch-menu/fetch-menu-response.dto';
 import { FetchMenuDto } from './dto/fetch-menu/fetch-menu.dto';
-import { IRestaurantServiceFetchMenuGroupsAndItemsResponse, IRestaurantServiceFetchMenuOfRestaurantResponse } from './interfaces';
+import {
+  IRestaurantServiceFetchMenuGroupsAndItemsResponse,
+  IRestaurantServiceFetchMenuOfRestaurantResponse,
+} from './interfaces';
 import { IRestaurantServiceCreateMenuResponse } from './interfaces/restaurant-service-create-menu-response.interface';
 
 @Injectable()
 export class MenuService {
   constructor(
-    @Inject(constants.RESTAURANT_SERVICE) private menuServiceClient: ClientProxy,
-  ) { }
+    @Inject(constants.RESTAURANT_SERVICE)
+    private menuServiceClient: ClientProxy,
+  ) {}
 
-  async createMenu(merchantId: string, restaurantId: string, createMenuDto: CreateMenuDto) {
-    const createMenuResponse: IRestaurantServiceCreateMenuResponse = await this.menuServiceClient
-      .send('createMenu', { merchantId, restaurantId, data: createMenuDto })
-      .toPromise();
+  async createMenu(
+    merchantId: string,
+    restaurantId: string,
+    createMenuDto: CreateMenuDto,
+  ) {
+    const createMenuResponse: IRestaurantServiceCreateMenuResponse =
+      await this.menuServiceClient
+        .send('createMenu', { merchantId, restaurantId, data: createMenuDto })
+        .toPromise();
     const { status, message, data } = createMenuResponse;
     if (status !== HttpStatus.CREATED) {
-      throw new HttpException({ message, }, status,);
+      throw new HttpException({ message }, status);
     }
     return {
       statusCode: 201,
       message,
-      data
+      data,
     };
   }
 
-  async fetchMenuOfRestaurant(fetchMenuOfRestaurantDto: FetchMenuDto): Promise<FetchMenuOfRestaurantResponseDto> {
+  async fetchMenuOfRestaurant(
+    fetchMenuOfRestaurantDto: FetchMenuDto,
+  ): Promise<FetchMenuOfRestaurantResponseDto> {
     const { restaurantId } = fetchMenuOfRestaurantDto;
-    const fetchMenuOfRestaurantResponse: IRestaurantServiceFetchMenuOfRestaurantResponse
-      = await this.menuServiceClient
+    const fetchMenuOfRestaurantResponse: IRestaurantServiceFetchMenuOfRestaurantResponse =
+      await this.menuServiceClient
         .send('fetchMenuOfRestaurant', {
           restaurantId,
           page: parseInt(fetchMenuOfRestaurantDto.page) || 0,
-          size: parseInt(fetchMenuOfRestaurantDto.size) || 10
+          size: parseInt(fetchMenuOfRestaurantDto.size) || 10,
         })
         .toPromise();
 
     const { status, message, data } = fetchMenuOfRestaurantResponse;
     if (status !== HttpStatus.OK) {
-      throw new HttpException({ message, }, status,);
+      throw new HttpException({ message }, status);
     }
     const { results, size, total } = data;
     return {
@@ -52,19 +67,29 @@ export class MenuService {
       data: {
         results,
         size,
-        total
-      }
+        total,
+      },
     };
   }
 
-  async updateMenu(merchantId: string, restaurantId: string, menuId: string, updateMenuDto: UpdateMenuDto): Promise<UpdateMenuResponseDto> {
+  async updateMenu(
+    merchantId: string,
+    restaurantId: string,
+    menuId: string,
+    updateMenuDto: UpdateMenuDto,
+  ): Promise<UpdateMenuResponseDto> {
     const updateMenuResponse: ISimpleResponse = await this.menuServiceClient
-      .send('updateMenu', { merchantId, restaurantId, menuId, data: updateMenuDto })
+      .send('updateMenu', {
+        merchantId,
+        restaurantId,
+        menuId,
+        data: updateMenuDto,
+      })
       .toPromise();
 
     const { status, message } = updateMenuResponse;
     if (status !== HttpStatus.OK) {
-      throw new HttpException({ message, }, status,);
+      throw new HttpException({ message }, status);
     }
 
     return {
@@ -73,25 +98,29 @@ export class MenuService {
     };
   }
 
-  async fetchMenuGroupsAndItems(merchantId: string, restaurantId: string, menuId: string): Promise<FetchMenuGroupsAndItemsResponseDto> {
-    const fetchMenuGroupsAndItemsResponse: IRestaurantServiceFetchMenuGroupsAndItemsResponse
-      = await this.menuServiceClient
+  async fetchMenuGroupsAndItems(
+    merchantId: string,
+    restaurantId: string,
+    menuId: string,
+  ): Promise<FetchMenuGroupsAndItemsResponseDto> {
+    const fetchMenuGroupsAndItemsResponse: IRestaurantServiceFetchMenuGroupsAndItemsResponse =
+      await this.menuServiceClient
         .send('fetchMenuGroupsAndItems', {
           merchantId,
           restaurantId,
-          menuId
+          menuId,
         })
         .toPromise();
 
     const { status, message, data } = fetchMenuGroupsAndItemsResponse;
     if (status !== HttpStatus.OK) {
-      throw new HttpException({ message, }, status,);
+      throw new HttpException({ message }, status);
     }
 
     return {
       statusCode: 200,
       message,
-      data
+      data,
     };
   }
 }

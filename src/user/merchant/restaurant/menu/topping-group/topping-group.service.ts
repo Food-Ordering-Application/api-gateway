@@ -9,43 +9,71 @@ import {
   FetchToppingGroupByMenuResponseDto,
   FetchToppingGroupQuery,
   UpdateToppingGroupDto,
-  UpdateToppingGroupResponseDto
+  UpdateToppingGroupResponseDto,
 } from './dto';
-import { IRestaurantServiceCreateToppingGroupResponse, IRestaurantServiceFetchToppingGroupByMenuResponse } from './interfaces';
+import {
+  IRestaurantServiceCreateToppingGroupResponse,
+  IRestaurantServiceFetchToppingGroupByMenuResponse,
+} from './interfaces';
 
 @Injectable()
 export class ToppingGroupService {
   constructor(
-    @Inject(constants.RESTAURANT_SERVICE) private toppingGroupServiceClient: ClientProxy,
-  ) { }
+    @Inject(constants.RESTAURANT_SERVICE)
+    private toppingGroupServiceClient: ClientProxy,
+  ) {}
 
-  async createToppingGroup(merchantId: string, restaurantId: string, menuId: string, createToppingGroupDto: CreateToppingGroupDto): Promise<CreateToppingGroupResponseDto> {
-    const createToppingGroupResponse: IRestaurantServiceCreateToppingGroupResponse = await this.toppingGroupServiceClient
-      .send('createToppingGroup', { merchantId, restaurantId, menuId, data: createToppingGroupDto })
-      .toPromise();
+  async createToppingGroup(
+    merchantId: string,
+    restaurantId: string,
+    menuId: string,
+    createToppingGroupDto: CreateToppingGroupDto,
+  ): Promise<CreateToppingGroupResponseDto> {
+    const createToppingGroupResponse: IRestaurantServiceCreateToppingGroupResponse =
+      await this.toppingGroupServiceClient
+        .send('createToppingGroup', {
+          merchantId,
+          restaurantId,
+          menuId,
+          data: createToppingGroupDto,
+        })
+        .toPromise();
 
     const { status, message, data } = createToppingGroupResponse;
     if (status !== HttpStatus.CREATED) {
-      throw new HttpException({ message, }, status,);
+      throw new HttpException({ message }, status);
     }
     const { toppingGroup } = data;
     return {
       statusCode: 201,
       message,
       data: {
-        toppingGroup
-      }
+        toppingGroup,
+      },
     };
   }
 
-  async updateToppingGroup(toppingGroupId: string, merchantId: string, restaurantId: string, menuId: string, updateToppingGroupDto: UpdateToppingGroupDto): Promise<UpdateToppingGroupResponseDto> {
-    const updateToppingGroupResponse: ISimpleResponse = await this.toppingGroupServiceClient
-      .send('updateToppingGroup', { toppingGroupId, merchantId, restaurantId, menuId, data: updateToppingGroupDto })
-      .toPromise();
+  async updateToppingGroup(
+    toppingGroupId: string,
+    merchantId: string,
+    restaurantId: string,
+    menuId: string,
+    updateToppingGroupDto: UpdateToppingGroupDto,
+  ): Promise<UpdateToppingGroupResponseDto> {
+    const updateToppingGroupResponse: ISimpleResponse =
+      await this.toppingGroupServiceClient
+        .send('updateToppingGroup', {
+          toppingGroupId,
+          merchantId,
+          restaurantId,
+          menuId,
+          data: updateToppingGroupDto,
+        })
+        .toPromise();
 
     const { status, message } = updateToppingGroupResponse;
     if (status !== HttpStatus.OK) {
-      throw new HttpException({ message, }, status,);
+      throw new HttpException({ message }, status);
     }
 
     return {
@@ -54,14 +82,25 @@ export class ToppingGroupService {
     };
   }
 
-  async deleteToppingGroup(toppingGroupId: string, merchantId: string, restaurantId: string, menuId: string): Promise<DeleteToppingGroupResponseDto> {
-    const deleteToppingGroupResponse: ISimpleResponse = await this.toppingGroupServiceClient
-      .send('deleteToppingGroup', { toppingGroupId, merchantId, restaurantId, menuId })
-      .toPromise();
+  async deleteToppingGroup(
+    toppingGroupId: string,
+    merchantId: string,
+    restaurantId: string,
+    menuId: string,
+  ): Promise<DeleteToppingGroupResponseDto> {
+    const deleteToppingGroupResponse: ISimpleResponse =
+      await this.toppingGroupServiceClient
+        .send('deleteToppingGroup', {
+          toppingGroupId,
+          merchantId,
+          restaurantId,
+          menuId,
+        })
+        .toPromise();
 
     const { status, message } = deleteToppingGroupResponse;
     if (status !== HttpStatus.OK) {
-      throw new HttpException({ message, }, status,);
+      throw new HttpException({ message }, status);
     }
 
     return {
@@ -70,21 +109,27 @@ export class ToppingGroupService {
     };
   }
 
-  async fetchToppingGroup(merchantId: string, restaurantId: string, menuId: string, fetchToppingGroupByMenuQuery: FetchToppingGroupQuery): Promise<FetchToppingGroupByMenuResponseDto> {
-    const fetchToppingGroupResponse: IRestaurantServiceFetchToppingGroupByMenuResponse = await this.toppingGroupServiceClient
-      .send('fetchToppingGroupOfMenu', {
-        merchantId,
-        restaurantId,
-        menuId,
-        page: parseInt(fetchToppingGroupByMenuQuery.page) || 0,
-        size: parseInt(fetchToppingGroupByMenuQuery.size) || 10,
-        search: fetchToppingGroupByMenuQuery.q
-      })
-      .toPromise();
+  async fetchToppingGroup(
+    merchantId: string,
+    restaurantId: string,
+    menuId: string,
+    fetchToppingGroupByMenuQuery: FetchToppingGroupQuery,
+  ): Promise<FetchToppingGroupByMenuResponseDto> {
+    const fetchToppingGroupResponse: IRestaurantServiceFetchToppingGroupByMenuResponse =
+      await this.toppingGroupServiceClient
+        .send('fetchToppingGroupOfMenu', {
+          merchantId,
+          restaurantId,
+          menuId,
+          page: parseInt(fetchToppingGroupByMenuQuery.page) || 0,
+          size: parseInt(fetchToppingGroupByMenuQuery.size) || 10,
+          search: fetchToppingGroupByMenuQuery.q,
+        })
+        .toPromise();
 
     const { status, message, data } = fetchToppingGroupResponse;
     if (status !== HttpStatus.OK) {
-      throw new HttpException({ message, }, status,);
+      throw new HttpException({ message }, status);
     }
     const { results, size, total } = data;
     return {
@@ -93,8 +138,8 @@ export class ToppingGroupService {
       data: {
         results,
         size,
-        total
-      }
+        total,
+      },
     };
   }
 }

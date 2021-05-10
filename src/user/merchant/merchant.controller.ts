@@ -1,5 +1,13 @@
 import {
-  Body, Controller, Get, HttpCode, Logger, Param, Post, Request, UseGuards
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Logger,
+  Param,
+  Post,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -10,14 +18,20 @@ import {
   ApiOkResponse,
   ApiParam,
   ApiTags,
-  ApiUnauthorizedResponse
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { AuthService } from 'src/auth/auth.service';
 import { MerchantJwtRequest } from 'src/auth/strategies/jwt-strategies/merchant-jwt-request.interface';
 import { InternalServerErrorResponseDto } from '../../shared/dto/internal-server-error.dto';
 import {
   CreateMerchantConflictResponseDto,
-  CreateMerchantDto, CreateMerchantResponseDto, FindMerchantByIdResponseDto, FindMerchantByIdUnauthorizedResponseDto, LoginMerchantDto, LoginMerchantResponseDto, LoginMerchantUnauthorizedResponseDto
+  CreateMerchantDto,
+  CreateMerchantResponseDto,
+  FindMerchantByIdResponseDto,
+  FindMerchantByIdUnauthorizedResponseDto,
+  LoginMerchantDto,
+  LoginMerchantResponseDto,
+  LoginMerchantUnauthorizedResponseDto,
 } from '../merchant/dto/index';
 import { MerchantJwtAuthGuard } from './../../auth/guards/jwts/merchant-jwt-auth.guard';
 import { MerchantLocalAuthGuard } from './../../auth/guards/locals/merchant-local-auth.guard';
@@ -32,7 +46,7 @@ export class MerchantController {
   constructor(
     private merchantService: MerchantService,
     private authService: AuthService,
-  ) { }
+  ) {}
 
   // Đăng ký Merchant
   @ApiCreatedResponse({ type: CreateMerchantResponseDto })

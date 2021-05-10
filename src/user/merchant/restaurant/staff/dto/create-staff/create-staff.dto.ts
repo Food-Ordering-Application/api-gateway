@@ -30,4 +30,3 @@ export class CreateStaffDto {
   @IsDateString()
   dateOfBirth: Date;
 }
-

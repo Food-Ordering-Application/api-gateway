@@ -3,7 +3,11 @@ import { IsBoolean, IsNumber, IsString } from 'class-validator';
 import { POSITION_GAP } from './../../../../../../constants';
 
 class UpdateMenuFullDto {
-  @ApiProperty({ example: 'Thực đơn', required: true, description: 'Tên của menu' })
+  @ApiProperty({
+    example: 'Thực đơn',
+    required: true,
+    description: 'Tên của menu',
+  })
   @IsString()
   name: string;
 
@@ -11,8 +15,12 @@ class UpdateMenuFullDto {
   @IsBoolean()
   isActive: boolean;
 
-  @ApiProperty({ example: POSITION_GAP, required: true, description: `Vị trí (index của phần tử cuối cùng + ${POSITION_GAP})` })
+  @ApiProperty({
+    example: POSITION_GAP,
+    required: true,
+    description: `Vị trí (index của phần tử cuối cùng + ${POSITION_GAP})`,
+  })
   @IsNumber()
   index: number;
 }
-export class UpdateMenuDto extends PartialType(UpdateMenuFullDto) { }
+export class UpdateMenuDto extends PartialType(UpdateMenuFullDto) {}

@@ -3,8 +3,8 @@ export interface IUserServiceFetchRestaurantsOfMerchantResponse {
   status: number;
   message: string;
   data: {
-    results: IRestaurantProfile[],
-    total: number,
-    size: number,
+    results: IRestaurantProfile[];
+    total: number;
+    size: number;
   };
 }

@@ -1,4 +1,3 @@
-
 export class IToppingGroup {
   id: string;
   menuId: string;

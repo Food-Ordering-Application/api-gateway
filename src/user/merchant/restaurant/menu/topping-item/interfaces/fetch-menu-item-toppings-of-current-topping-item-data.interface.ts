@@ -1,3 +1,3 @@
 export interface IFetchMenuItemToppingsOfCurrentToppingItemData {
-  results: string[]
+  results: string[];
 }

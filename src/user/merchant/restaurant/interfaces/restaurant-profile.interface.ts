@@ -10,4 +10,3 @@ export interface IRestaurantProfile {
   isActive: boolean;
   isVerified: boolean;
 }
-

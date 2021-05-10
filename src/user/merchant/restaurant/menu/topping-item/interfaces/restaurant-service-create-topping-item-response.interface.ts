@@ -5,5 +5,5 @@ export interface IRestaurantServiceCreateToppingItemResponse {
   message: string;
   data: {
     toppingItem: IToppingItem;
-  }
+  };
 }

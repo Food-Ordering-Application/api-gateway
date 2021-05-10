@@ -1,4 +1,4 @@
-import { IStaffLogin } from ".";
+import { IStaffLogin } from '.';
 
 export interface ILoginPosData {
   user: IStaffLogin;

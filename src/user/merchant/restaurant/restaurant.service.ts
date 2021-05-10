@@ -10,17 +10,21 @@ import { IUserServiceFetchRestaurantsOfMerchantResponse } from './interfaces/use
 export class RestaurantService {
   constructor(
     @Inject(constants.USER_SERVICE) private userServiceClient: ClientProxy,
-    @Inject(constants.RESTAURANT_SERVICE) private restaurantServiceClient: ClientProxy,
-  ) { }
+    @Inject(constants.RESTAURANT_SERVICE)
+    private restaurantServiceClient: ClientProxy,
+  ) {}
 
-  async createRestaurant(merchantId: string, createRestaurantDto: CreateRestaurantDto) {
+  async createRestaurant(
+    merchantId: string,
+    createRestaurantDto: CreateRestaurantDto,
+  ) {
     const isMerchantIdValid: boolean = await this.userServiceClient
       .send('validateMerchantId', merchantId)
       .toPromise();
     if (!isMerchantIdValid) {
       return {
         statusCode: HttpStatus.BAD_REQUEST,
-        message: 'MerchantId is not valid'
+        message: 'MerchantId is not valid',
       };
     }
     const createRestaurantResponse = await this.restaurantServiceClient
@@ -28,28 +32,31 @@ export class RestaurantService {
       .toPromise();
     const { status, message, data } = createRestaurantResponse;
     if (status !== HttpStatus.CREATED) {
-      throw new HttpException({ message, }, status,);
+      throw new HttpException({ message }, status);
     }
     return {
       statusCode: 201,
       message,
-      data
+      data,
     };
   }
 
-  async fetchRestaurantsOfMerchant(merchantId: string, fetchRestaurantsOfMerchantDto: FetchRestaurantDto): Promise<FetchRestaurantsOfMerchantResponseDto> {
-    const fetchRestaurantsOfMerchantResponse: IUserServiceFetchRestaurantsOfMerchantResponse
-      = await this.userServiceClient
+  async fetchRestaurantsOfMerchant(
+    merchantId: string,
+    fetchRestaurantsOfMerchantDto: FetchRestaurantDto,
+  ): Promise<FetchRestaurantsOfMerchantResponseDto> {
+    const fetchRestaurantsOfMerchantResponse: IUserServiceFetchRestaurantsOfMerchantResponse =
+      await this.userServiceClient
         .send('fetchRestaurantsOfMerchant', {
           merchantId,
           page: parseInt(fetchRestaurantsOfMerchantDto.page) || 0,
-          size: parseInt(fetchRestaurantsOfMerchantDto.size) || 10
+          size: parseInt(fetchRestaurantsOfMerchantDto.size) || 10,
         })
         .toPromise();
 
     const { status, message, data } = fetchRestaurantsOfMerchantResponse;
     if (status !== HttpStatus.OK) {
-      throw new HttpException({ message, }, status,);
+      throw new HttpException({ message }, status);
     }
     const { results, size, total } = data;
     return {
@@ -58,8 +65,8 @@ export class RestaurantService {
       data: {
         results,
         size,
-        total
-      }
+        total,
+      },
     };
   }
 }

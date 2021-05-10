@@ -1,4 +1,3 @@
-
 export class IMerchant {
   id: string;
   username: string;

@@ -16,8 +16,8 @@ export class FetchMenuGroupsAndItemsResponseDto {
             {
               id: 'b060a64c-e887-4180-92be-7c0689a966d4',
               name: 'Mì cay',
-            }
-          ]
+            },
+          ],
         },
       ],
     },

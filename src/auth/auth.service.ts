@@ -25,7 +25,7 @@ export class AuthService {
     private adminService: AdminService,
     private posService: PosService,
     private jwtService: JwtService,
-  ) { }
+  ) {}
 
   async validateCustomer(phoneNumber: string, pass: string): Promise<any> {
     const user = await this.customerService.findCustomerByPhoneNumber(
@@ -58,8 +58,14 @@ export class AuthService {
     };
   }
 
-  async validateMerchant(username: string, password: string): Promise<IMerchant> {
-    const user = await this.merchantService.getAuthenticatedMerchant(username, password);
+  async validateMerchant(
+    username: string,
+    password: string,
+  ): Promise<IMerchant> {
+    const user = await this.merchantService.getAuthenticatedMerchant(
+      username,
+      password,
+    );
 
     return user;
   }
@@ -68,7 +74,7 @@ export class AuthService {
     const { id, username } = user;
     const payload: MerchantJwtPayload = {
       merchantId: id,
-      merchantUsername: username
+      merchantUsername: username,
     };
 
     return {
@@ -77,7 +83,7 @@ export class AuthService {
       data: {
         user: {
           id,
-          username
+          username,
         },
         access_token: this.jwtService.sign(payload),
       },
@@ -85,7 +91,10 @@ export class AuthService {
   }
 
   async validateAdmin(username: string, password: string): Promise<IAdmin> {
-    const user = await this.adminService.getAuthenticatedAdmin(username, password);
+    const user = await this.adminService.getAuthenticatedAdmin(
+      username,
+      password,
+    );
 
     return user;
   }
@@ -94,7 +103,7 @@ export class AuthService {
     const { id, username } = user;
     const payload: AdminJwtPayload = {
       adminId: id,
-      adminUsername: username
+      adminUsername: username,
     };
 
     return {
@@ -110,8 +119,16 @@ export class AuthService {
     };
   }
 
-  async validatePos(username: string, password: string, restaurantId: string): Promise<IStaffLogin> {
-    const user = await this.posService.getAuthenticatedStaff(username, password, restaurantId);
+  async validatePos(
+    username: string,
+    password: string,
+    restaurantId: string,
+  ): Promise<IStaffLogin> {
+    const user = await this.posService.getAuthenticatedStaff(
+      username,
+      password,
+      restaurantId,
+    );
 
     return user;
   }
@@ -121,7 +138,7 @@ export class AuthService {
     const payload: PosJwtPayload = {
       staffId: id,
       staffUsername: username,
-      restaurantId: restaurantId
+      restaurantId: restaurantId,
     };
 
     return {
@@ -134,7 +151,7 @@ export class AuthService {
           firstName,
           fullName,
           lastName,
-          restaurantId
+          restaurantId,
         },
         access_token: this.jwtService.sign(payload),
       },

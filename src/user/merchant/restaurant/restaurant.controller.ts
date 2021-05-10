@@ -1,4 +1,14 @@
-import { Controller, Get, Logger, Param, Post, Query, Req, Request, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Logger,
+  Param,
+  Post,
+  Query,
+  Req,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { Payload } from '@nestjs/microservices';
 import {
   ApiBearerAuth,
@@ -8,7 +18,7 @@ import {
   ApiOkResponse,
   ApiQuery,
   ApiTags,
-  ApiUnauthorizedResponse
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { MerchantJwtRequest } from 'src/auth/strategies/jwt-strategies/merchant-jwt-request.interface';
 import { InternalServerErrorResponseDto } from '../../../shared/dto/internal-server-error.dto';
@@ -26,12 +36,12 @@ import { RestaurantService } from './restaurant.service';
 export class RestaurantController {
   private logger = new Logger('RestaurantController');
 
-  constructor(
-    private restaurantService: RestaurantService,
-  ) { }
+  constructor(private restaurantService: RestaurantService) {}
 
   @ApiOkResponse({ type: FetchRestaurantsOfMerchantResponseDto })
-  @ApiUnauthorizedResponse({ type: FetchRestaurantsOfMerchantUnauthorizedResponseDto })
+  @ApiUnauthorizedResponse({
+    type: FetchRestaurantsOfMerchantUnauthorizedResponseDto,
+  })
   @ApiQuery({ type: FetchRestaurantDto, required: false })
   @UseGuards(MerchantJwtAuthGuard)
   @Get()
@@ -49,7 +59,10 @@ export class RestaurantController {
         data: null,
       };
     }
-    return await this.restaurantService.fetchRestaurantsOfMerchant(merchantId, fetchRestaurantByMerchantDto);
+    return await this.restaurantService.fetchRestaurantsOfMerchant(
+      merchantId,
+      fetchRestaurantByMerchantDto,
+    );
   }
 
   @ApiCreatedResponse({ type: CreateRestaurantResponseDto })
@@ -71,6 +84,9 @@ export class RestaurantController {
         data: null,
       };
     }
-    return await this.restaurantService.createRestaurant(merchantId, createRestaurantDto);
+    return await this.restaurantService.createRestaurant(
+      merchantId,
+      createRestaurantDto,
+    );
   }
 }

@@ -1,4 +1,4 @@
-import { IMerchant } from "./merchant.interface";
+import { IMerchant } from './merchant.interface';
 
 export interface IUserServiceFetchMerchantResponse {
   status: number;

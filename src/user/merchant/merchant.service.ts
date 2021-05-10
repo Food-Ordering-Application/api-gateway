@@ -4,47 +4,55 @@ import * as constants from '../../constants';
 import {
   CreateMerchantDto,
   CreateMerchantResponseDto,
-  FindMerchantByIdResponseDto
+  FindMerchantByIdResponseDto,
 } from '../merchant/dto/index';
-import { IMerchant, IUserServiceCreateMerchantResponse, IUserServiceFetchMerchantResponse } from '../merchant/interfaces/index';
+import {
+  IMerchant,
+  IUserServiceCreateMerchantResponse,
+  IUserServiceFetchMerchantResponse,
+} from '../merchant/interfaces/index';
 
 @Injectable()
 export class MerchantService {
-
   constructor(
     @Inject(constants.USER_SERVICE) private userServiceClient: ClientProxy,
-  ) { }
+  ) {}
 
   async createMerchant(
     createMerchantDto: CreateMerchantDto,
   ): Promise<CreateMerchantResponseDto> {
-    const createMerchantResponse: IUserServiceCreateMerchantResponse = await this.userServiceClient
-      .send('createMerchant', createMerchantDto)
-      .toPromise();
+    const createMerchantResponse: IUserServiceCreateMerchantResponse =
+      await this.userServiceClient
+        .send('createMerchant', createMerchantDto)
+        .toPromise();
 
     const { status, message, user } = createMerchantResponse;
     if (status !== HttpStatus.CREATED) {
-      throw new HttpException({ message, }, status,);
+      throw new HttpException({ message }, status);
     }
 
     return {
       statusCode: 201,
       message,
       data: {
-        user
+        user,
       },
     };
   }
 
-  async getAuthenticatedMerchant(username: string, password: string): Promise<IMerchant> {
-    const authenticatedMerchantResponse: IUserServiceFetchMerchantResponse = await this.userServiceClient
-      .send('getAuthenticatedMerchant', { username, password })
-      .toPromise();
+  async getAuthenticatedMerchant(
+    username: string,
+    password: string,
+  ): Promise<IMerchant> {
+    const authenticatedMerchantResponse: IUserServiceFetchMerchantResponse =
+      await this.userServiceClient
+        .send('getAuthenticatedMerchant', { username, password })
+        .toPromise();
     const { message, user, status } = authenticatedMerchantResponse;
     if (status !== HttpStatus.OK) {
       throw new HttpException(
         {
-          message
+          message,
         },
         status,
       );
@@ -52,10 +60,13 @@ export class MerchantService {
     return user;
   }
 
-  async findMerchantById(merchantId: string): Promise<FindMerchantByIdResponseDto> {
-    const findMerchantById: IUserServiceFetchMerchantResponse = await this.userServiceClient
-      .send('findMerchantById', merchantId)
-      .toPromise();
+  async findMerchantById(
+    merchantId: string,
+  ): Promise<FindMerchantByIdResponseDto> {
+    const findMerchantById: IUserServiceFetchMerchantResponse =
+      await this.userServiceClient
+        .send('findMerchantById', merchantId)
+        .toPromise();
 
     const { status, message, user } = findMerchantById;
 
@@ -67,7 +78,7 @@ export class MerchantService {
       statusCode: 200,
       message,
       data: {
-        user
+        user,
       },
     };
   }

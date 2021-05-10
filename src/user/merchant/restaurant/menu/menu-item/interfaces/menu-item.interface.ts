@@ -1,4 +1,3 @@
-
 export class IMenuItem {
   id: string;
   menuId: string;
