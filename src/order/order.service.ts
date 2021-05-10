@@ -19,23 +19,73 @@ import {
   GetOrderDetailResponseDto,
   UpdateOrderItemQuantityDto,
   UpdateOrderItemQuantityResponseDto,
+  PickCustomerAddressResponseDto,
 } from './dto';
-import { ICreateOrderResponse } from './interfaces';
+import { ICreateOrderResponse, IGetAddressResponse } from './interfaces';
 import { IOrdersResponse } from './interfaces/orders-response.interface';
+import { ICustomerAddressResponse } from 'src/user/customer/interfaces';
 
 @Injectable()
 export class OrderService {
   constructor(
     @Inject(constants.ORDER_SERVICE)
     private orderServiceClient: ClientProxy,
-  ) { }
+    @Inject(constants.USER_SERVICE)
+    private userServiceClient: ClientProxy,
+    @Inject(constants.RESTAURANT_SERVICE)
+    private restaurantServiceClient: ClientProxy,
+  ) {}
 
   async createOrderAndFirstOrderItem(
     createOrderDto: CreateOrderDto,
   ): Promise<CreateOrderResponseDto> {
-    const createOrderAndFirstOrderItemResponse: ICreateOrderResponse = await this.orderServiceClient
-      .send('createOrderAndFirstOrderItem', createOrderDto)
-      .toPromise();
+    const { restaurantId, customerId } = createOrderDto;
+    let createOrderAndFirstOrderItemResponse: ICreateOrderResponse;
+    /* Nếu là order Salechannel */
+    if (customerId) {
+      /* Lấy thông tin địa chỉ nhà hàng và thông tin địa chỉ customer */
+      const values = await Promise.all([
+        this.restaurantServiceClient
+          .send('getRestaurantAddressInfo', { restaurantId })
+          .toPromise(),
+        this.userServiceClient
+          .send('getDefaultCustomerAddressInfo', { customerId })
+          .toPromise(),
+      ]);
+      const getRestaurantAddressInfoResponse: IGetAddressResponse = values[0];
+
+      if (getRestaurantAddressInfoResponse.status !== HttpStatus.OK) {
+        throw new HttpException(
+          {
+            message: getRestaurantAddressInfoResponse.message,
+          },
+          getRestaurantAddressInfoResponse.status,
+        );
+      }
+
+      const getCustomerAddressInfoResponse: IGetAddressResponse = values[1];
+
+      if (getCustomerAddressInfoResponse.status !== HttpStatus.OK) {
+        throw new HttpException(
+          {
+            message: getCustomerAddressInfoResponse.message,
+          },
+          getCustomerAddressInfoResponse.status,
+        );
+      }
+
+      createOrderAndFirstOrderItemResponse = await this.orderServiceClient
+        .send('createOrderAndFirstOrderItem', {
+          ...createOrderDto,
+          restaurantGeom: getRestaurantAddressInfoResponse.data.geom,
+          customerGeom: getCustomerAddressInfoResponse.data.geom,
+        })
+        .toPromise();
+    } else {
+      createOrderAndFirstOrderItemResponse = await this.orderServiceClient
+        .send('createOrderAndFirstOrderItem', createOrderDto)
+        .toPromise();
+    }
 
     const { message, order, status } = createOrderAndFirstOrderItemResponse;
 
@@ -264,6 +314,60 @@ export class OrderService {
         status,
       );
     }
+    return {
+      statusCode: status,
+      message,
+      data: {
+        order,
+      },
+    };
+  }
+
+  async pickCustomerAddress(
+    customerId: string,
+    customerAddressId: string,
+    orderId: string,
+  ): Promise<PickCustomerAddressResponseDto> {
+    //TODO: Update địa chỉ mặc định của customer
+    const updateDefaultCustomerAddressResponse: ICustomerAddressResponse = await this.userServiceClient
+      .send('updateDefaultCustomerAddress', {
+        customerId,
+        customerAddressId,
+      })
+      .toPromise();
+
+    const { address } = updateDefaultCustomerAddressResponse;
+    console.log(address);
+
+    if (updateDefaultCustomerAddressResponse.status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: updateDefaultCustomerAddressResponse.message,
+        },
+        updateDefaultCustomerAddressResponse.status,
+      );
+    }
+    //TODO: Update lại thông tin delivery. Tính toán lại shippingFee trả về thông tin order
+    const updateDeliveryAddressResponse: ICreateOrderResponse = await this.orderServiceClient
+      .send('updateDeliveryAddress', {
+        orderId,
+        newAddress: {
+          address: address.address,
+          geom: address.geom,
+        },
+      })
+      .toPromise();
+    const { message, order, status } = updateDeliveryAddressResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message,
+        },
+        status,
+      );
+    }
+
     return {
       statusCode: status,
       message,

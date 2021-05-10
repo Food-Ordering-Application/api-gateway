@@ -15,3 +15,5 @@ export { GetAllRestaurantOrderDto } from './get-all-restaurant-orders.dto';
 export { GetOrderDetailResponseDto } from './get-order-detail-response.dto';
 export { UpdateOrderItemQuantityResponseDto } from './update-orderitem-quantity-response.dto';
 export { UpdateOrderItemQuantityDto } from './update-orderitem-quantity.dto';
+export { PickCustomerAddressResponseDto } from './pick-customer-address-response.dto';
+export { PickCustomerAddressDto } from './pick-customer-address.dto';
