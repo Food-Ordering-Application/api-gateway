@@ -84,6 +84,7 @@ export class OrderController {
     @Body()
     getOrderAssociatedWithCusAndResDto: GetOrderAssociatedWithCusAndResDto,
   ): Promise<GetOrderAssociatedWithCusAndResResponseDto> {
+    console.log('haha');
     return this.orderService.getOrderAssociatedWithCusAndRes(
       getOrderAssociatedWithCusAndResDto,
     );
@@ -198,7 +199,6 @@ export class OrderController {
     updateOrderItemQuantityDto: UpdateOrderItemQuantityDto,
     @Param() params,
   ): Promise<UpdateOrderItemQuantityResponseDto> {
-    //! FIXME
     const { orderId } = params;
     return this.orderService.updateOrderItemQuantity(
       updateOrderItemQuantityDto,
