@@ -5,3 +5,4 @@ export { IRestaurantServiceCreateToppingItemResponse } from './restaurant-servic
 export { IRestaurantServiceFetchToppingItemByMenuResponse } from './restaurant-service-fetch-topping-item-response.interface';
 export { IFetchMenuItemToppingsOfCurrentToppingItemData } from './fetch-menu-item-toppings-of-current-topping-item-data.interface';
 export { IRestaurantServiceFetchMenuItemToppingsOfCurrentToppingItemResponse } from './restaurant-service-fetch-menu-item-toppings-of-current-topping-item-response.interface';
+export { IMenuItemToppingOfToppingItem } from './menu-item-topping-of-topping.interface';

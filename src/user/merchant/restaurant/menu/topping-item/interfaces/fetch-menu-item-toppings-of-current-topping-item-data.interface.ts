@@ -1,3 +1,6 @@
+import { IMenuItemToppingOfToppingItem } from '.';
+
 export interface IFetchMenuItemToppingsOfCurrentToppingItemData {
-  results: string[];
+  toppingItemId: string;
+  results: IMenuItemToppingOfToppingItem[];
 }

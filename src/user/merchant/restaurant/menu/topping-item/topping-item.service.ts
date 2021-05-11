@@ -168,13 +168,10 @@ export class ToppingItemService {
     if (status !== HttpStatus.OK) {
       throw new HttpException({ message }, status);
     }
-    const { results } = data;
     return {
       statusCode: 200,
       message,
-      data: {
-        results,
-      },
+      data,
     };
   }
 
