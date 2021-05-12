@@ -1,24 +1,27 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ValidateNested } from 'class-validator';
-import { Type } from 'class-transformer'
+import { Type } from 'class-transformer';
 import { OrderItem } from './order-item.dto';
 
 export class AddNewItemToOrderDto {
   @ApiProperty({
     example: {
-      menuItemId: '9c7b4cd5-7dc7-48c7-8cc9-661b2e026cda',
-      price: 20000,
-      quantity: 3,
+      menuItemId: 'e8f311bf-4687-451d-b55d-0d5c4b105acd',
+      price: 10000,
+      name: 'Mariela Okuneva',
+      quantity: 2,
       orderItemToppings: [
         {
-          menuItemToppingId: '6d93fafd-6cc8-423c-8147-35e011cd8414',
+          menuItemToppingId: 'e8f311bf-4687-451d-b55d-0d5c4b105acd',
+          name: 'Mariela Okuneva DDS 11',
           quantity: 1,
-          price: 5000,
+          price: 7000,
         },
         {
-          menuItemToppingId: '20228240-d7cd-435a-a8c0-e6b999555a4d',
+          menuItemToppingId: '17478751-c055-4111-9755-f5535e10b7a1',
+          name: 'Mariela Okuneva DDS 22',
           quantity: 1,
-          price: 9000,
+          price: 3000,
         },
       ],
     },

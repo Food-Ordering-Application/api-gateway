@@ -9,16 +9,16 @@ export class UpdateCustomerAddressResponseDto {
   @ApiProperty({
     example: {
       customerAddress: {
-        address:
-          '2581/13 Huỳnh Tấn Phát, Phú Xuân, Nhà Bè, Thành phố Hồ Chí Minh',
+        address: '484 Sư Vạn Hạnh, phường 9, Quận 10, Thành phố Hồ Chí Minh',
         geom: {
           type: 'Point',
-          coordinates: [10.6796076, 106.7497249],
+          coordinates: [10.7669222, 106.6708678],
         },
+        default: true,
         customer: {
-          id: 'cb40c29c-d932-4053-871b-73ba0134f1dc',
+          id: 'da552594-d925-4311-ab2f-303d26abdae1',
         },
-        id: '1206ed93-5960-4b8b-b608-55752c76e2c3',
+        id: '2db97de5-fbd5-4104-9031-acf67bdf7997',
         city: 'TPHCM',
         area: 'TPHCM',
       },

@@ -7,6 +7,9 @@ export class OrderItemTopping {
   @IsNumber()
   quantity?: number;
 
+  @IsString()
+  name?: string;
+
   @IsNumber()
   price?: number;
 }

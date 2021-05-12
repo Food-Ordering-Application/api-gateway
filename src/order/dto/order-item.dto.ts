@@ -4,7 +4,7 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { Type } from 'class-transformer'
+import { Type } from 'class-transformer';
 import { OrderItemTopping } from './order-item-topping.dto';
 
 export class OrderItem {
@@ -16,6 +16,9 @@ export class OrderItem {
 
   @IsNumber()
   quantity?: number;
+
+  @IsString()
+  name?: string;
 
   @IsNumber()
   @IsOptional()
