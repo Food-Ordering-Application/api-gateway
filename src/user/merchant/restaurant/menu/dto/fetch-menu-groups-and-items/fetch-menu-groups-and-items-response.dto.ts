@@ -8,6 +8,7 @@ export class FetchMenuGroupsAndItemsResponseDto {
   message: string;
   @ApiProperty({
     example: {
+      menuId: '5360a64c-e887-4180-92be-7c0689a966d4',
       menuGroups: [
         {
           id: '9103f477-af37-4ec3-9ec1-90d604cdd744',

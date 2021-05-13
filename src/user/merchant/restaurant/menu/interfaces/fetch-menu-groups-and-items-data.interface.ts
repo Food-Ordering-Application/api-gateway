@@ -1,6 +1,7 @@
 import { IMenu } from './menu.interface';
 
 export interface IFetchMenuGroupsAndItemsData {
+  menuId: string;
   menuGroups: {
     id: string;
     name: string;
@@ -8,5 +9,5 @@ export interface IFetchMenuGroupsAndItemsData {
       id: string;
       name: string;
     }[];
-  };
+  }[];
 }
