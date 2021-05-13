@@ -4,7 +4,7 @@ import * as constants from '../../../constants';
 import { CreateRestaurantDto } from './dto/create-restaurant/create-restaurant.dto';
 import { FetchRestaurantsOfMerchantResponseDto } from './dto/fetch-restaurant/fetch-restaurant-response.dto';
 import { FetchRestaurantDto } from './dto/fetch-restaurant/fetch-restaurant.dto';
-import { IUserServiceFetchRestaurantsOfMerchantResponse } from './interfaces/user-service-fetch-restaurants-of-merchant-response.interface';
+import { IRestaurantServiceFetchRestaurantsOfMerchantResponse } from './interfaces/restaurant-service-fetch-restaurants-of-merchant-response.interface';
 
 @Injectable()
 export class RestaurantService {
@@ -45,8 +45,19 @@ export class RestaurantService {
     merchantId: string,
     fetchRestaurantsOfMerchantDto: FetchRestaurantDto,
   ): Promise<FetchRestaurantsOfMerchantResponseDto> {
-    const fetchRestaurantsOfMerchantResponse: IUserServiceFetchRestaurantsOfMerchantResponse =
-      await this.userServiceClient
+    const isMerchantIdValid: boolean = await this.userServiceClient
+      .send('validateMerchantId', merchantId)
+      .toPromise();
+    if (!isMerchantIdValid) {
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        message: 'MerchantId is not valid',
+        data: null,
+      };
+    }
+
+    const fetchRestaurantsOfMerchantResponse: IRestaurantServiceFetchRestaurantsOfMerchantResponse =
+      await this.restaurantServiceClient
         .send('fetchRestaurantsOfMerchant', {
           merchantId,
           page: parseInt(fetchRestaurantsOfMerchantDto.page) || 0,
