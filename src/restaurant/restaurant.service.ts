@@ -5,6 +5,8 @@ import {
   GetRestaurantInformationResponseDto,
   GetSomeRestaurantDto,
   GetSomeRestaurantResponseDto,
+  GetToppingInfoOfAMenuDto,
+  GetToppingInfoOfAMenuResponseDto,
 } from './dto/index';
 import * as constants from '../constants';
 import { ClientProxy } from '@nestjs/microservices';
@@ -20,7 +22,7 @@ export class RestaurantService {
   constructor(
     @Inject(constants.RESTAURANT_SERVICE)
     private restaurantServiceClient: ClientProxy,
-  ) { }
+  ) {}
 
   async getSomeRestaurant(
     getSomeRestaurantDto: GetSomeRestaurantDto,
@@ -105,6 +107,36 @@ export class RestaurantService {
       .toPromise();
 
     const { toppingGroups, message, status } = getMenuInformationResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message,
+        },
+        status,
+      );
+    }
+    return {
+      statusCode: 200,
+      message,
+      data: {
+        toppingGroups,
+      },
+    };
+  }
+
+  async getToppingInfoOfAMenu(
+    getAllRestaurantOrderDto: GetToppingInfoOfAMenuDto,
+    restaurantId: string,
+  ): Promise<GetToppingInfoOfAMenuResponseDto> {
+    const getToppingInfoOfAMenuResponse: IMenuItemToppingResponse = await this.restaurantServiceClient
+      .send('getToppingInfoOfAMenu', {
+        ...getAllRestaurantOrderDto,
+        restaurantId,
+      })
+      .toPromise();
+
+    const { toppingGroups, message, status } = getToppingInfoOfAMenuResponse;
 
     if (status !== HttpStatus.OK) {
       throw new HttpException(

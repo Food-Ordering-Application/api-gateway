@@ -1,13 +1,10 @@
-import { IRestaurant } from '.';
-import { IToppingItem } from './topping-item.interface';
+import { IToppingItem, IMenu } from './index';
 
 export interface IToppingGroup {
   id: string;
-  restaurant?: IRestaurant;
+  menu?: IMenu;
   toppingItems?: IToppingItem[];
-  description?: string;
-  price?: number;
-  maxQuantity?: number;
+  name?: string;
   index?: number;
   isActive?: boolean;
 }

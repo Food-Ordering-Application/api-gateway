@@ -5,6 +5,7 @@ export interface IToppingItem {
   id: string;
   group?: IToppingGroup;
   menuItemToppings: IMenuItemTopping[];
+  name?: string;
   description?: string;
   price?: number;
   maxQuantity?: number;

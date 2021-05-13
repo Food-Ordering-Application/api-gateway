@@ -4,3 +4,5 @@ export { GetRestaurantInformationResponseDto } from './get-restaurant-informatio
 export { GetMenuInformationResponseDto } from './get-menu-information-response.dto';
 export { GetMenuItemToppingInfoResponseDto } from './get-menu-item-topping-info-response.dto';
 export { GetMenuItemToppingDto } from './get-menu-item-topping.dto';
+export { GetToppingInfoOfAMenuResponseDto } from './get-topping-info-of-a-menu-response.dto';
+export { GetToppingInfoOfAMenuDto } from './get-topping-info-of-a-menu.dto';
