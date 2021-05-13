@@ -1,9 +1,11 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import * as constants from '../../../constants';
+import { FetchRestaurantDetailOfMerchantResponseDto } from './dto';
 import { CreateRestaurantDto } from './dto/create-restaurant/create-restaurant.dto';
 import { FetchRestaurantsOfMerchantResponseDto } from './dto/fetch-restaurant/fetch-restaurant-response.dto';
 import { FetchRestaurantDto } from './dto/fetch-restaurant/fetch-restaurant.dto';
+import { IRestaurantServiceFetchRestaurantDetailOfMerchantResponse } from './interfaces';
 import { IRestaurantServiceFetchRestaurantsOfMerchantResponse } from './interfaces/restaurant-service-fetch-restaurants-of-merchant-response.interface';
 
 @Injectable()
@@ -78,6 +80,29 @@ export class RestaurantService {
         size,
         total,
       },
+    };
+  }
+  async fetchRestaurantDetailOfMerchant(
+    restaurantId: string,
+    merchantId: string,
+  ): Promise<FetchRestaurantDetailOfMerchantResponseDto> {
+    const fetchRestaurantDetailResponse: IRestaurantServiceFetchRestaurantDetailOfMerchantResponse =
+      await this.restaurantServiceClient
+        .send('fetchRestaurantDetailOfMerchant', {
+          merchantId,
+          restaurantId,
+        })
+        .toPromise();
+
+    const { status, message, data } = fetchRestaurantDetailResponse;
+    if (status !== HttpStatus.OK) {
+      throw new HttpException({ message }, status);
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message,
+      data,
     };
   }
 }

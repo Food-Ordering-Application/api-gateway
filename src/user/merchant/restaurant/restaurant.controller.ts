@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   Logger,
@@ -15,6 +16,7 @@ import {
   ApiBody,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiQuery,
   ApiTags,
@@ -24,7 +26,11 @@ import { MerchantJwtRequest } from 'src/auth/strategies/jwt-strategies/merchant-
 import { InternalServerErrorResponseDto } from '../../../shared/dto/internal-server-error.dto';
 import { MerchantJwtAuthGuard } from './../../../auth/guards/jwts/merchant-jwt-auth.guard';
 import { MerchantJwtPayload } from './../../../auth/strategies/jwt-strategies/merchant-jwt-payload.interface';
-import { CreateRestaurantResponseDto, FetchRestaurantDto } from './dto';
+import {
+  CreateRestaurantResponseDto,
+  FetchRestaurantDetailOfMerchantResponseDto,
+  FetchRestaurantDto,
+} from './dto';
 import { CreateRestaurantDto } from './dto/create-restaurant/create-restaurant.dto';
 import { FetchRestaurantsOfMerchantResponseDto } from './dto/fetch-restaurant/fetch-restaurant-response.dto';
 import { FetchRestaurantsOfMerchantUnauthorizedResponseDto } from './dto/fetch-restaurant/fetch-restaurant-unauthorized-response.dto';
@@ -87,6 +93,32 @@ export class RestaurantController {
     return await this.restaurantService.createRestaurant(
       merchantId,
       createRestaurantDto,
+    );
+  }
+
+  @ApiOkResponse({ type: FetchRestaurantDetailOfMerchantResponseDto })
+  @ApiNotFoundResponse({
+    type: FetchRestaurantsOfMerchantUnauthorizedResponseDto,
+  })
+  @UseGuards(MerchantJwtAuthGuard)
+  @Get(':restaurantId')
+  async fetchRestaurantDetailOfMerchant(
+    @Request() req: MerchantJwtRequest,
+    @Param('merchantId') merchant,
+    @Param('restaurantId') restaurant,
+  ): Promise<FetchRestaurantDetailOfMerchantResponseDto> {
+    const { user } = req;
+    const { merchantId } = user;
+    if (merchantId !== merchant) {
+      return {
+        statusCode: 403,
+        message: 'Unauthorized',
+        data: null,
+      };
+    }
+    return await this.restaurantService.fetchRestaurantDetailOfMerchant(
+      restaurant,
+      merchantId,
     );
   }
 }
