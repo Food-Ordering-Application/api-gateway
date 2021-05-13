@@ -3,7 +3,12 @@ import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { USER_SERVICE } from 'src/constants';
 import { VerifyRestaurantDto } from './dto/verify-restaurant/verify-restaurant.dto';
-import { IAdmin, IUserServiceFetchAdminResponse } from './interfaces';
+import {
+  IAdmin,
+  IUserServiceFetchAdminResponse,
+  IUserServiceFetchRestaurantProfilesResponse,
+} from './interfaces';
+import { FetchRestaurantDto, FetchRestaurantProfilesResponseDto } from './dto';
 
 @Injectable()
 export class AdminService {
@@ -44,6 +49,33 @@ export class AdminService {
       statusCode: 200,
       message,
       data,
+    };
+  }
+
+  async fetchRestaurantProfiles(
+    fetchRestaurantProfilesDto: FetchRestaurantDto,
+  ): Promise<FetchRestaurantProfilesResponseDto> {
+    const fetchRestaurantProfilesResponse: IUserServiceFetchRestaurantProfilesResponse =
+      await this.userServiceClient
+        .send('fetchRestaurantProfiles', {
+          page: parseInt(fetchRestaurantProfilesDto.page) || 0,
+          size: parseInt(fetchRestaurantProfilesDto.size) || 10,
+        })
+        .toPromise();
+
+    const { status, message, data } = fetchRestaurantProfilesResponse;
+    if (status !== HttpStatus.OK) {
+      throw new HttpException({ message }, status);
+    }
+    const { results, size, total } = data;
+    return {
+      statusCode: 200,
+      message,
+      data: {
+        results,
+        size,
+        total,
+      },
     };
   }
 }

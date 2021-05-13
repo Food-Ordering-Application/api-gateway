@@ -1,5 +1,5 @@
 import { IRestaurantProfile } from './restaurant-profile.interface';
-export interface IUserServiceFetchRestaurantsOfMerchantResponse {
+export interface IUserServiceFetchRestaurantProfilesResponse {
   status: number;
   message: string;
   data: {
