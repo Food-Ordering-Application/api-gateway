@@ -55,20 +55,19 @@ export class RestaurantService {
         .send('getRestaurantInformation', { restaurantId })
         .toPromise();
 
-    if (getRestaurantInformationResponse.status !== HttpStatus.OK) {
+    const { data, message, status } = getRestaurantInformationResponse;
+    if (status !== HttpStatus.OK) {
       throw new HttpException(
         {
-          message: getRestaurantInformationResponse.message,
+          message,
         },
-        getRestaurantInformationResponse.status,
+        status,
       );
     }
     return {
       statusCode: 200,
-      message: getRestaurantInformationResponse.message,
-      data: {
-        restaurant: getRestaurantInformationResponse.restaurant,
-      },
+      message: message,
+      data,
     };
   }
 

@@ -1,5 +1,5 @@
-import { IRestaurant } from './restaurant.interface';
+import { IRestaurantDetail } from './restaurant-detail.interface';
 
 export interface IRestaurantData {
-  restaurant: IRestaurant;
+  restaurant: IRestaurantDetail;
 }
