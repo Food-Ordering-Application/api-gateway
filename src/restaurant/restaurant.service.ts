@@ -80,7 +80,7 @@ export class RestaurantService {
         .send('getMenuInformation', { restaurantId })
         .toPromise();
 
-    const { menu, menuGroups, message, status } = getMenuInformationResponse;
+    const { data, message, status } = getMenuInformationResponse;
 
     if (status !== HttpStatus.OK) {
       throw new HttpException(
@@ -90,13 +90,11 @@ export class RestaurantService {
         status,
       );
     }
+
     return {
-      statusCode: 200,
+      statusCode: status,
       message,
-      data: {
-        menu,
-        menuGroups,
-      },
+      data,
     };
   }
 
