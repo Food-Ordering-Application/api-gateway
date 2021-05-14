@@ -1,13 +1,15 @@
 import { IMenu } from './menu.interface';
 
 export interface IFetchMenuGroupsAndItemsData {
-  menuId: string;
-  menuGroups: {
-    id: string;
-    name: string;
-    menuItems: {
+  menu: {
+    menuId: string;
+    menuGroups: {
       id: string;
       name: string;
+      menuItems: {
+        id: string;
+        name: string;
+      }[];
     }[];
-  }[];
+  };
 }
