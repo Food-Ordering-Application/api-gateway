@@ -10,34 +10,13 @@ export class GetSomeRestaurantResponseDto {
     example: {
       restaurants: [
         {
-          id: '06aa7d41-e33f-4682-9aeb-f4d22a0244a6',
-          name: 'Mr. Hồ Bửu',
+          id: 'fef41594-94b8-469e-82c9-ea8b244693b9',
+          name: 'Quán Ăn Maika',
           coverImageUrl: 'http://lorempixel.com/640/480',
-          address: '16055 Phan Isle',
-          isActive: true,
-          categories: [
-            {
-              id: '06aa7d41-e33f-4682-9aeb-f4d22a0244a6',
-              type: 'CAFEDESSERT',
-            },
-          ],
-        },
-        {
-          id: '19218c09-4441-4ac9-87b4-404d9946c9f3',
-          name: 'Hà Dương',
-          coverImageUrl: 'http://lorempixel.com/640/480',
-          address: '91197 Thủy Villages',
-          isActive: true,
-          categories: [
-            {
-              id: '06aa7d41-e33f-4682-9aeb-f4d22a0244a6',
-              type: 'CAFEDESSERT',
-            },
-            {
-              id: '19218c09-4441-4ac9-87b4-404d9946c9f3',
-              type: 'STREETFOOD',
-            },
-          ],
+          numRate: 40,
+          rating: 4.3,
+          address: '528 Nguyễn Trãi, P. 8, Quận 5, TP. HCM',
+          categories: ['RESTAURANT'],
         },
       ],
     },

@@ -29,21 +29,19 @@ export class RestaurantService {
       await this.restaurantServiceClient
         .send('getSomeRestaurant', getSomeRestaurantDto)
         .toPromise();
-
-    if (getSomeRestaurantResponse.status !== HttpStatus.OK) {
+    const { data, message, status } = getSomeRestaurantResponse;
+    if (status !== HttpStatus.OK) {
       throw new HttpException(
         {
-          message: getSomeRestaurantResponse.message,
+          message,
         },
-        getSomeRestaurantResponse.status,
+        status,
       );
     }
     return {
       statusCode: 200,
-      message: getSomeRestaurantResponse.message,
-      data: {
-        restaurants: getSomeRestaurantResponse.restaurants,
-      },
+      message: message,
+      data,
     };
   }
 
