@@ -21,9 +21,14 @@ import {
   UpdateOrderItemQuantityResponseDto,
   PickCustomerAddressResponseDto,
 } from './dto';
-import { ICreateOrderResponse, IGetAddressResponse } from './interfaces';
-import { IOrdersResponse } from './interfaces/orders-response.interface';
-import { ICustomerAddressResponse } from 'src/user/customer/interfaces';
+import {
+  ICreateOrderResponse,
+  IGetAddressResponse,
+  IOrdersResponse,
+  IGetMenuItemInfoResponse,
+} from './interfaces';
+import { ICustomerAddressResponse } from '../user/customer/interfaces';
+import { transformOrderItem } from './helpers/helpers';
 
 @Injectable()
 export class OrderService {
@@ -39,20 +44,35 @@ export class OrderService {
   async createOrderAndFirstOrderItem(
     createOrderDto: CreateOrderDto,
   ): Promise<CreateOrderResponseDto> {
-    const { restaurantId, customerId } = createOrderDto;
+    const { restaurantId, customerId, orderItem } = createOrderDto;
     let createOrderAndFirstOrderItemResponse: ICreateOrderResponse;
-    /* Nếu là order Salechannel */
+    //TODO: Nếu là order Salechannel
     if (customerId) {
-      /* Lấy thông tin địa chỉ nhà hàng và thông tin địa chỉ customer */
-      const values = await Promise.all([
+      //TODO: Lấy thông tin địa chỉ nhà hàng, name và price của menuItem
+      //TODO: name và price của từng menuItemTopping và thông tin địa chỉ customer
+      const [
+        getRestaurantAddressInfoResponse,
+        getMenuItemInfoResponse,
+        getCustomerAddressInfoResponse,
+      ]: [
+        IGetAddressResponse,
+        IGetMenuItemInfoResponse,
+        IGetAddressResponse,
+      ] = await Promise.all([
         this.restaurantServiceClient
-          .send('getRestaurantAddressInfo', { restaurantId })
+          .send('getRestaurantAddressInfo', {
+            restaurantId,
+          })
+          .toPromise(),
+        this.restaurantServiceClient
+          .send('getMenuItemInfo', {
+            orderItem,
+          })
           .toPromise(),
         this.userServiceClient
           .send('getDefaultCustomerAddressInfo', { customerId })
           .toPromise(),
       ]);
-      const getRestaurantAddressInfoResponse: IGetAddressResponse = values[0];
 
       if (getRestaurantAddressInfoResponse.status !== HttpStatus.OK) {
         throw new HttpException(
@@ -63,7 +83,14 @@ export class OrderService {
         );
       }
 
-      const getCustomerAddressInfoResponse: IGetAddressResponse = values[1];
+      if (getMenuItemInfoResponse.status !== HttpStatus.OK) {
+        throw new HttpException(
+          {
+            message: getMenuItemInfoResponse.message,
+          },
+          getMenuItemInfoResponse.status,
+        );
+      }
 
       if (getCustomerAddressInfoResponse.status !== HttpStatus.OK) {
         throw new HttpException(
@@ -74,6 +101,14 @@ export class OrderService {
         );
       }
 
+      const { menuItemToppings, menuItem } = getMenuItemInfoResponse.data;
+
+      const tfOrderItem = transformOrderItem(
+        menuItemToppings,
+        menuItem,
+        orderItem,
+      );
+
       createOrderAndFirstOrderItemResponse = await this.orderServiceClient
         .send('createOrderAndFirstOrderItem', {
           ...createOrderDto,
@@ -81,11 +116,58 @@ export class OrderService {
           customerGeom: getCustomerAddressInfoResponse.data.geom,
           restaurantAddress: getRestaurantAddressInfoResponse.data.address,
           customerAddress: getCustomerAddressInfoResponse.data.address,
+          orderItem: tfOrderItem,
         })
         .toPromise();
     } else {
+      const [getRestaurantAddressInfoResponse, getMenuItemInfoResponse]: [
+        IGetAddressResponse,
+        IGetMenuItemInfoResponse,
+      ] = await Promise.all([
+        this.restaurantServiceClient
+          .send('getRestaurantAddressInfo', {
+            restaurantId,
+          })
+          .toPromise(),
+        this.restaurantServiceClient
+          .send('getMenuItemInfo', {
+            orderItem,
+          })
+          .toPromise(),
+      ]);
+
+      if (getRestaurantAddressInfoResponse.status !== HttpStatus.OK) {
+        throw new HttpException(
+          {
+            message: getRestaurantAddressInfoResponse.message,
+          },
+          getRestaurantAddressInfoResponse.status,
+        );
+      }
+
+      if (getMenuItemInfoResponse.status !== HttpStatus.OK) {
+        throw new HttpException(
+          {
+            message: getMenuItemInfoResponse.message,
+          },
+          getMenuItemInfoResponse.status,
+        );
+      }
+      const { menuItemToppings, menuItem } = getMenuItemInfoResponse.data;
+
+      const tfOrderItem = transformOrderItem(
+        menuItemToppings,
+        menuItem,
+        orderItem,
+      );
+
       createOrderAndFirstOrderItemResponse = await this.orderServiceClient
-        .send('createOrderAndFirstOrderItem', createOrderDto)
+        .send('createOrderAndFirstOrderItem', {
+          ...createOrderDto,
+          restaurantGeom: getRestaurantAddressInfoResponse.data.geom,
+          restaurantAddress: getRestaurantAddressInfoResponse.data.address,
+          orderItem: tfOrderItem,
+        })
         .toPromise();
     }
 
@@ -111,13 +193,12 @@ export class OrderService {
   async getOrderAssociatedWithCusAndRes(
     getOrderAssociatedWithCusAndResDto: GetOrderAssociatedWithCusAndResDto,
   ): Promise<GetOrderAssociatedWithCusAndResResponseDto> {
-    const getOrderAssociatedWithCusAndResResponse: ICreateOrderResponse =
-      await this.orderServiceClient
-        .send(
-          'getOrderAssociatedWithCusAndRes',
-          getOrderAssociatedWithCusAndResDto,
-        )
-        .toPromise();
+    const getOrderAssociatedWithCusAndResResponse: ICreateOrderResponse = await this.orderServiceClient
+      .send(
+        'getOrderAssociatedWithCusAndRes',
+        getOrderAssociatedWithCusAndResDto,
+      )
+      .toPromise();
 
     const { message, order, status } = getOrderAssociatedWithCusAndResResponse;
 
@@ -142,10 +223,9 @@ export class OrderService {
     addNewItemToOrderDto: AddNewItemToOrderDto,
     orderId: string,
   ): Promise<AddNewItemToOrderResponseDto> {
-    const addNewOrderItemToOrderDtoResponse: ICreateOrderResponse =
-      await this.orderServiceClient
-        .send('addNewItemToOrder', { ...addNewItemToOrderDto, orderId })
-        .toPromise();
+    const addNewOrderItemToOrderDtoResponse: ICreateOrderResponse = await this.orderServiceClient
+      .send('addNewItemToOrder', { ...addNewItemToOrderDto, orderId })
+      .toPromise();
 
     const { message, order, status } = addNewOrderItemToOrderDtoResponse;
 
@@ -170,13 +250,12 @@ export class OrderService {
     reduceOrderItemQuantityDto: ReduceOrderItemQuantityDto,
     orderId: string,
   ): Promise<ReduceOrderItemQuantityResponseDto> {
-    const reduceQuantityOrderItemResponse: ICreateOrderResponse =
-      await this.orderServiceClient
-        .send('reduceOrderItemQuantity', {
-          ...reduceOrderItemQuantityDto,
-          orderId,
-        })
-        .toPromise();
+    const reduceQuantityOrderItemResponse: ICreateOrderResponse = await this.orderServiceClient
+      .send('reduceOrderItemQuantity', {
+        ...reduceOrderItemQuantityDto,
+        orderId,
+      })
+      .toPromise();
     const { message, order, status } = reduceQuantityOrderItemResponse;
     if (status !== HttpStatus.OK) {
       throw new HttpException(
@@ -199,13 +278,12 @@ export class OrderService {
     increaseOrderItemQuantityDto: IncreaseOrderItemQuantityDto,
     orderId: string,
   ): Promise<IncreaseOrderItemQuantityResponseDto> {
-    const increaseOrderItemQuantityResponse: ICreateOrderResponse =
-      await this.orderServiceClient
-        .send('increaseOrderItemQuantity', {
-          ...increaseOrderItemQuantityDto,
-          orderId,
-        })
-        .toPromise();
+    const increaseOrderItemQuantityResponse: ICreateOrderResponse = await this.orderServiceClient
+      .send('increaseOrderItemQuantity', {
+        ...increaseOrderItemQuantityDto,
+        orderId,
+      })
+      .toPromise();
     const { message, order, status } = increaseOrderItemQuantityResponse;
     if (status !== HttpStatus.OK) {
       throw new HttpException(
@@ -228,10 +306,9 @@ export class OrderService {
     removeOrderItemDto: RemoveOrderItemDto,
     orderId: string,
   ): Promise<RemoveOrderItemResponseDto> {
-    const removeOrderItemResponse: ICreateOrderResponse =
-      await this.orderServiceClient
-        .send('removeOrderItem', { ...removeOrderItemDto, orderId })
-        .toPromise();
+    const removeOrderItemResponse: ICreateOrderResponse = await this.orderServiceClient
+      .send('removeOrderItem', { ...removeOrderItemDto, orderId })
+      .toPromise();
 
     const { message, order, status } = removeOrderItemResponse;
 
@@ -255,10 +332,9 @@ export class OrderService {
   async getAllRestaurantOrder(
     getAllRestaurantOrderDto: GetAllRestaurantOrderDto,
   ): Promise<GetAllRestaurantOrderResponseDto> {
-    const getAllRestaurantOrderResponse: IOrdersResponse =
-      await this.orderServiceClient
-        .send('getAllRestaurantOrder', { ...getAllRestaurantOrderDto })
-        .toPromise();
+    const getAllRestaurantOrderResponse: IOrdersResponse = await this.orderServiceClient
+      .send('getAllRestaurantOrder', { ...getAllRestaurantOrderDto })
+      .toPromise();
 
     const { message, orders, status } = getAllRestaurantOrderResponse;
 
@@ -280,10 +356,9 @@ export class OrderService {
   }
 
   async getOrderDetail(orderId: string): Promise<GetOrderDetailResponseDto> {
-    const getAllRestaurantOrderResponse: ICreateOrderResponse =
-      await this.orderServiceClient
-        .send('getOrderDetail', { orderId })
-        .toPromise();
+    const getAllRestaurantOrderResponse: ICreateOrderResponse = await this.orderServiceClient
+      .send('getOrderDetail', { orderId })
+      .toPromise();
 
     const { message, order, status } = getAllRestaurantOrderResponse;
 
@@ -308,13 +383,12 @@ export class OrderService {
     updateOrderItemQuantityDto: UpdateOrderItemQuantityDto,
     orderId: string,
   ): Promise<UpdateOrderItemQuantityResponseDto> {
-    const updateOrderItemQuantityResponse: ICreateOrderResponse =
-      await this.orderServiceClient
-        .send('updateOrderItemQuantity', {
-          ...updateOrderItemQuantityDto,
-          orderId,
-        })
-        .toPromise();
+    const updateOrderItemQuantityResponse: ICreateOrderResponse = await this.orderServiceClient
+      .send('updateOrderItemQuantity', {
+        ...updateOrderItemQuantityDto,
+        orderId,
+      })
+      .toPromise();
     const { message, order, status } = updateOrderItemQuantityResponse;
     if (status !== HttpStatus.OK) {
       throw new HttpException(
@@ -339,13 +413,12 @@ export class OrderService {
     orderId: string,
   ): Promise<PickCustomerAddressResponseDto> {
     //TODO: Update địa chỉ mặc định của customer
-    const updateDefaultCustomerAddressResponse: ICustomerAddressResponse =
-      await this.userServiceClient
-        .send('updateDefaultCustomerAddress', {
-          customerId,
-          customerAddressId,
-        })
-        .toPromise();
+    const updateDefaultCustomerAddressResponse: ICustomerAddressResponse = await this.userServiceClient
+      .send('updateDefaultCustomerAddress', {
+        customerId,
+        customerAddressId,
+      })
+      .toPromise();
 
     const { address } = updateDefaultCustomerAddressResponse;
     console.log(address);
@@ -359,16 +432,15 @@ export class OrderService {
       );
     }
     //TODO: Update lại thông tin delivery. Tính toán lại shippingFee trả về thông tin order
-    const updateDeliveryAddressResponse: ICreateOrderResponse =
-      await this.orderServiceClient
-        .send('updateDeliveryAddress', {
-          orderId,
-          newAddress: {
-            address: address.address,
-            geom: address.geom,
-          },
-        })
-        .toPromise();
+    const updateDeliveryAddressResponse: ICreateOrderResponse = await this.orderServiceClient
+      .send('updateDeliveryAddress', {
+        orderId,
+        newAddress: {
+          address: address.address,
+          geom: address.geom,
+        },
+      })
+      .toPromise();
     const { message, order, status } = updateDeliveryAddressResponse;
 
     if (status !== HttpStatus.OK) {
