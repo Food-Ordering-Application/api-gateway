@@ -79,6 +79,8 @@ export class OrderService {
           ...createOrderDto,
           restaurantGeom: getRestaurantAddressInfoResponse.data.geom,
           customerGeom: getCustomerAddressInfoResponse.data.geom,
+          restaurantAddress: getRestaurantAddressInfoResponse.data.address,
+          customerAddress: getCustomerAddressInfoResponse.data.address,
         })
         .toPromise();
     } else {

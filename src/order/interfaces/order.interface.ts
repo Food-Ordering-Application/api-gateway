@@ -5,7 +5,8 @@ export interface IOrder {
   customerId?: string;
   driverId?: string;
   restaurantId?: string;
-  total?: number;
+  subTotal?: number;
+  grandTotal?: number;
   itemDiscount?: number;
   promoId?: string;
   discount?: number;

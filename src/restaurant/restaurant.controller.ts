@@ -6,6 +6,7 @@ import {
   Post,
   HttpCode,
   Param,
+  Query,
 } from '@nestjs/common';
 import { RestaurantService } from './restaurant.service';
 import {
@@ -15,11 +16,14 @@ import {
   GetMenuItemToppingInfoResponseDto,
   GetMenuItemToppingDto,
   GetSomeRestaurantDto,
+  GetToppingInfoOfAMenuResponseDto,
+  GetToppingInfoOfAMenuDto,
 } from './dto/index';
 import {
   ApiBody,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { InternalServerErrorResponseDto } from 'src/shared/dto/internal-server-error.dto';
@@ -72,6 +76,22 @@ export class RestaurantController {
   ): Promise<GetMenuItemToppingInfoResponseDto> {
     return this.restaurantService.getMenuItemToppingInfo(
       getMenuItemToppingDto.menuItemId,
+    );
+  }
+
+  // Lấy thông tin về Menu, MenuGroup, MenuItems của nhà hàng
+  @ApiOkResponse({ type: GetToppingInfoOfAMenuResponseDto })
+  @ApiQuery({ type: GetToppingInfoOfAMenuDto })
+  @Get('/:restaurantId/get-topping-info')
+  getToppingInfoOfAMenu(
+    @Param() params,
+    @Query()
+    getAllRestaurantOrderDto: GetToppingInfoOfAMenuDto,
+  ): Promise<GetToppingInfoOfAMenuResponseDto> {
+    const { restaurantId } = params;
+    return this.restaurantService.getToppingInfoOfAMenu(
+      getAllRestaurantOrderDto,
+      restaurantId,
     );
   }
 }
