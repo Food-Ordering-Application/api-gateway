@@ -1,4 +1,4 @@
-import { IStaffLogin } from ".";
+import { IStaffLogin } from '.';
 
 export interface IUserServiceLoginPosResponse {
   status: number;

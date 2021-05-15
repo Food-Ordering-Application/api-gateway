@@ -5,5 +5,5 @@ export interface IUserServiceCreateStaffResponse {
   message: string;
   data: {
     staff: IStaff;
-  }
+  };
 }

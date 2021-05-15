@@ -1,4 +1,3 @@
-
 export class IAdmin {
   id: string;
   username: string;

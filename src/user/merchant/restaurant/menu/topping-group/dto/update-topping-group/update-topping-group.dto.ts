@@ -3,11 +3,19 @@ import { IsBoolean, IsNumber, IsString } from 'class-validator';
 import { POSITION_GAP } from '../../../../../../../constants';
 
 export class UpdateToppingGroupFullDto {
-  @ApiProperty({ example: 'Nước sốt', required: true, description: 'Tên nhóm topping' })
+  @ApiProperty({
+    example: 'Nước sốt',
+    required: true,
+    description: 'Tên nhóm topping',
+  })
   @IsString()
   name: string;
 
-  @ApiProperty({ example: POSITION_GAP, required: true, description: `Vị trí (index của phần tử cuối cùng + ${POSITION_GAP})` })
+  @ApiProperty({
+    example: POSITION_GAP,
+    required: true,
+    description: `Vị trí (index của phần tử cuối cùng + ${POSITION_GAP})`,
+  })
   @IsNumber()
   index: number;
 
@@ -16,4 +24,6 @@ export class UpdateToppingGroupFullDto {
   isActive: boolean;
 }
 
-export class UpdateToppingGroupDto extends PartialType(UpdateToppingGroupFullDto) { }
+export class UpdateToppingGroupDto extends PartialType(
+  UpdateToppingGroupFullDto,
+) {}

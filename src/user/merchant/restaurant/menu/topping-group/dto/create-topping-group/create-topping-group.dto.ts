@@ -3,11 +3,19 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsNumber, IsString, IsUUID } from 'class-validator';
 
 export class CreateToppingGroupDto {
-  @ApiProperty({ example: 'Nước sốt', required: true, description: 'Tên nhóm topping' })
+  @ApiProperty({
+    example: 'Nước sốt',
+    required: true,
+    description: 'Tên nhóm topping',
+  })
   @IsString()
   name: string;
 
-  @ApiProperty({ example: POSITION_GAP, required: true, description: `Vị trí (index của phần tử cuối cùng + ${POSITION_GAP})` })
+  @ApiProperty({
+    example: POSITION_GAP,
+    required: true,
+    description: `Vị trí (index của phần tử cuối cùng + ${POSITION_GAP})`,
+  })
   @IsNumber()
   index: number;
 
@@ -15,4 +23,3 @@ export class CreateToppingGroupDto {
   @IsBoolean()
   isActive: boolean;
 }
-

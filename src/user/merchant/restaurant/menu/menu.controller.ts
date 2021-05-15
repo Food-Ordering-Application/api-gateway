@@ -1,5 +1,17 @@
 import { PaginationDto } from './../../../../shared/dto/pagination.dto';
-import { Body, Controller, Get, Logger, Param, Patch, Post, Query, Req, Request, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Logger,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Req,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { Payload } from '@nestjs/microservices';
 import {
   ApiBearerAuth,
@@ -11,13 +23,25 @@ import {
   ApiOkResponse,
   ApiQuery,
   ApiTags,
-  ApiUnauthorizedResponse
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { MerchantJwtRequest } from 'src/auth/strategies/jwt-strategies/merchant-jwt-request.interface';
 import { InternalServerErrorResponseDto } from '../../../../shared/dto/internal-server-error.dto';
 import { MerchantJwtAuthGuard } from '../../../../auth/guards/jwts/merchant-jwt-auth.guard';
 import { MerchantJwtPayload } from '../../../../auth/strategies/jwt-strategies/merchant-jwt-payload.interface';
-import { CreateMenuConflictResponseDto, CreateMenuDto, CreateMenuResponseDto, FetchMenuDto, FetchMenuOfRestaurantResponseDto, FetchMenuOfRestaurantUnauthorizedResponseDto, UpdateMenuDto, UpdateMenuNotFoundResponseDto, UpdateMenuResponseDto } from './dto';
+import {
+  CreateMenuConflictResponseDto,
+  CreateMenuDto,
+  CreateMenuResponseDto,
+  FetchMenuDto,
+  FetchMenuGroupsAndItemsResponseDto,
+  FetchMenuGroupsAndItemsUnauthorizedResponseDto,
+  FetchMenuOfRestaurantResponseDto,
+  FetchMenuOfRestaurantUnauthorizedResponseDto,
+  UpdateMenuDto,
+  UpdateMenuNotFoundResponseDto,
+  UpdateMenuResponseDto,
+} from './dto';
 import { MenuService } from './menu.service';
 
 @ApiTags('merchant/restaurant/menu')
@@ -26,12 +50,12 @@ import { MenuService } from './menu.service';
 export class MenuController {
   private logger = new Logger('MenuController');
 
-  constructor(
-    private menuService: MenuService,
-  ) { }
+  constructor(private menuService: MenuService) {}
 
   @ApiOkResponse({ type: FetchMenuOfRestaurantResponseDto })
-  @ApiUnauthorizedResponse({ type: FetchMenuOfRestaurantUnauthorizedResponseDto })
+  @ApiUnauthorizedResponse({
+    type: FetchMenuOfRestaurantUnauthorizedResponseDto,
+  })
   @ApiQuery({ type: FetchMenuDto, required: false })
   @UseGuards(MerchantJwtAuthGuard)
   @Get()
@@ -50,7 +74,10 @@ export class MenuController {
         data: null,
       };
     }
-    return await this.menuService.fetchMenuOfRestaurant({ ...pagination, restaurantId: restaurant });
+    return await this.menuService.fetchMenuOfRestaurant({
+      ...pagination,
+      restaurantId: restaurant,
+    });
   }
 
   @ApiCreatedResponse({ type: CreateMenuResponseDto })
@@ -74,7 +101,11 @@ export class MenuController {
         data: null,
       };
     }
-    return await this.menuService.createMenu(merchant, restaurant, createMenuDto);
+    return await this.menuService.createMenu(
+      merchant,
+      restaurant,
+      createMenuDto,
+    );
   }
 
   @ApiOkResponse({ type: UpdateMenuResponseDto })
@@ -97,6 +128,39 @@ export class MenuController {
         message: 'Unauthorized',
       };
     }
-    return await this.menuService.updateMenu(merchant, restaurant, menu, updateMenuDto);
+    return await this.menuService.updateMenu(
+      merchant,
+      restaurant,
+      menu,
+      updateMenuDto,
+    );
+  }
+
+  @ApiOkResponse({ type: FetchMenuGroupsAndItemsResponseDto })
+  @ApiUnauthorizedResponse({
+    type: FetchMenuGroupsAndItemsUnauthorizedResponseDto,
+  })
+  @UseGuards(MerchantJwtAuthGuard)
+  @Get(':menuId/menu-groups-and-items')
+  async fetchMenuGroupsAndItems(
+    @Request() req: MerchantJwtRequest,
+    @Param('merchantId') merchant: string,
+    @Param('restaurantId') restaurant: string,
+    @Param('menuId') menu: string,
+  ): Promise<FetchMenuGroupsAndItemsResponseDto> {
+    const { user } = req;
+    const { merchantId } = user;
+    if (merchantId !== merchant) {
+      return {
+        statusCode: 403,
+        message: 'Unauthorized',
+        data: null,
+      };
+    }
+    return await this.menuService.fetchMenuGroupsAndItems(
+      merchant,
+      restaurant,
+      menu,
+    );
   }
 }

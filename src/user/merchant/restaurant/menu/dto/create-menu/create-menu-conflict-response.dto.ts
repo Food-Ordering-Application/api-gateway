@@ -7,7 +7,7 @@ export class CreateMenuConflictResponseDto {
   @ApiProperty({ example: 'Restaurant already has menu', type: 'string' })
   message: string;
   @ApiProperty({
-    example: null
+    example: null,
   })
   data: any;
 }

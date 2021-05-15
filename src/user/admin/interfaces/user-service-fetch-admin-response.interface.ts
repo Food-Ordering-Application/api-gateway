@@ -1,4 +1,4 @@
-import { IAdmin } from "./admin.interface";
+import { IAdmin } from './admin.interface';
 
 export interface IUserServiceFetchAdminResponse {
   status: number;

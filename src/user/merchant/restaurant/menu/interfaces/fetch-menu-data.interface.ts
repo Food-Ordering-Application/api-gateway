@@ -1,4 +1,4 @@
-import { IMenu } from "./menu.interface";
+import { IMenu } from './menu.interface';
 
 export interface IFetchMenuData {
   results: IMenu[];

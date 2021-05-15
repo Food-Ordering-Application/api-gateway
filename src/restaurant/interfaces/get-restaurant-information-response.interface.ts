@@ -1,8 +1,8 @@
-import { IRestaurant } from './restaurant.interface';
-
+import { IRestaurantDetail } from '.';
 export interface IRestaurantResponse {
   status: number;
   message: string;
-  restaurant: IRestaurant | null;
-  // errors: { [key: string]: any };
+  data: {
+    restaurant: IRestaurantDetail | null;
+  };
 }

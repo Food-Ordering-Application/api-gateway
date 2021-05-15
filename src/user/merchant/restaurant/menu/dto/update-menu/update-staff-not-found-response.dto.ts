@@ -1,6 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-;
-
 export class UpdateMenuNotFoundResponseDto {
   @ApiProperty({ example: 404 })
   statusCode: number;

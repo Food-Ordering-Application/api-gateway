@@ -5,7 +5,10 @@ import { IToppingGroupData } from '../../interfaces/create-topping-group-data.in
 export class CreateToppingGroupResponseDto {
   @ApiProperty({ example: 201 })
   statusCode: number;
-  @ApiProperty({ example: 'Topping group created successfully', type: 'string' })
+  @ApiProperty({
+    example: 'Topping group created successfully',
+    type: 'string',
+  })
   message: string;
   @ApiProperty({
     example: {
@@ -14,8 +17,8 @@ export class CreateToppingGroupResponseDto {
         menuId: '148cd922-b73b-47d3-bada-facdf7b4ef54',
         name: 'Nước sốt',
         index: POSITION_GAP,
-        isActive: true
-      }
+        isActive: true,
+      },
     },
   })
   data: IToppingGroupData;

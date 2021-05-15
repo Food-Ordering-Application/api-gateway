@@ -14,8 +14,8 @@ export class CreateMenuGroupResponseDto {
         menuId: '148cd922-b73b-47d3-bada-facdf7b4ef54',
         name: 'Mì',
         index: POSITION_GAP,
-        isActive: true
-      }
+        isActive: true,
+      },
     },
   })
   data: IMenuGroupData;

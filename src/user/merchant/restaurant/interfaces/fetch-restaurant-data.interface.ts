@@ -1,7 +1,7 @@
-import { IRestaurantProfile } from "./restaurant-profile.interface";
+import { IRestaurant } from '.';
 
 export interface IFetchRestaurantData {
-  results: IRestaurantProfile[];
+  results: IRestaurant[];
   total: number;
   size: number;
 }

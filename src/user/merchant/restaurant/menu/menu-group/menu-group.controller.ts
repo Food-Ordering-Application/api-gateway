@@ -1,5 +1,15 @@
 import {
-  Body, Controller, Delete, Get, Logger, Param, Patch, Post, Query, Request, UseGuards
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Logger,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -10,27 +20,42 @@ import {
   ApiOkResponse,
   ApiQuery,
   ApiTags,
-  ApiUnauthorizedResponse
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { InternalServerErrorResponseDto } from '../../../../../shared/dto/internal-server-error.dto';
 import { MerchantJwtAuthGuard } from '../../../../../auth/guards/jwts/merchant-jwt-auth.guard';
 import { MerchantJwtRequest } from '../../../../../auth/strategies/jwt-strategies/merchant-jwt-request.interface';
-import { DeleteMenuGroupNotFoundResponseDto, DeleteMenuGroupResponseDto, FetchMenuGroupQuery, UpdateMenuGroupDto, UpdateMenuGroupNotFoundResponseDto, UpdateMenuGroupResponseDto } from './dto';
-import { CreateMenuGroupConflictResponseDto, CreateMenuGroupDto, CreateMenuGroupResponseDto, FetchMenuGroupByMenuResponseDto, FetchMenuGroupByMenuUnauthorizedResponseDto } from './dto';
+import {
+  DeleteMenuGroupNotFoundResponseDto,
+  DeleteMenuGroupResponseDto,
+  FetchMenuGroupQuery,
+  UpdateMenuGroupDto,
+  UpdateMenuGroupNotFoundResponseDto,
+  UpdateMenuGroupResponseDto,
+} from './dto';
+import {
+  CreateMenuGroupConflictResponseDto,
+  CreateMenuGroupDto,
+  CreateMenuGroupResponseDto,
+  FetchMenuGroupByMenuResponseDto,
+  FetchMenuGroupByMenuUnauthorizedResponseDto,
+} from './dto';
 import { MenuGroupService } from './menu-group.service';
 
 @ApiTags('merchant/restaurant/menu/menu-group')
 @ApiInternalServerErrorResponse({ type: InternalServerErrorResponseDto })
-@Controller('user/merchant/:merchantId/restaurant/:restaurantId/menu/:menuId/menu-group')
+@Controller(
+  'user/merchant/:merchantId/restaurant/:restaurantId/menu/:menuId/menu-group',
+)
 export class MenuGroupController {
   private logger = new Logger('MenuGroupController');
 
-  constructor(
-    private menuGroupService: MenuGroupService,
-  ) { }
+  constructor(private menuGroupService: MenuGroupService) {}
 
   @ApiOkResponse({ type: FetchMenuGroupByMenuResponseDto })
-  @ApiUnauthorizedResponse({ type: FetchMenuGroupByMenuUnauthorizedResponseDto })
+  @ApiUnauthorizedResponse({
+    type: FetchMenuGroupByMenuUnauthorizedResponseDto,
+  })
   @ApiQuery({ type: FetchMenuGroupQuery, required: false })
   @UseGuards(MerchantJwtAuthGuard)
   @Get()
@@ -50,7 +75,12 @@ export class MenuGroupController {
         data: null,
       };
     }
-    return await this.menuGroupService.fetchMenuGroup(merchantId, restaurant, menu, fetchMenuGroupByMenuQuery);
+    return await this.menuGroupService.fetchMenuGroup(
+      merchantId,
+      restaurant,
+      menu,
+      fetchMenuGroupByMenuQuery,
+    );
   }
 
   // Tao menu group
@@ -75,7 +105,12 @@ export class MenuGroupController {
         data: null,
       };
     }
-    return await this.menuGroupService.createMenuGroup(merchantId, restaurant, menu, createMenuGroupDto);
+    return await this.menuGroupService.createMenuGroup(
+      merchantId,
+      restaurant,
+      menu,
+      createMenuGroupDto,
+    );
   }
 
   // Update menu group
@@ -100,7 +135,13 @@ export class MenuGroupController {
         message: 'Unauthorized',
       };
     }
-    return await this.menuGroupService.updateMenuGroup(menuGroup, merchantId, restaurant, menu, updateMenuGroupDto);
+    return await this.menuGroupService.updateMenuGroup(
+      menuGroup,
+      merchantId,
+      restaurant,
+      menu,
+      updateMenuGroupDto,
+    );
   }
 
   // Delete menu group
@@ -123,6 +164,11 @@ export class MenuGroupController {
         message: 'Unauthorized',
       };
     }
-    return await this.menuGroupService.deleteMenuGroup(menuGroup, merchantId, restaurant, menu);
+    return await this.menuGroupService.deleteMenuGroup(
+      menuGroup,
+      merchantId,
+      restaurant,
+      menu,
+    );
   }
 }

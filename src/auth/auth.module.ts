@@ -28,11 +28,17 @@ import { AdminJwtStrategy } from './strategies/jwt-strategies/admin-jwt.strategy
       }),
     }),
   ],
-  providers: [AuthService,
-    CustomerLocalStrategy, CustomerJwtStrategy,
-    MerchantLocalStrategy, MerchantJwtStrategy,
-    AdminLocalStrategy, AdminJwtStrategy,
-    PosLocalStrategy, PosJwtStrategy],
+  providers: [
+    AuthService,
+    CustomerLocalStrategy,
+    CustomerJwtStrategy,
+    MerchantLocalStrategy,
+    MerchantJwtStrategy,
+    AdminLocalStrategy,
+    AdminJwtStrategy,
+    PosLocalStrategy,
+    PosJwtStrategy,
+  ],
   exports: [AuthService],
 })
-export class AuthModule { }
+export class AuthModule {}

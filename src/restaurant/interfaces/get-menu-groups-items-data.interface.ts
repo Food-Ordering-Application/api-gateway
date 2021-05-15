@@ -1,4 +1,4 @@
-import { IMenu, IMenuGroup } from './index';
+import { IMenu, IMenuGroup } from '.';
 
 export interface IGetMenuAndMenuGroupsAndMenuItemsData {
   menu: IMenu;

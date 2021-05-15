@@ -1,9 +1,8 @@
-import { IRestaurant } from './index';
+import { IMenuGroup } from '.';
 
 export interface IMenu {
   id: string;
-  restaurant?: IRestaurant;
-  name?: string;
-  index?: number;
-  isActive?: boolean;
+  restaurantId: string;
+  name: string;
+  menuGroups?: IMenuGroup[];
 }

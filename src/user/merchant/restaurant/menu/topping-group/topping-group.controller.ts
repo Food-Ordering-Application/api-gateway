@@ -1,5 +1,15 @@
 import {
-  Body, Controller, Delete, Get, Logger, Param, Patch, Post, Query, Request, UseGuards
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Logger,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -10,27 +20,42 @@ import {
   ApiOkResponse,
   ApiQuery,
   ApiTags,
-  ApiUnauthorizedResponse
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { InternalServerErrorResponseDto } from '../../../../../shared/dto/internal-server-error.dto';
 import { MerchantJwtAuthGuard } from '../../../../../auth/guards/jwts/merchant-jwt-auth.guard';
 import { MerchantJwtRequest } from '../../../../../auth/strategies/jwt-strategies/merchant-jwt-request.interface';
-import { DeleteToppingGroupNotFoundResponseDto, DeleteToppingGroupResponseDto, FetchToppingGroupQuery, UpdateToppingGroupDto, UpdateToppingGroupNotFoundResponseDto, UpdateToppingGroupResponseDto } from './dto';
-import { CreateToppingGroupConflictResponseDto, CreateToppingGroupDto, CreateToppingGroupResponseDto, FetchToppingGroupByMenuResponseDto, FetchToppingGroupByMenuUnauthorizedResponseDto } from './dto';
+import {
+  DeleteToppingGroupNotFoundResponseDto,
+  DeleteToppingGroupResponseDto,
+  FetchToppingGroupQuery,
+  UpdateToppingGroupDto,
+  UpdateToppingGroupNotFoundResponseDto,
+  UpdateToppingGroupResponseDto,
+} from './dto';
+import {
+  CreateToppingGroupConflictResponseDto,
+  CreateToppingGroupDto,
+  CreateToppingGroupResponseDto,
+  FetchToppingGroupByMenuResponseDto,
+  FetchToppingGroupByMenuUnauthorizedResponseDto,
+} from './dto';
 import { ToppingGroupService } from './topping-group.service';
 
 @ApiTags('merchant/restaurant/menu/topping-group')
 @ApiInternalServerErrorResponse({ type: InternalServerErrorResponseDto })
-@Controller('user/merchant/:merchantId/restaurant/:restaurantId/menu/:menuId/topping-group')
+@Controller(
+  'user/merchant/:merchantId/restaurant/:restaurantId/menu/:menuId/topping-group',
+)
 export class ToppingGroupController {
   private logger = new Logger('ToppingGroupController');
 
-  constructor(
-    private toppingGroupService: ToppingGroupService,
-  ) { }
+  constructor(private toppingGroupService: ToppingGroupService) {}
 
   @ApiOkResponse({ type: FetchToppingGroupByMenuResponseDto })
-  @ApiUnauthorizedResponse({ type: FetchToppingGroupByMenuUnauthorizedResponseDto })
+  @ApiUnauthorizedResponse({
+    type: FetchToppingGroupByMenuUnauthorizedResponseDto,
+  })
   @ApiQuery({ type: FetchToppingGroupQuery, required: false })
   @UseGuards(MerchantJwtAuthGuard)
   @Get()
@@ -50,7 +75,12 @@ export class ToppingGroupController {
         data: null,
       };
     }
-    return await this.toppingGroupService.fetchToppingGroup(merchantId, restaurant, menu, fetchToppingGroupByMenuQuery);
+    return await this.toppingGroupService.fetchToppingGroup(
+      merchantId,
+      restaurant,
+      menu,
+      fetchToppingGroupByMenuQuery,
+    );
   }
 
   // Tao menu group
@@ -75,7 +105,12 @@ export class ToppingGroupController {
         data: null,
       };
     }
-    return await this.toppingGroupService.createToppingGroup(merchantId, restaurant, menu, createToppingGroupDto);
+    return await this.toppingGroupService.createToppingGroup(
+      merchantId,
+      restaurant,
+      menu,
+      createToppingGroupDto,
+    );
   }
 
   // Update menu group
@@ -100,7 +135,13 @@ export class ToppingGroupController {
         message: 'Unauthorized',
       };
     }
-    return await this.toppingGroupService.updateToppingGroup(toppingGroup, merchantId, restaurant, menu, updateToppingGroupDto);
+    return await this.toppingGroupService.updateToppingGroup(
+      toppingGroup,
+      merchantId,
+      restaurant,
+      menu,
+      updateToppingGroupDto,
+    );
   }
 
   // Delete menu group
@@ -123,6 +164,11 @@ export class ToppingGroupController {
         message: 'Unauthorized',
       };
     }
-    return await this.toppingGroupService.deleteToppingGroup(toppingGroup, merchantId, restaurant, menu);
+    return await this.toppingGroupService.deleteToppingGroup(
+      toppingGroup,
+      merchantId,
+      restaurant,
+      menu,
+    );
   }
 }

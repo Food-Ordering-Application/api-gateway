@@ -12,9 +12,9 @@ export class VerifyAppKeyResponseDto {
 
   @ApiProperty({
     example: {
-      restaurantId: "967da9e1-230b-47f6-b482-2154023a7d96",
-      merchantId: "967da9e1-230b-47f6-b482-2154023a7d96"
-    }
+      restaurantId: '967da9e1-230b-47f6-b482-2154023a7d96',
+      merchantId: '967da9e1-230b-47f6-b482-2154023a7d96',
+    },
   })
   data: IVerifyAppKeyResponseData;
 }

@@ -5,10 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { PosJwtPayload } from './pos-jwt-payload.interface';
 
 @Injectable()
-export class PosJwtStrategy extends PassportStrategy(
-  Strategy,
-  'pos-jwt',
-) {
+export class PosJwtStrategy extends PassportStrategy(Strategy, 'pos-jwt') {
   constructor(private configService: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -22,7 +19,7 @@ export class PosJwtStrategy extends PassportStrategy(
     return {
       restaurantId,
       staffId,
-      staffUsername
+      staffUsername,
     };
   }
 }

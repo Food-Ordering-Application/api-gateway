@@ -8,7 +8,7 @@ export class FetchMenuOfRestaurantResponseDto {
   message: string;
   @ApiProperty({
     example: {
-      "results": [
+      results: [
         {
           id: 'b060a64c-e887-4180-92be-7c0689a966d4',
           restaurantId: 'a919dc5a-0652-4253-bedd-21b5df5dd52f',
@@ -17,7 +17,7 @@ export class FetchMenuOfRestaurantResponseDto {
         },
       ],
       size: 10,
-      total: 1
+      total: 1,
     },
     nullable: true,
   })

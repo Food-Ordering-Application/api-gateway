@@ -18,7 +18,12 @@ export class OpenHourDto {
   @IsNumber()
   toMinute: number;
 
-  @ApiProperty({ example: 'Thursday', enum: DaysOfWeek, required: true, description: 'Ngày trong tuần' })
+  @ApiProperty({
+    example: 'Thursday',
+    enum: DaysOfWeek,
+    required: true,
+    description: 'Ngày trong tuần',
+  })
   @IsEnum(DaysOfWeek)
-  day: DaysOfWeek
+  day: DaysOfWeek;
 }

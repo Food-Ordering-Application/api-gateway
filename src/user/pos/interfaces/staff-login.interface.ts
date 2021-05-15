@@ -1,4 +1,3 @@
-
 export class IStaffLogin {
   id: string;
   username: string;

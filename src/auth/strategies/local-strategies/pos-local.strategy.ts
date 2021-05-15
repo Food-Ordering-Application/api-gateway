@@ -6,21 +6,22 @@ import { AuthService } from '../../auth.service';
 import { LoginPosDto } from './../../../user/pos/dto/login-pos/login-pos.dto';
 
 @Injectable()
-export class PosLocalStrategy extends PassportStrategy(
-  Strategy,
-  'pos-local',
-) {
+export class PosLocalStrategy extends PassportStrategy(Strategy, 'pos-local') {
   constructor(private authService: AuthService) {
     super({
       usernameField: 'username',
-      passReqToCallback: true
+      passReqToCallback: true,
     });
   }
 
   async validate(req: { body: LoginPosDto }): Promise<IStaffLogin> {
     const { body } = req;
     const { username, password, restaurantId } = body;
-    const user = await this.authService.validatePos(username, password, restaurantId);
+    const user = await this.authService.validatePos(
+      username,
+      password,
+      restaurantId,
+    );
     if (!user) {
       throw new UnauthorizedException();
     }

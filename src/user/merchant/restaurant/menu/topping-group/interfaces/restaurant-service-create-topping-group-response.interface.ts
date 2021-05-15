@@ -5,5 +5,5 @@ export interface IRestaurantServiceCreateToppingGroupResponse {
   message: string;
   data: {
     toppingGroup: IToppingGroup;
-  }
+  };
 }

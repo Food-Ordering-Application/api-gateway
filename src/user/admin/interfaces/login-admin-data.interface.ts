@@ -1,4 +1,3 @@
-
 export interface ILoginAdminData {
   user: {
     id: string;

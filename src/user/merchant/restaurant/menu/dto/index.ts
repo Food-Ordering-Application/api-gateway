@@ -7,3 +7,5 @@ export { CreateMenuConflictResponseDto } from './create-menu/create-menu-conflic
 export { UpdateMenuDto } from './update-menu/update-menu.dto';
 export { UpdateMenuResponseDto } from './update-menu/update-staff-response.dto';
 export { UpdateMenuNotFoundResponseDto } from './update-menu/update-staff-not-found-response.dto';
+export { FetchMenuGroupsAndItemsResponseDto } from './fetch-menu-groups-and-items/fetch-menu-groups-and-items-response.dto';
+export { FetchMenuGroupsAndItemsUnauthorizedResponseDto } from './fetch-menu-groups-and-items/fetch-menu-groups-and-items-unauthorized-response.dto';

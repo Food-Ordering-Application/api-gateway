@@ -6,3 +6,5 @@ export { CreateRestaurantResponseDto } from './create-restaurant/create-restaura
 export { GeospatialDataDto } from './create-restaurant/geospatial-data.dto';
 export { OpenHoursDataExample } from './create-restaurant/open-hours-data-example';
 export { OpenHourDto } from './create-restaurant/open-hours-data.dto';
+export { FetchRestaurantDetailOfMerchantResponseDto } from './fetch-restaurant-detail/fetch-restaurant-detail-response.dto';
+export { FetchRestaurantDetailOfMerchantUnauthorizedResponseDto } from './fetch-restaurant-detail/fetch-restaurant-detail-unauthorized-response.dto';

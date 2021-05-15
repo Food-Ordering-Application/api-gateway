@@ -5,5 +5,5 @@ export interface IRestaurantServiceCreateMenuItemResponse {
   message: string;
   data: {
     menuItem: IMenuItem;
-  }
+  };
 }

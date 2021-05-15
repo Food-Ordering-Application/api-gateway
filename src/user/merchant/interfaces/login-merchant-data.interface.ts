@@ -1,4 +1,4 @@
-import { IMerchant } from ".";
+import { IMerchant } from '.';
 
 export interface ILoginMerchantData {
   user: {

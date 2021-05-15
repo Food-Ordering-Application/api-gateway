@@ -1,4 +1,4 @@
-import { IRestaurant } from './restaurant.interface';
+import { IRestaurant } from '.';
 
 export interface IRestaurantsData {
   restaurants: IRestaurant[];

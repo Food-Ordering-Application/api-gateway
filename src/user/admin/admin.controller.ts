@@ -1,21 +1,47 @@
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Post,
+  Query,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiInternalServerErrorResponse,
+  ApiOkResponse,
+  ApiQuery,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import { AuthService } from 'src/auth/auth.service';
+import { InternalServerErrorResponseDto } from 'src/shared/dto/internal-server-error.dto';
 import { AdminJwtAuthGuard } from './../../auth/guards/jwts/admin-jwt-auth.guard';
-import { Body, Controller, HttpCode, Post, Request, UseGuards } from "@nestjs/common";
-import { ApiBearerAuth, ApiBody, ApiInternalServerErrorResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
-import { AuthService } from "src/auth/auth.service";
-import { InternalServerErrorResponseDto } from "src/shared/dto/internal-server-error.dto";
 import { AdminLocalAuthGuard } from './../../auth/guards/locals/admin-local-auth.guard';
-import { AdminService } from "./admin.service";
-import { LoginAdminDto, LoginAdminResponseDto, LoginAdminUnauthorizedResponseDto, VerifyRestaurantDto, VerifyRestaurantResponseDto, VerifyRestaurantUnauthorizedResponseDto } from './dto';
+import { AdminService } from './admin.service';
+import {
+  FetchRestaurantDto,
+  FetchRestaurantProfilesResponseDto,
+  FetchRestaurantProfilesUnauthorizedResponseDto,
+  LoginAdminDto,
+  LoginAdminResponseDto,
+  LoginAdminUnauthorizedResponseDto,
+  VerifyRestaurantDto,
+  VerifyRestaurantResponseDto,
+  VerifyRestaurantUnauthorizedResponseDto,
+} from './dto';
 
 @ApiTags('admin')
 @ApiInternalServerErrorResponse({ type: InternalServerErrorResponseDto })
 @Controller('user/admin')
 export class AdminController {
-
   constructor(
     private adminService: AdminService,
-    private authService: AuthService
-  ) { }
+    private authService: AuthService,
+  ) {}
 
   // Đăng nhập Admin
   @ApiOkResponse({ type: LoginAdminResponseDto })
@@ -37,12 +63,22 @@ export class AdminController {
   @HttpCode(200)
   @UseGuards(AdminJwtAuthGuard)
   @Post('/verify-restaurant')
-  async verifyRestaurant(
-    @Body() verifyRestaurantDto: VerifyRestaurantDto,
-  ) {
+  async verifyRestaurant(@Body() verifyRestaurantDto: VerifyRestaurantDto) {
     return await this.adminService.verifyRestaurant(verifyRestaurantDto);
   }
 
-
-
+  @ApiOkResponse({ type: FetchRestaurantProfilesResponseDto })
+  @ApiUnauthorizedResponse({
+    type: FetchRestaurantProfilesUnauthorizedResponseDto,
+  })
+  @ApiQuery({ type: FetchRestaurantDto, required: false })
+  @UseGuards(AdminJwtAuthGuard)
+  @Get('/restaurant')
+  async fetchRestaurantProfiles(
+    @Query() fetchRestaurantProfilesDto: FetchRestaurantDto,
+  ): Promise<FetchRestaurantProfilesResponseDto> {
+    return await this.adminService.fetchRestaurantProfiles(
+      fetchRestaurantProfilesDto,
+    );
+  }
 }

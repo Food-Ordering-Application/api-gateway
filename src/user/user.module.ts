@@ -75,7 +75,7 @@ import { ToppingItemService } from './merchant/restaurant/menu/topping-item/topp
     MenuGroupController,
     MenuItemController,
     ToppingGroupController,
-    ToppingItemController
+    ToppingItemController,
   ],
   providers: [
     CustomerService,
@@ -88,7 +88,7 @@ import { ToppingItemService } from './merchant/restaurant/menu/topping-item/topp
     MenuGroupService,
     MenuItemService,
     ToppingGroupService,
-    ToppingItemService
+    ToppingItemService,
   ],
   exports: [
     CustomerService,
@@ -101,7 +101,7 @@ import { ToppingItemService } from './merchant/restaurant/menu/topping-item/topp
     MenuGroupService,
     MenuItemService,
     ToppingGroupService,
-    ToppingItemService
+    ToppingItemService,
   ],
 })
-export class UserModule { }
+export class UserModule {}

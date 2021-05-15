@@ -1,5 +1,16 @@
 import {
-  Body, Controller, Delete, Get, Logger, Param, Patch, Post, Query, Request, UseGuards
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Logger,
+  Param,
+  Patch,
+  Post,
+  Put,
+  Query,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -10,27 +21,45 @@ import {
   ApiOkResponse,
   ApiQuery,
   ApiTags,
-  ApiUnauthorizedResponse
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { InternalServerErrorResponseDto } from '../../../../../shared/dto/internal-server-error.dto';
 import { MerchantJwtAuthGuard } from '../../../../../auth/guards/jwts/merchant-jwt-auth.guard';
 import { MerchantJwtRequest } from '../../../../../auth/strategies/jwt-strategies/merchant-jwt-request.interface';
-import { DeleteToppingItemNotFoundResponseDto, DeleteToppingItemResponseDto, FetchToppingItemQuery, UpdateToppingItemDto, UpdateToppingItemNotFoundResponseDto, UpdateToppingItemResponseDto } from './dto';
-import { CreateToppingItemConflictResponseDto, CreateToppingItemDto, CreateToppingItemResponseDto, FetchToppingItemByMenuResponseDto, FetchToppingItemByMenuUnauthorizedResponseDto } from './dto';
+import { InternalServerErrorResponseDto } from '../../../../../shared/dto/internal-server-error.dto';
+import {
+  CreateToppingItemConflictResponseDto,
+  CreateToppingItemDto,
+  CreateToppingItemResponseDto,
+  DeleteToppingItemNotFoundResponseDto,
+  DeleteToppingItemResponseDto,
+  FetchMenuItemToppingsOfCurrentToppingItemResponseDto,
+  FetchMenuItemToppingsOfCurrentToppingItemUnauthorizedResponseDto,
+  FetchToppingItemByMenuResponseDto,
+  FetchToppingItemByMenuUnauthorizedResponseDto,
+  FetchToppingItemQuery,
+  UpdateMenuItemToppingsOfCurrentToppingItemDto,
+  UpdateMenuItemToppingsOfCurrentToppingItemNotFoundResponseDto,
+  UpdateMenuItemToppingsOfCurrentToppingItemResponseDto,
+  UpdateToppingItemDto,
+  UpdateToppingItemNotFoundResponseDto,
+  UpdateToppingItemResponseDto,
+} from './dto';
 import { ToppingItemService } from './topping-item.service';
 
 @ApiTags('merchant/restaurant/menu/topping-item')
 @ApiInternalServerErrorResponse({ type: InternalServerErrorResponseDto })
-@Controller('user/merchant/:merchantId/restaurant/:restaurantId/menu/:menuId/topping-item')
+@Controller(
+  'user/merchant/:merchantId/restaurant/:restaurantId/menu/:menuId/topping-item',
+)
 export class ToppingItemController {
   private logger = new Logger('ToppingItemController');
 
-  constructor(
-    private toppingItemService: ToppingItemService,
-  ) { }
+  constructor(private toppingItemService: ToppingItemService) {}
 
   @ApiOkResponse({ type: FetchToppingItemByMenuResponseDto })
-  @ApiUnauthorizedResponse({ type: FetchToppingItemByMenuUnauthorizedResponseDto })
+  @ApiUnauthorizedResponse({
+    type: FetchToppingItemByMenuUnauthorizedResponseDto,
+  })
   @ApiQuery({ type: FetchToppingItemQuery, required: false })
   @UseGuards(MerchantJwtAuthGuard)
   @Get()
@@ -50,7 +79,12 @@ export class ToppingItemController {
         data: null,
       };
     }
-    return await this.toppingItemService.fetchToppingItem(merchantId, restaurant, menu, fetchToppingItemByMenuQuery);
+    return await this.toppingItemService.fetchToppingItem(
+      merchantId,
+      restaurant,
+      menu,
+      fetchToppingItemByMenuQuery,
+    );
   }
 
   // Tao topping item
@@ -75,7 +109,12 @@ export class ToppingItemController {
         data: null,
       };
     }
-    return await this.toppingItemService.createToppingItem(merchantId, restaurant, menu, createToppingItemDto);
+    return await this.toppingItemService.createToppingItem(
+      merchantId,
+      restaurant,
+      menu,
+      createToppingItemDto,
+    );
   }
 
   // Update topping item
@@ -100,7 +139,13 @@ export class ToppingItemController {
         message: 'Unauthorized',
       };
     }
-    return await this.toppingItemService.updateToppingItem(toppingItem, merchantId, restaurant, menu, updateToppingItemDto);
+    return await this.toppingItemService.updateToppingItem(
+      toppingItem,
+      merchantId,
+      restaurant,
+      menu,
+      updateToppingItemDto,
+    );
   }
 
   // Delete topping item
@@ -123,6 +168,76 @@ export class ToppingItemController {
         message: 'Unauthorized',
       };
     }
-    return await this.toppingItemService.deleteToppingItem(toppingItem, merchantId, restaurant, menu);
+    return await this.toppingItemService.deleteToppingItem(
+      toppingItem,
+      merchantId,
+      restaurant,
+      menu,
+    );
+  }
+
+  @ApiOkResponse({ type: FetchMenuItemToppingsOfCurrentToppingItemResponseDto })
+  @ApiUnauthorizedResponse({
+    type: FetchMenuItemToppingsOfCurrentToppingItemUnauthorizedResponseDto,
+  })
+  @UseGuards(MerchantJwtAuthGuard)
+  @Get(':toppingItemId/menu-item')
+  async fetchMenuItemToppingsOfCurrentToppingItem(
+    @Request() req: MerchantJwtRequest,
+    @Param('merchantId') merchant: string,
+    @Param('restaurantId') restaurant: string,
+    @Param('menuId') menu: string,
+    @Param('toppingItemId') toppingItem: string,
+  ): Promise<FetchMenuItemToppingsOfCurrentToppingItemResponseDto> {
+    const { user } = req;
+    const { merchantId } = user;
+    if (merchantId !== merchant) {
+      return {
+        statusCode: 403,
+        message: 'Unauthorized',
+        data: null,
+      };
+    }
+    return await this.toppingItemService.fetchMenuItemToppingsOfCurrentToppingItem(
+      merchantId,
+      restaurant,
+      menu,
+      toppingItem,
+    );
+  }
+
+  // Update menu item toppings
+  @ApiOkResponse({
+    type: UpdateMenuItemToppingsOfCurrentToppingItemResponseDto,
+  })
+  @ApiNotFoundResponse({
+    type: UpdateMenuItemToppingsOfCurrentToppingItemNotFoundResponseDto,
+  })
+  @ApiBody({ type: UpdateMenuItemToppingsOfCurrentToppingItemDto })
+  @UseGuards(MerchantJwtAuthGuard)
+  @Put(':toppingItemId/menu-item')
+  async updateMenuToppingsOfCurrentToppingItem(
+    @Request() req: MerchantJwtRequest,
+    @Param('merchantId') merchant,
+    @Param('restaurantId') restaurant,
+    @Param('menuId') menu,
+    @Param('toppingItemId') toppingItem,
+    @Body() updateToppingItemDto: UpdateMenuItemToppingsOfCurrentToppingItemDto,
+  ): Promise<UpdateMenuItemToppingsOfCurrentToppingItemResponseDto> {
+    const { user } = req;
+    const { merchantId } = user;
+    if (merchantId !== merchant) {
+      return {
+        statusCode: 403,
+        message: 'Unauthorized',
+      };
+    }
+    return await this.toppingItemService.updateMenuToppingsOfCurrentToppingItem(
+      toppingItem,
+      merchantId,
+      restaurant,
+      menu,
+      updateToppingItemDto,
+    );
   }
 }

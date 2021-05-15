@@ -5,5 +5,5 @@ export interface IRestaurantServiceCreateMenuGroupResponse {
   message: string;
   data: {
     menuGroup: IMenuGroup;
-  }
+  };
 }
