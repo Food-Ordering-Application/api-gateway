@@ -12,13 +12,7 @@ export class OrderItem {
   menuItemId?: string;
 
   @IsNumber()
-  price?: number;
-
-  @IsNumber()
   quantity?: number;
-
-  @IsString()
-  name?: string;
 
   @IsNumber()
   @IsOptional()

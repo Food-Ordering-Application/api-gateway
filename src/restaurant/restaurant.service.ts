@@ -27,10 +27,9 @@ export class RestaurantService {
   async getSomeRestaurant(
     getSomeRestaurantDto: GetSomeRestaurantDto,
   ): Promise<GetSomeRestaurantResponseDto> {
-    const getSomeRestaurantResponse: IRestaurantsResponse =
-      await this.restaurantServiceClient
-        .send('getSomeRestaurant', getSomeRestaurantDto)
-        .toPromise();
+    const getSomeRestaurantResponse: IRestaurantsResponse = await this.restaurantServiceClient
+      .send('getSomeRestaurant', getSomeRestaurantDto)
+      .toPromise();
     const { data, message, status } = getSomeRestaurantResponse;
     if (status !== HttpStatus.OK) {
       throw new HttpException(
@@ -50,10 +49,9 @@ export class RestaurantService {
   async getRestaurantInformation(
     restaurantId,
   ): Promise<GetRestaurantInformationResponseDto> {
-    const getRestaurantInformationResponse: IRestaurantResponse =
-      await this.restaurantServiceClient
-        .send('getRestaurantInformation', { restaurantId })
-        .toPromise();
+    const getRestaurantInformationResponse: IRestaurantResponse = await this.restaurantServiceClient
+      .send('getRestaurantInformation', { restaurantId })
+      .toPromise();
 
     const { data, message, status } = getRestaurantInformationResponse;
     if (status !== HttpStatus.OK) {
@@ -74,10 +72,9 @@ export class RestaurantService {
   async getMenuInformation(
     restaurantId,
   ): Promise<GetMenuInformationResponseDto> {
-    const getMenuInformationResponse: IMenuInformationResponse =
-      await this.restaurantServiceClient
-        .send('getMenuInformation', { restaurantId })
-        .toPromise();
+    const getMenuInformationResponse: IMenuInformationResponse = await this.restaurantServiceClient
+      .send('getMenuInformation', { restaurantId })
+      .toPromise();
 
     const { data, message, status } = getMenuInformationResponse;
 
@@ -104,10 +101,9 @@ export class RestaurantService {
   async getMenuItemToppingInfo(
     menuItemId,
   ): Promise<GetMenuItemToppingInfoResponseDto> {
-    const getMenuInformationResponse: IMenuItemToppingResponse =
-      await this.restaurantServiceClient
-        .send('getMenuItemToppingInfo', { menuItemId })
-        .toPromise();
+    const getMenuInformationResponse: IMenuItemToppingResponse = await this.restaurantServiceClient
+      .send('getMenuItemToppingInfo', { menuItemId })
+      .toPromise();
 
     const { toppingGroups, message, status } = getMenuInformationResponse;
 
