@@ -2,8 +2,11 @@ import { AuthService } from './../../auth/auth.service';
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
+  Param,
   Post,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -17,6 +20,7 @@ import {
 import { InternalServerErrorResponseDto } from 'src/shared/dto/internal-server-error.dto';
 import { PosLocalAuthGuard } from './../../auth/guards/locals/pos-local-auth.guard';
 import {
+  FetchDto,
   LoginPosDto,
   LoginPosResponseDto,
   LoginPosUnauthorizedResponseDto,
@@ -25,6 +29,8 @@ import {
   VerifyAppKeyUnauthorizedResponseDto,
 } from './dto';
 import { PosService } from './pos.service';
+import { PosJwtAuthGuard } from 'src/auth/guards/jwts/pos-jwt-auth.guard';
+import { PosJwtRequest } from 'src/auth/strategies/jwt-strategies/pos-jwt-request.interface';
 
 @ApiTags('pos')
 @ApiInternalServerErrorResponse({ type: InternalServerErrorResponseDto })
@@ -60,5 +66,86 @@ export class PosController {
     @Body() verifyAppKeyDto: VerifyAppKeyDto,
   ): Promise<VerifyAppKeyResponseDto> {
     return await this.posService.verifyAppKey(verifyAppKeyDto);
+  }
+
+  @UseGuards(PosJwtAuthGuard)
+  @Get('/menu')
+  async fetchMenuOfRestaurant(@Request() req: PosJwtRequest) {
+    const { user } = req;
+    const { restaurantId } = user;
+    return await this.posService.fetchMenuOfRestaurant(restaurantId);
+  }
+
+  @UseGuards(PosJwtAuthGuard)
+  @Get('/menu/:menuId/menu-item')
+  async fetchMenuItem(
+    @Request() req: PosJwtRequest,
+    @Param('menuId') menu,
+    @Query() fetchDto: FetchDto,
+  ) {
+    const { user } = req;
+    const { restaurantId } = user;
+
+    return await this.posService.fetchMenuItem(restaurantId, menu, fetchDto);
+  }
+
+  @UseGuards(PosJwtAuthGuard)
+  @Get('/menu/:menuId/menu-group')
+  async fetchMenuGroup(
+    @Request() req: PosJwtRequest,
+    @Param('menuId') menu,
+    @Query() fetchDto: FetchDto,
+  ) {
+    const { user } = req;
+    const { restaurantId } = user;
+
+    return await this.posService.fetchMenuGroup(restaurantId, menu, fetchDto);
+  }
+
+  @UseGuards(PosJwtAuthGuard)
+  @Get('/menu/:menuId/topping-item')
+  async fetchToppingItem(
+    @Request() req: PosJwtRequest,
+    @Param('menuId') menu,
+    @Query() fetchDto: FetchDto,
+  ) {
+    const { user } = req;
+    const { restaurantId } = user;
+
+    return await this.posService.fetchToppingItem(restaurantId, menu, fetchDto);
+  }
+
+  @UseGuards(PosJwtAuthGuard)
+  @Get('/menu/:menuId/topping-group')
+  async fetchToppingGroup(
+    @Request() req: PosJwtRequest,
+    @Param('menuId') menu,
+    @Query() fetchDto: FetchDto,
+  ) {
+    const { user } = req;
+    const { restaurantId } = user;
+
+    return await this.posService.fetchToppingGroup(
+      restaurantId,
+      menu,
+      fetchDto,
+    );
+  }
+
+  @UseGuards(PosJwtAuthGuard)
+  @Get('/menu/:menuId/menu-item-topping')
+  async fetchMenuItemTopping(
+    @Request() req: PosJwtRequest,
+    @Param('menuId') menu,
+    @Query() fetchDto: FetchDto,
+  ) {
+    const { user } = req;
+    const { restaurantId } = user;
+
+    return await this.posService.fetchMenuItemTopping(
+      restaurantId,
+      menu,
+      fetchDto,
+    );
   }
 }
