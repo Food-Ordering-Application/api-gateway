@@ -47,6 +47,7 @@ export class AdminController {
   @ApiOkResponse({ type: LoginAdminResponseDto })
   @ApiUnauthorizedResponse({ type: LoginAdminUnauthorizedResponseDto })
   @ApiBody({ type: LoginAdminDto })
+  @ApiBearerAuth()
   @UseGuards(AdminLocalAuthGuard)
   @HttpCode(200)
   @Post('/login')
@@ -60,8 +61,8 @@ export class AdminController {
   })
   @ApiBody({ type: VerifyRestaurantDto })
   @ApiBearerAuth()
-  @HttpCode(200)
   @UseGuards(AdminJwtAuthGuard)
+  @HttpCode(200)
   @Post('/verify-restaurant')
   async verifyRestaurant(@Body() verifyRestaurantDto: VerifyRestaurantDto) {
     return await this.adminService.verifyRestaurant(verifyRestaurantDto);
@@ -72,6 +73,7 @@ export class AdminController {
     type: FetchRestaurantProfilesUnauthorizedResponseDto,
   })
   @ApiQuery({ type: FetchRestaurantDto, required: false })
+  @ApiBearerAuth()
   @UseGuards(AdminJwtAuthGuard)
   @Get('/restaurant')
   async fetchRestaurantProfiles(

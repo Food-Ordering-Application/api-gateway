@@ -11,6 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
@@ -53,6 +54,7 @@ export class PosController {
   @ApiOkResponse({ type: LoginPosResponseDto })
   @ApiUnauthorizedResponse({ type: LoginPosUnauthorizedResponseDto })
   @ApiBody({ type: LoginPosDto })
+  @ApiBearerAuth()
   @UseGuards(PosLocalAuthGuard)
   @HttpCode(200)
   @Post('/login')
@@ -81,6 +83,7 @@ export class PosController {
     type: FetchMenuInformationUnauthorizedResponseDto,
   })
   @ApiQuery({ type: FetchDto, required: false })
+  @ApiBearerAuth()
   @UseGuards(PosJwtAuthGuard)
   @Get('/menu')
   async fetchMenuOfRestaurant(@Request() req: PosJwtRequest) {
@@ -94,6 +97,7 @@ export class PosController {
     type: FetchMenuInformationUnauthorizedResponseDto,
   })
   @ApiQuery({ type: FetchDto, required: false })
+  @ApiBearerAuth()
   @UseGuards(PosJwtAuthGuard)
   @Get('/menu/:menuId/menu-item')
   async fetchMenuItem(
@@ -112,6 +116,7 @@ export class PosController {
     type: FetchMenuInformationUnauthorizedResponseDto,
   })
   @ApiQuery({ type: FetchDto, required: false })
+  @ApiBearerAuth()
   @UseGuards(PosJwtAuthGuard)
   @Get('/menu/:menuId/menu-group')
   async fetchMenuGroup(
@@ -130,6 +135,7 @@ export class PosController {
     type: FetchMenuInformationUnauthorizedResponseDto,
   })
   @ApiQuery({ type: FetchDto, required: false })
+  @ApiBearerAuth()
   @UseGuards(PosJwtAuthGuard)
   @Get('/menu/:menuId/topping-item')
   async fetchToppingItem(
@@ -148,6 +154,7 @@ export class PosController {
     type: FetchMenuInformationUnauthorizedResponseDto,
   })
   @ApiQuery({ type: FetchDto, required: false })
+  @ApiBearerAuth()
   @UseGuards(PosJwtAuthGuard)
   @Get('/menu/:menuId/topping-group')
   async fetchToppingGroup(
@@ -170,6 +177,7 @@ export class PosController {
     type: FetchMenuInformationUnauthorizedResponseDto,
   })
   @ApiQuery({ type: FetchDto, required: false })
+  @ApiBearerAuth()
   @UseGuards(PosJwtAuthGuard)
   @Get('/menu/:menuId/menu-item-topping')
   async fetchMenuItemTopping(

@@ -63,6 +63,7 @@ export class MerchantController {
   @ApiOkResponse({ type: LoginMerchantResponseDto })
   @ApiUnauthorizedResponse({ type: LoginMerchantUnauthorizedResponseDto })
   @ApiBody({ type: LoginMerchantDto })
+  @ApiBearerAuth()
   @UseGuards(MerchantLocalAuthGuard)
   @HttpCode(200)
   @Post('/login')
@@ -73,12 +74,12 @@ export class MerchantController {
   // Fetch merchant data
   @ApiOkResponse({ type: FindMerchantByIdResponseDto })
   @ApiUnauthorizedResponse({ type: FindMerchantByIdUnauthorizedResponseDto })
-  @ApiBearerAuth()
   @ApiParam({
     name: 'merchantId',
     type: 'String',
     required: true,
   })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Get('/:merchantId')
   async findMerchantById(

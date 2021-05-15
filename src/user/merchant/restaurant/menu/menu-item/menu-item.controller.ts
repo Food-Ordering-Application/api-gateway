@@ -12,6 +12,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiConflictResponse,
   ApiCreatedResponse,
@@ -55,6 +56,7 @@ export class MenuItemController {
   @ApiOkResponse({ type: FetchMenuItemByMenuResponseDto })
   @ApiUnauthorizedResponse({ type: FetchMenuItemByMenuUnauthorizedResponseDto })
   @ApiQuery({ type: FetchMenuItemQuery, required: false })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Get()
   async fetchMenuItem(
@@ -85,6 +87,7 @@ export class MenuItemController {
   @ApiCreatedResponse({ type: CreateMenuItemResponseDto })
   @ApiConflictResponse({ type: CreateMenuItemConflictResponseDto })
   @ApiBody({ type: CreateMenuItemDto })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Post()
   async createMenuItem(
@@ -115,6 +118,7 @@ export class MenuItemController {
   @ApiOkResponse({ type: UpdateMenuItemResponseDto })
   @ApiNotFoundResponse({ type: UpdateMenuItemNotFoundResponseDto })
   @ApiBody({ type: UpdateMenuItemDto })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Patch(':menuItemId')
   async updateMenuItem(
@@ -145,6 +149,7 @@ export class MenuItemController {
   // Delete menu item
   @ApiOkResponse({ type: DeleteMenuItemResponseDto })
   @ApiNotFoundResponse({ type: DeleteMenuItemNotFoundResponseDto })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Delete(':menuItemId')
   async deleteMenuItem(

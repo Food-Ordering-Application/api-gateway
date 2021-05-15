@@ -57,6 +57,7 @@ export class MenuController {
     type: FetchMenuOfRestaurantUnauthorizedResponseDto,
   })
   @ApiQuery({ type: FetchMenuDto, required: false })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Get()
   async fetchMenuOfRestaurant(
@@ -111,6 +112,7 @@ export class MenuController {
   @ApiOkResponse({ type: UpdateMenuResponseDto })
   @ApiNotFoundResponse({ type: UpdateMenuNotFoundResponseDto })
   @ApiBody({ type: UpdateMenuDto })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Patch(':menuId')
   async updateMenu(
@@ -140,6 +142,7 @@ export class MenuController {
   @ApiUnauthorizedResponse({
     type: FetchMenuGroupsAndItemsUnauthorizedResponseDto,
   })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Get(':menuId/menu-groups-and-items')
   async fetchMenuGroupsAndItems(

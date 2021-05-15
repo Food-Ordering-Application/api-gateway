@@ -13,6 +13,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiConflictResponse,
   ApiCreatedResponse,
@@ -61,6 +62,7 @@ export class ToppingItemController {
     type: FetchToppingItemByMenuUnauthorizedResponseDto,
   })
   @ApiQuery({ type: FetchToppingItemQuery, required: false })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Get()
   async fetchToppingItem(
@@ -91,6 +93,7 @@ export class ToppingItemController {
   @ApiCreatedResponse({ type: CreateToppingItemResponseDto })
   @ApiConflictResponse({ type: CreateToppingItemConflictResponseDto })
   @ApiBody({ type: CreateToppingItemDto })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Post()
   async createToppingItem(
@@ -121,6 +124,7 @@ export class ToppingItemController {
   @ApiOkResponse({ type: UpdateToppingItemResponseDto })
   @ApiNotFoundResponse({ type: UpdateToppingItemNotFoundResponseDto })
   @ApiBody({ type: UpdateToppingItemDto })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Patch(':toppingItemId')
   async updateToppingItem(
@@ -151,6 +155,7 @@ export class ToppingItemController {
   // Delete topping item
   @ApiOkResponse({ type: DeleteToppingItemResponseDto })
   @ApiNotFoundResponse({ type: DeleteToppingItemNotFoundResponseDto })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Delete(':toppingItemId')
   async deleteToppingItem(
@@ -180,6 +185,7 @@ export class ToppingItemController {
   @ApiUnauthorizedResponse({
     type: FetchMenuItemToppingsOfCurrentToppingItemUnauthorizedResponseDto,
   })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Get(':toppingItemId/menu-item')
   async fetchMenuItemToppingsOfCurrentToppingItem(
@@ -214,6 +220,7 @@ export class ToppingItemController {
     type: UpdateMenuItemToppingsOfCurrentToppingItemNotFoundResponseDto,
   })
   @ApiBody({ type: UpdateMenuItemToppingsOfCurrentToppingItemDto })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Put(':toppingItemId/menu-item')
   async updateMenuToppingsOfCurrentToppingItem(

@@ -12,6 +12,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiConflictResponse,
   ApiCreatedResponse,
@@ -57,6 +58,7 @@ export class MenuGroupController {
     type: FetchMenuGroupByMenuUnauthorizedResponseDto,
   })
   @ApiQuery({ type: FetchMenuGroupQuery, required: false })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Get()
   async fetchMenuGroup(
@@ -87,6 +89,7 @@ export class MenuGroupController {
   @ApiCreatedResponse({ type: CreateMenuGroupResponseDto })
   @ApiConflictResponse({ type: CreateMenuGroupConflictResponseDto })
   @ApiBody({ type: CreateMenuGroupDto })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Post()
   async createMenuGroup(
@@ -117,6 +120,7 @@ export class MenuGroupController {
   @ApiOkResponse({ type: UpdateMenuGroupResponseDto })
   @ApiNotFoundResponse({ type: UpdateMenuGroupNotFoundResponseDto })
   @ApiBody({ type: UpdateMenuGroupDto })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Patch(':menuGroupId')
   async updateMenuGroup(
@@ -147,6 +151,7 @@ export class MenuGroupController {
   // Delete menu group
   @ApiOkResponse({ type: DeleteMenuGroupResponseDto })
   @ApiNotFoundResponse({ type: DeleteMenuGroupNotFoundResponseDto })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Delete(':menuGroupId')
   async deleteMenuGroup(
