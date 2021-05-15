@@ -23,11 +23,12 @@ import {
 } from './dto';
 import {
   ICreateOrderResponse,
-  IGetAddressAndMenuItemResponse,
   IGetAddressResponse,
   IOrdersResponse,
+  IGetMenuItemInfoResponse,
 } from './interfaces';
 import { ICustomerAddressResponse } from '../user/customer/interfaces';
+import { transformOrderItem } from './helpers/helpers';
 
 @Injectable()
 export class OrderService {
@@ -45,13 +46,26 @@ export class OrderService {
   ): Promise<CreateOrderResponseDto> {
     const { restaurantId, customerId, orderItem } = createOrderDto;
     let createOrderAndFirstOrderItemResponse: ICreateOrderResponse;
-    /* Nếu là order Salechannel */
+    //TODO: Nếu là order Salechannel
     if (customerId) {
-      /* Lấy thông tin địa chỉ nhà hàng và thông tin địa chỉ customer */
-      const values = await Promise.all([
+      //TODO: Lấy thông tin địa chỉ nhà hàng, name và price của menuItem
+      //TODO: name và price của từng menuItemTopping và thông tin địa chỉ customer
+      const [
+        getRestaurantAddressInfoResponse,
+        getMenuItemInfoResponse,
+        getCustomerAddressInfoResponse,
+      ]: [
+        IGetAddressResponse,
+        IGetMenuItemInfoResponse,
+        IGetAddressResponse,
+      ] = await Promise.all([
         this.restaurantServiceClient
-          .send('getRestaurantAddressInfoAndMenuItemInfo', {
+          .send('getRestaurantAddressInfo', {
             restaurantId,
+          })
+          .toPromise(),
+        this.restaurantServiceClient
+          .send('getMenuItemInfo', {
             orderItem,
           })
           .toPromise(),
@@ -59,8 +73,6 @@ export class OrderService {
           .send('getDefaultCustomerAddressInfo', { customerId })
           .toPromise(),
       ]);
-      const getRestaurantAddressInfoResponse: IGetAddressAndMenuItemResponse =
-        values[0];
 
       if (getRestaurantAddressInfoResponse.status !== HttpStatus.OK) {
         throw new HttpException(
@@ -71,7 +83,14 @@ export class OrderService {
         );
       }
 
-      const getCustomerAddressInfoResponse: IGetAddressResponse = values[1];
+      if (getMenuItemInfoResponse.status !== HttpStatus.OK) {
+        throw new HttpException(
+          {
+            message: getMenuItemInfoResponse.message,
+          },
+          getMenuItemInfoResponse.status,
+        );
+      }
 
       if (getCustomerAddressInfoResponse.status !== HttpStatus.OK) {
         throw new HttpException(
@@ -82,33 +101,13 @@ export class OrderService {
         );
       }
 
-      const {
+      const { menuItemToppings, menuItem } = getMenuItemInfoResponse.data;
+
+      const tfOrderItem = transformOrderItem(
         menuItemToppings,
         menuItem,
-      } = getRestaurantAddressInfoResponse.data;
-
-      const transformOrderItemToppings = orderItem.orderItemToppings.map(
-        (orderItemTopping) => {
-          const findMenuItemToppingInfo = menuItemToppings.find(
-            (menuItemToppingInfo) =>
-              menuItemToppingInfo.id === orderItemTopping.menuItemToppingId,
-          );
-          return {
-            ...orderItemTopping,
-            name: findMenuItemToppingInfo.name,
-            price: findMenuItemToppingInfo.price,
-          };
-        },
+        orderItem,
       );
-
-      const transformOrderItem = {
-        ...orderItem,
-        name: menuItem.name,
-        price: menuItem.price,
-        orderItemToppings: transformOrderItemToppings,
-      };
-
-      console.log(transformOrderItem);
 
       createOrderAndFirstOrderItemResponse = await this.orderServiceClient
         .send('createOrderAndFirstOrderItem', {
@@ -117,15 +116,58 @@ export class OrderService {
           customerGeom: getCustomerAddressInfoResponse.data.geom,
           restaurantAddress: getRestaurantAddressInfoResponse.data.address,
           customerAddress: getCustomerAddressInfoResponse.data.address,
-          // menuItemInfo: getRestaurantAddressInfoResponse.data.menuItem,
-          // menuItemToppingsInfo:
-          //   getRestaurantAddressInfoResponse.data.menuItemToppings,
-          orderItem: transformOrderItem,
+          orderItem: tfOrderItem,
         })
         .toPromise();
     } else {
+      const [getRestaurantAddressInfoResponse, getMenuItemInfoResponse]: [
+        IGetAddressResponse,
+        IGetMenuItemInfoResponse,
+      ] = await Promise.all([
+        this.restaurantServiceClient
+          .send('getRestaurantAddressInfo', {
+            restaurantId,
+          })
+          .toPromise(),
+        this.restaurantServiceClient
+          .send('getMenuItemInfo', {
+            orderItem,
+          })
+          .toPromise(),
+      ]);
+
+      if (getRestaurantAddressInfoResponse.status !== HttpStatus.OK) {
+        throw new HttpException(
+          {
+            message: getRestaurantAddressInfoResponse.message,
+          },
+          getRestaurantAddressInfoResponse.status,
+        );
+      }
+
+      if (getMenuItemInfoResponse.status !== HttpStatus.OK) {
+        throw new HttpException(
+          {
+            message: getMenuItemInfoResponse.message,
+          },
+          getMenuItemInfoResponse.status,
+        );
+      }
+      const { menuItemToppings, menuItem } = getMenuItemInfoResponse.data;
+
+      const tfOrderItem = transformOrderItem(
+        menuItemToppings,
+        menuItem,
+        orderItem,
+      );
+
       createOrderAndFirstOrderItemResponse = await this.orderServiceClient
-        .send('createOrderAndFirstOrderItem', createOrderDto)
+        .send('createOrderAndFirstOrderItem', {
+          ...createOrderDto,
+          restaurantGeom: getRestaurantAddressInfoResponse.data.geom,
+          restaurantAddress: getRestaurantAddressInfoResponse.data.address,
+          orderItem: tfOrderItem,
+        })
         .toPromise();
     }
 
