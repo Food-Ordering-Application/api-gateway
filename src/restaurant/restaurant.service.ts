@@ -87,11 +87,15 @@ export class RestaurantService {
         status,
       );
     }
-
+    const { menu } = data;
+    const { menuGroups, ...newMenu } = menu;
     return {
       statusCode: status,
       message,
-      data,
+      data: {
+        menu: newMenu,
+        menuGroups,
+      },
     };
   }
 
