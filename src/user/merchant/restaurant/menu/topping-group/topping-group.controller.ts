@@ -12,6 +12,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiConflictResponse,
   ApiCreatedResponse,
@@ -57,6 +58,7 @@ export class ToppingGroupController {
     type: FetchToppingGroupByMenuUnauthorizedResponseDto,
   })
   @ApiQuery({ type: FetchToppingGroupQuery, required: false })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Get()
   async fetchToppingGroup(
@@ -87,6 +89,7 @@ export class ToppingGroupController {
   @ApiCreatedResponse({ type: CreateToppingGroupResponseDto })
   @ApiConflictResponse({ type: CreateToppingGroupConflictResponseDto })
   @ApiBody({ type: CreateToppingGroupDto })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Post()
   async createToppingGroup(
@@ -117,6 +120,7 @@ export class ToppingGroupController {
   @ApiOkResponse({ type: UpdateToppingGroupResponseDto })
   @ApiNotFoundResponse({ type: UpdateToppingGroupNotFoundResponseDto })
   @ApiBody({ type: UpdateToppingGroupDto })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Patch(':toppingGroupId')
   async updateToppingGroup(
@@ -147,6 +151,7 @@ export class ToppingGroupController {
   // Delete menu group
   @ApiOkResponse({ type: DeleteToppingGroupResponseDto })
   @ApiNotFoundResponse({ type: DeleteToppingGroupNotFoundResponseDto })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Delete(':toppingGroupId')
   async deleteToppingGroup(
