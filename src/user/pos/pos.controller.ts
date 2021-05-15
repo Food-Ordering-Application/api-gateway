@@ -14,6 +14,7 @@ import {
   ApiBody,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
+  ApiQuery,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -21,6 +22,13 @@ import { InternalServerErrorResponseDto } from 'src/shared/dto/internal-server-e
 import { PosLocalAuthGuard } from './../../auth/guards/locals/pos-local-auth.guard';
 import {
   FetchDto,
+  FetchMenuGroupOfRestaurantResponseDto,
+  FetchMenuInformationUnauthorizedResponseDto,
+  FetchMenuItemOfRestaurantResponseDto,
+  FetchMenuItemToppingOfRestaurantResponseDto,
+  FetchMenuResponseDto,
+  FetchToppingGroupOfRestaurantResponseDto,
+  FetchToppingItemOfRestaurantResponseDto,
   LoginPosDto,
   LoginPosResponseDto,
   LoginPosUnauthorizedResponseDto,
@@ -68,6 +76,11 @@ export class PosController {
     return await this.posService.verifyAppKey(verifyAppKeyDto);
   }
 
+  @ApiOkResponse({ type: FetchMenuResponseDto })
+  @ApiUnauthorizedResponse({
+    type: FetchMenuInformationUnauthorizedResponseDto,
+  })
+  @ApiQuery({ type: FetchDto, required: false })
   @UseGuards(PosJwtAuthGuard)
   @Get('/menu')
   async fetchMenuOfRestaurant(@Request() req: PosJwtRequest) {
@@ -76,6 +89,11 @@ export class PosController {
     return await this.posService.fetchMenuOfRestaurant(restaurantId);
   }
 
+  @ApiOkResponse({ type: FetchMenuItemOfRestaurantResponseDto })
+  @ApiUnauthorizedResponse({
+    type: FetchMenuInformationUnauthorizedResponseDto,
+  })
+  @ApiQuery({ type: FetchDto, required: false })
   @UseGuards(PosJwtAuthGuard)
   @Get('/menu/:menuId/menu-item')
   async fetchMenuItem(
@@ -89,6 +107,11 @@ export class PosController {
     return await this.posService.fetchMenuItem(restaurantId, menu, fetchDto);
   }
 
+  @ApiOkResponse({ type: FetchMenuGroupOfRestaurantResponseDto })
+  @ApiUnauthorizedResponse({
+    type: FetchMenuInformationUnauthorizedResponseDto,
+  })
+  @ApiQuery({ type: FetchDto, required: false })
   @UseGuards(PosJwtAuthGuard)
   @Get('/menu/:menuId/menu-group')
   async fetchMenuGroup(
@@ -102,6 +125,11 @@ export class PosController {
     return await this.posService.fetchMenuGroup(restaurantId, menu, fetchDto);
   }
 
+  @ApiOkResponse({ type: FetchToppingItemOfRestaurantResponseDto })
+  @ApiUnauthorizedResponse({
+    type: FetchMenuInformationUnauthorizedResponseDto,
+  })
+  @ApiQuery({ type: FetchDto, required: false })
   @UseGuards(PosJwtAuthGuard)
   @Get('/menu/:menuId/topping-item')
   async fetchToppingItem(
@@ -115,6 +143,11 @@ export class PosController {
     return await this.posService.fetchToppingItem(restaurantId, menu, fetchDto);
   }
 
+  @ApiOkResponse({ type: FetchToppingGroupOfRestaurantResponseDto })
+  @ApiUnauthorizedResponse({
+    type: FetchMenuInformationUnauthorizedResponseDto,
+  })
+  @ApiQuery({ type: FetchDto, required: false })
   @UseGuards(PosJwtAuthGuard)
   @Get('/menu/:menuId/topping-group')
   async fetchToppingGroup(
@@ -132,6 +165,11 @@ export class PosController {
     );
   }
 
+  @ApiOkResponse({ type: FetchMenuItemToppingOfRestaurantResponseDto })
+  @ApiUnauthorizedResponse({
+    type: FetchMenuInformationUnauthorizedResponseDto,
+  })
+  @ApiQuery({ type: FetchDto, required: false })
   @UseGuards(PosJwtAuthGuard)
   @Get('/menu/:menuId/menu-item-topping')
   async fetchMenuItemTopping(
