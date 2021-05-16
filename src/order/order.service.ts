@@ -223,8 +223,36 @@ export class OrderService {
     addNewItemToOrderDto: AddNewItemToOrderDto,
     orderId: string,
   ): Promise<AddNewItemToOrderResponseDto> {
+    //TODO: Lấy thông tin name và price của món được gửi lên + topping nếu có
+    const getMenuItemInfoResponse: IGetMenuItemInfoResponse = await this.restaurantServiceClient
+      .send('getMenuItemInfo', {
+        orderItem: addNewItemToOrderDto.sendItem,
+      })
+      .toPromise();
+
+    if (getMenuItemInfoResponse.status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: getMenuItemInfoResponse.message,
+        },
+        getMenuItemInfoResponse.status,
+      );
+    }
+    const { menuItemToppings, menuItem } = getMenuItemInfoResponse.data;
+
+    const tfOrderItem = transformOrderItem(
+      menuItemToppings,
+      menuItem,
+      addNewItemToOrderDto.sendItem,
+    );
+
+    //TODO: Thêm món đó vào order
     const addNewOrderItemToOrderDtoResponse: ICreateOrderResponse = await this.orderServiceClient
-      .send('addNewItemToOrder', { ...addNewItemToOrderDto, orderId })
+      .send('addNewItemToOrder', {
+        ...addNewItemToOrderDto,
+        sendItem: tfOrderItem,
+        orderId,
+      })
       .toPromise();
 
     const { message, order, status } = addNewOrderItemToOrderDtoResponse;
