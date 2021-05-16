@@ -33,6 +33,7 @@ import {
   LoginPosDto,
   LoginPosResponseDto,
   LoginPosUnauthorizedResponseDto,
+  SavePosOrderDto,
   VerifyAppKeyDto,
   VerifyAppKeyResponseDto,
   VerifyAppKeyUnauthorizedResponseDto,
@@ -193,5 +194,11 @@ export class PosController {
       menu,
       fetchDto,
     );
+  }
+
+  @UseGuards(PosJwtAuthGuard)
+  @Post('/order/save-order')
+  async saveOrder(@Body() savePosOrderDto: SavePosOrderDto) {
+    return await this.posService.savePosOrder(savePosOrderDto);
   }
 }
