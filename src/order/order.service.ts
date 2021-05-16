@@ -73,7 +73,7 @@ export class OrderService {
           .send('getDefaultCustomerAddressInfo', { customerId })
           .toPromise(),
       ]);
-
+      console.log('CALL 2 service');
       if (getRestaurantAddressInfoResponse.status !== HttpStatus.OK) {
         throw new HttpException(
           {
@@ -101,6 +101,8 @@ export class OrderService {
         );
       }
 
+      console.log('In CreateOrder Route 1');
+
       const { menuItemToppings, menuItem } = getMenuItemInfoResponse.data;
 
       const tfOrderItem = transformOrderItem(
@@ -119,6 +121,8 @@ export class OrderService {
           orderItem: tfOrderItem,
         })
         .toPromise();
+
+      console.log('Successfully Sent');
     } else {
       const [getRestaurantAddressInfoResponse, getMenuItemInfoResponse]: [
         IGetAddressResponse,
