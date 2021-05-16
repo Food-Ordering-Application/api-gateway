@@ -49,6 +49,7 @@ export class RestaurantController {
     type: FetchRestaurantsOfMerchantUnauthorizedResponseDto,
   })
   @ApiQuery({ type: FetchRestaurantDto, required: false })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Get()
   async fetchRestaurantsOfMerchant(
@@ -100,6 +101,7 @@ export class RestaurantController {
   @ApiNotFoundResponse({
     type: FetchRestaurantsOfMerchantUnauthorizedResponseDto,
   })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Get(':restaurantId')
   async fetchRestaurantDetailOfMerchant(

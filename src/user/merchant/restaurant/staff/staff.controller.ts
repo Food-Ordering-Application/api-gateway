@@ -12,6 +12,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiConflictResponse,
   ApiCreatedResponse,
@@ -55,6 +56,7 @@ export class StaffController {
     type: FetchStaffByMerchantUnauthorizedResponseDto,
   })
   @ApiQuery({ type: FetchStaffDto, required: false })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Get()
   async fetchStaff(
@@ -83,6 +85,7 @@ export class StaffController {
   @ApiCreatedResponse({ type: CreateStaffResponseDto })
   @ApiConflictResponse({ type: CreateStaffConflictResponseDto })
   @ApiBody({ type: CreateStaffDto })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Post()
   async createStaff(
@@ -111,6 +114,7 @@ export class StaffController {
   @ApiOkResponse({ type: UpdateStaffResponseDto })
   @ApiNotFoundResponse({ type: UpdateStaffNotFoundResponseDto })
   @ApiBody({ type: UpdateStaffDto })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Patch(':staffId')
   async updateStaff(
@@ -139,6 +143,7 @@ export class StaffController {
   // Delete nhan vien
   @ApiOkResponse({ type: DeleteStaffResponseDto })
   @ApiNotFoundResponse({ type: DeleteStaffNotFoundResponseDto })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Delete(':staffId')
   async deleteStaff(
