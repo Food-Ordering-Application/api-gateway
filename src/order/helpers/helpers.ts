@@ -1,4 +1,5 @@
 export const transformOrderItem = (menuItemToppings, menuItem, orderItem) => {
+  console.log('MenuItemToppings', menuItemToppings);
   console.log('OrderItem', orderItem);
   //? Nếu orderItem ko có topping
   if (
