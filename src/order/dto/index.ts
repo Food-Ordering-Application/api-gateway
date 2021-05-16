@@ -17,3 +17,4 @@ export { UpdateOrderItemQuantityResponseDto } from './update-orderitem-quantity-
 export { UpdateOrderItemQuantityDto } from './update-orderitem-quantity.dto';
 export { PickCustomerAddressResponseDto } from './pick-customer-address-response.dto';
 export { PickCustomerAddressDto } from './pick-customer-address.dto';
+export { OrderItem } from './order-item.dto';
