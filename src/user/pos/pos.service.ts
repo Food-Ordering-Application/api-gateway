@@ -6,10 +6,12 @@ import { IRestaurantServiceFetchMenuItemByMenuResponse } from '../merchant/resta
 import {
   FetchDto,
   SavePosOrderDto,
+  SavePosOrderResponseDto,
   VerifyAppKeyDto,
   VerifyAppKeyResponseDto,
 } from './dto';
 import {
+  IOrderServiceSavePosOrderResponse,
   IStaffLogin,
   IUserServiceLoginPosResponse,
   IUserServiceVerifyAppKeyResponse,
@@ -254,11 +256,13 @@ export class PosService {
     };
   }
 
-  async savePosOrder(savePosOrderDto: SavePosOrderDto) {
+  async savePosOrder(
+    savePosOrderDto: SavePosOrderDto,
+  ): Promise<SavePosOrderResponseDto> {
     const { order } = savePosOrderDto;
-    const saveOrderResponse = await this.orderServiceClient
-      .send('savePosOrder', { order })
-      .toPromise();
+    const saveOrderResponse: IOrderServiceSavePosOrderResponse =
+      await this.orderServiceClient.send('savePosOrder', { order }).toPromise();
+
     const { status, message, data } = saveOrderResponse;
 
     if (status !== HttpStatus.OK) {
