@@ -8,9 +8,7 @@ export class SavePosOrderResponseDto {
   @ApiProperty({ example: 'Save order successfully', type: 'string' })
   message: string;
   @ApiProperty({
-    example: {
-      SavePosOrderExample,
-    },
+    example: SavePosOrderExample,
     nullable: true,
   })
   data: ISavePosOrderData;
