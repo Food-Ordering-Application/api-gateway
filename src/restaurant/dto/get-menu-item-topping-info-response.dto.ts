@@ -13,153 +13,61 @@ export class GetMenuItemToppingInfoResponseDto {
     example: {
       toppingGroups: [
         {
-          id: 'a018d218-6125-4e20-8796-d75e02734875',
-          name: 'Moises Senger',
-          index: 1,
-          isActive: true,
+          id: '6d6403dc-297f-48f4-a17e-3c290bc697dd',
+          name: 'Kenneth Doyle',
           toppingItems: [
             {
-              id: 'f9871bbd-e1c9-4fd6-9d12-428d35b22e30',
-              description: 'Laborum amet harum nulla voluptatum est.',
-              price: 95827,
-              maxQuantity: 3,
-              index: 1,
-              isActive: true,
-              menuItemToppings: [
-                {
-                  id: 'eee5a379-5775-4b85-bfa0-0dc88e6078f7',
-                  customPrice: 15031,
-                },
-              ],
-            },
-            {
-              id: '432564ab-a503-4636-b3ef-7ec50912c2a7',
+              id: 'af184e4e-c6f4-4117-946e-1cc5ff10e1d8',
+              name: 'Alison Satterfield',
               description:
-                'Consectetur est velit neque totam omnis animi sapiente vitae iusto.',
-              price: 35981,
+                'Provident expedita beatae sunt porro consequatur aut.',
+              price: 11673,
               maxQuantity: 3,
-              index: 1,
-              isActive: true,
-              menuItemToppings: [
-                {
-                  id: '340f5529-76c5-4def-826c-c6767a67ed69',
-                  customPrice: 16188,
-                },
-              ],
             },
             {
-              id: 'c16d7ffb-5a11-4a58-821d-74437197a4aa',
-              description: 'Eos nam exercitationem corporis quae.',
-              price: 58682,
+              id: 'c0225a9a-19b1-4574-8496-0f9a52b41814',
+              name: 'Thalia Reichel III',
+              description:
+                'Quisquam voluptatem distinctio odio vero veritatis repellat ut nemo aut.',
+              price: 6956,
               maxQuantity: 3,
-              index: 1,
-              isActive: true,
-              menuItemToppings: [
-                {
-                  id: 'f6fbe937-4315-48bc-9dd4-ee720312eda8',
-                  customPrice: 9041,
-                },
-              ],
+            },
+            {
+              id: 'c508d9c7-8d06-46fb-9c00-a8856368bfca',
+              name: 'Mertie Sipes',
+              description:
+                'Et quia quasi rem sint non nesciunt voluptatem non est.',
+              price: 16427,
+              maxQuantity: 3,
             },
           ],
         },
         {
-          id: '13078795-e093-4969-a551-63182e27c94a',
-          name: 'Shannon Osinski',
-          index: 1,
-          isActive: true,
+          id: '5fa98e03-ec9e-4a2c-8195-68b9db13b08c',
+          name: 'Orland Hickle',
           toppingItems: [
             {
-              id: 'b7877ab3-a60c-48f4-a572-c9ebb53f2972',
-              description: 'Et voluptatem iure modi velit quos id ullam.',
-              price: 66503,
+              id: '9d5c9c80-440d-4885-b9ef-bdb15aca75a0',
+              name: 'Roberta Pacocha',
+              description: 'Totam quidem nulla recusandae.',
+              price: 8171,
               maxQuantity: 3,
-              index: 1,
-              isActive: true,
-              menuItemToppings: [
-                {
-                  id: '57c72bbb-260e-47a1-8f31-7b9de68b0990',
-                  customPrice: 14871,
-                },
-              ],
             },
             {
-              id: 'c467ab52-949d-48e7-aae9-df3d045453f5',
-              description: 'Molestias voluptate quis reiciendis sunt.',
-              price: 83659,
+              id: '5a11addb-01e5-4260-b627-3699bec9fd22',
+              name: 'Maryam Orn',
+              description:
+                'Numquam iusto quidem nesciunt ad atque facere eos qui.',
+              price: 8618,
               maxQuantity: 3,
-              index: 1,
-              isActive: true,
-              menuItemToppings: [
-                {
-                  id: 'fdab4dbf-66de-4ff1-b8cc-6ae56149ab9a',
-                  customPrice: 8602,
-                },
-              ],
             },
             {
-              id: 'c3049d31-8c1b-4a59-aed3-0b8bd7541f4d',
-              description: 'Qui qui labore voluptatem enim accusantium.',
-              price: 72132,
+              id: 'f68224a5-3e57-49b9-9baf-3cd2476c5645',
+              name: 'Henderson Dickinson',
+              description:
+                'Quasi non porro cum rerum numquam assumenda totam nihil voluptas.',
+              price: 6561,
               maxQuantity: 3,
-              index: 1,
-              isActive: true,
-              menuItemToppings: [
-                {
-                  id: 'a5fc23ca-e11f-439c-8a09-2dce26a22d06',
-                  customPrice: 18433,
-                },
-              ],
-            },
-          ],
-        },
-        {
-          id: '40ad52e1-3eea-4cd0-9515-a84cebe7f3f4',
-          name: 'Ernie Pagac',
-          index: 1,
-          isActive: true,
-          toppingItems: [
-            {
-              id: '6f348905-21e9-4507-9ace-7752c4b1a37b',
-              description: 'Temporibus sint temporibus et consequatur ut.',
-              price: 87838,
-              maxQuantity: 3,
-              index: 1,
-              isActive: true,
-              menuItemToppings: [
-                {
-                  id: '57d4f44c-b404-4cbd-915e-4bc04beae696',
-                  customPrice: 8939,
-                },
-              ],
-            },
-            {
-              id: '75a31889-0933-468a-b2aa-0ddb46f1a2ea',
-              description: 'Rerum repellendus qui.',
-              price: 59198,
-              maxQuantity: 3,
-              index: 1,
-              isActive: true,
-              menuItemToppings: [
-                {
-                  id: '4c161937-9766-41c4-a4f4-5d592c5f202d',
-                  customPrice: 18669,
-                },
-              ],
-            },
-            {
-              id: 'accdc1b3-fe0d-4419-a66e-5af44976b975',
-              description: 'Ea sint enim autem.',
-              price: 79930,
-              maxQuantity: 3,
-              index: 1,
-              isActive: true,
-              menuItemToppings: [
-                {
-                  id: '37942674-adbe-423d-be65-a0eb626a47fd',
-                  customPrice: 19718,
-                },
-              ],
             },
           ],
         },

@@ -4,6 +4,7 @@ import {
   Controller,
   Get,
   HttpCode,
+  HttpStatus,
   Param,
   Post,
   Query,
@@ -33,6 +34,9 @@ import {
   LoginPosDto,
   LoginPosResponseDto,
   LoginPosUnauthorizedResponseDto,
+  SavePosOrderDto,
+  SavePosOrderResponseDto,
+  SavePosOrderUnauthorizedResponseDto,
   VerifyAppKeyDto,
   VerifyAppKeyResponseDto,
   VerifyAppKeyUnauthorizedResponseDto,
@@ -193,5 +197,34 @@ export class PosController {
       menu,
       fetchDto,
     );
+  }
+
+  @ApiOkResponse({ type: SavePosOrderResponseDto })
+  @ApiUnauthorizedResponse({
+    type: SavePosOrderUnauthorizedResponseDto,
+  })
+  @ApiBody({ type: SavePosOrderDto })
+  @ApiBearerAuth()
+  @UseGuards(PosJwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @Post('/order/save-order')
+  async saveOrder(
+    @Request() req: PosJwtRequest,
+    @Body() savePosOrderDto: SavePosOrderDto,
+  ): Promise<SavePosOrderResponseDto> {
+    const dataRestaurantId = savePosOrderDto?.order?.restaurantId;
+
+    const { user } = req;
+    const { restaurantId } = user;
+
+    if (!dataRestaurantId || restaurantId !== dataRestaurantId) {
+      return {
+        statusCode: HttpStatus.UNAUTHORIZED,
+        message: 'Cannot save order of another restaurant',
+        data: null,
+      };
+    }
+
+    return await this.posService.savePosOrder(savePosOrderDto);
   }
 }

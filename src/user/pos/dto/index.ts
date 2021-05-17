@@ -12,3 +12,7 @@ export { FetchToppingGroupOfRestaurantResponseDto } from './fetch-menu-informati
 export { FetchToppingItemOfRestaurantResponseDto } from './fetch-menu-information-dto/fetch-topping-item-response.dto';
 export { FetchMenuItemToppingOfRestaurantResponseDto } from './fetch-menu-information-dto/fetch-menu-item-topping-response.dto';
 export { FetchMenuResponseDto } from './fetch-menu-information-dto/fetch-menu-response.dto';
+export { SavePosOrderDto } from './save-pos-order/save-pos-order.dto';
+export { PosOrderDto } from './save-pos-order/pos-order.dto';
+export { SavePosOrderResponseDto } from './save-pos-order/save-pos-order-response.dto';
+export { SavePosOrderUnauthorizedResponseDto } from './save-pos-order/save-pos-order-unauthorized-response.dto';

@@ -1,0 +1,6 @@
+export enum OrdStatus {
+  DRAFT = 'DRAFT',
+  ORDERED = 'ORDERED',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+}
