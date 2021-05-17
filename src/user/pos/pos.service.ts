@@ -1,10 +1,17 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { USER_SERVICE, RESTAURANT_SERVICE } from 'src/constants';
+import { USER_SERVICE, RESTAURANT_SERVICE, ORDER_SERVICE } from 'src/constants';
 import { IRestaurantServiceFetchMenuOfRestaurantResponse } from '../merchant/restaurant/menu/interfaces';
 import { IRestaurantServiceFetchMenuItemByMenuResponse } from '../merchant/restaurant/menu/menu-item/interfaces';
-import { FetchDto, VerifyAppKeyDto, VerifyAppKeyResponseDto } from './dto';
 import {
+  FetchDto,
+  SavePosOrderDto,
+  SavePosOrderResponseDto,
+  VerifyAppKeyDto,
+  VerifyAppKeyResponseDto,
+} from './dto';
+import {
+  IOrderServiceSavePosOrderResponse,
   IStaffLogin,
   IUserServiceLoginPosResponse,
   IUserServiceVerifyAppKeyResponse,
@@ -13,9 +20,12 @@ import {
 @Injectable()
 export class PosService {
   constructor(
-    @Inject(USER_SERVICE) private userServiceClient: ClientProxy,
+    @Inject(USER_SERVICE)
+    private userServiceClient: ClientProxy,
     @Inject(RESTAURANT_SERVICE)
     private restaurantServiceClient: ClientProxy,
+    @Inject(ORDER_SERVICE)
+    private orderServiceClient: ClientProxy,
   ) {}
 
   async verifyAppKey(
@@ -243,6 +253,26 @@ export class PosService {
         size,
         total,
       },
+    };
+  }
+
+  async savePosOrder(
+    savePosOrderDto: SavePosOrderDto,
+  ): Promise<SavePosOrderResponseDto> {
+    const { order } = savePosOrderDto;
+    const saveOrderResponse: IOrderServiceSavePosOrderResponse =
+      await this.orderServiceClient.send('savePosOrder', { order }).toPromise();
+
+    const { status, message, data } = saveOrderResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException({ message }, status);
+    }
+
+    return {
+      statusCode: 200,
+      message,
+      data,
     };
   }
 }
