@@ -20,6 +20,8 @@ import {
   UpdateOrderItemQuantityDto,
   UpdateOrderItemQuantityResponseDto,
   PickCustomerAddressResponseDto,
+  ConfirmOrderCheckoutDto,
+  ConfirmOrderCheckoutResponseDto,
 } from './dto';
 import {
   ICreateOrderResponse,
@@ -29,6 +31,7 @@ import {
 } from './interfaces';
 import { ICustomerAddressResponse } from '../user/customer/interfaces';
 import { transformOrderItem } from './helpers/helpers';
+import { ISimpleResponse } from '../shared/interfaces/simple-response.interface';
 
 @Injectable()
 export class OrderService {
@@ -487,6 +490,37 @@ export class OrderService {
       data: {
         order,
       },
+    };
+  }
+
+  async confirmOrderCheckout(
+    confirmOrderCheckoutDto: ConfirmOrderCheckoutDto,
+    orderId: string,
+    customerId: string,
+  ): Promise<ConfirmOrderCheckoutResponseDto> {
+    //TODO:
+    const confirmOrderCheckout: ISimpleResponse = await this.orderServiceClient
+      .send('confirmOrderCheckout', {
+        ...confirmOrderCheckoutDto,
+        orderId,
+        customerId,
+      })
+      .toPromise();
+
+    const { message, status } = confirmOrderCheckout;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+
+    return {
+      statusCode: status,
+      message,
     };
   }
 }

@@ -19,7 +19,6 @@ export class AddNewItemToOrderResponseDto {
         note: null,
         createdAt: '2021-05-12T14:52:57.355Z',
         updatedAt: '2021-05-12T14:53:23.731Z',
-        paymentType: 'COD',
         status: 'DRAFT',
         orderItems: [
           {

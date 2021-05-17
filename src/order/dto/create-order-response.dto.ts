@@ -10,7 +10,6 @@ export class CreateOrderResponseDto {
     example: {
       order: {
         restaurantId: '76471160-2c3e-412e-85a7-4ab087306509',
-        paymentType: 'COD',
         status: 'DRAFT',
         orderItems: [
           {

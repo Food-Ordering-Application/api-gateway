@@ -44,6 +44,8 @@ import {
   UpdateOrderItemQuantityDto,
   PickCustomerAddressResponseDto,
   PickCustomerAddressDto,
+  ConfirmOrderCheckoutResponseDto,
+  ConfirmOrderCheckoutDto,
 } from './dto';
 import { ForbiddenResponseDto } from 'src/user/customer/dto';
 import { PoliciesGuard } from 'src/casl/guards/policy.guard';
@@ -237,6 +239,30 @@ export class OrderController {
       customerId,
       customerAddressId,
       orderId,
+    );
+  }
+
+  //! Confirm Order Checkout
+  @ApiOkResponse({ type: ConfirmOrderCheckoutResponseDto })
+  @ApiForbiddenResponse({
+    type: ForbiddenResponseDto,
+  })
+  @ApiBody({ type: ConfirmOrderCheckoutDto })
+  @ApiBearerAuth()
+  @UseGuards(CustomerJwtAuthGuard, PoliciesGuard)
+  @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, Customer))
+  @Patch('/:orderId/confirm-ord-checkout')
+  async confirmOrderCheckout(
+    @Request() req,
+    @Param() params,
+    @Body()
+    confirmOrderCheckoutDto: ConfirmOrderCheckoutDto,
+  ): Promise<ConfirmOrderCheckoutResponseDto> {
+    const { orderId } = params;
+    return this.orderService.confirmOrderCheckout(
+      confirmOrderCheckoutDto,
+      orderId,
+      req.user.userId,
     );
   }
 }

@@ -10,7 +10,6 @@ export interface IOrder {
   itemDiscount?: number;
   promoId?: string;
   discount?: number;
-  paymentType?: string;
   status?: string;
   note?: string;
   createdAt?: Date;

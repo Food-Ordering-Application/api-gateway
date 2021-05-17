@@ -22,7 +22,6 @@ export class GetOrderDetailResponseDto {
         note: null,
         createdAt: '2021-05-12T14:52:57.355Z',
         updatedAt: '2021-05-12T15:01:02.016Z',
-        paymentType: 'COD',
         status: 'DRAFT',
         orderItems: [
           {

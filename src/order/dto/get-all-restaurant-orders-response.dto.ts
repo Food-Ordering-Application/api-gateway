@@ -24,7 +24,6 @@ export class GetAllRestaurantOrderResponseDto {
             'Sunt quam saepe. Qui nihil placeat modi. Quam nulla autem neque vero vel.',
           createdAt: '2021-12-08T04:45:56.647Z',
           updatedAt: '2021-05-12T14:27:46.967Z',
-          paymentType: 'COD',
           status: 'ORDERED',
           delivery: {
             id: 'd9b6bb95-33a0-4ac7-84f1-b9ca7aa3ab06',
@@ -60,7 +59,6 @@ export class GetAllRestaurantOrderResponseDto {
             'Sapiente ducimus soluta. Ut doloribus id et. Tenetur natus animi harum eligendi iste sed et. Ipsa tempora fugit id sit ea perspiciatis praesentium. Recusandae iure totam est. Et excepturi beatae maiores pariatur in molestiae et.',
           createdAt: '2021-12-08T04:45:56.647Z',
           updatedAt: '2021-05-12T14:27:46.973Z',
-          paymentType: 'COD',
           status: 'ORDERED',
           delivery: {
             id: 'cabe02dc-957b-4d83-8ced-59e4b55542a3',

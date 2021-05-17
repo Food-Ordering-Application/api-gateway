@@ -22,7 +22,6 @@ export class UpdateOrderItemQuantityResponseDto {
         note: null,
         createdAt: '2021-05-12T14:52:57.355Z',
         updatedAt: '2021-05-12T15:01:02.016Z',
-        paymentType: 'COD',
         status: 'DRAFT',
         delivery: {
           id: 'b42e5f64-bb12-42f0-bf3c-ce7975ff0c76',

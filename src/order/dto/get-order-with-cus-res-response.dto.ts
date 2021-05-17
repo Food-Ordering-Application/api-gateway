@@ -17,7 +17,6 @@ export class GetOrderAssociatedWithCusAndResResponseDto {
         total: 40000,
         createdAt: '2021-05-08T09:39:08.024Z',
         updatedAt: '2021-05-08T09:39:08.024Z',
-        paymentType: 'COD',
         status: 'DRAFT',
         delivery: {
           id: '5fe17292-299e-4ca7-9dfb-a246afc77f07',
