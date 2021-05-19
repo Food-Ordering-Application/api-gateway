@@ -47,10 +47,12 @@ export class OrderService {
   async createOrderAndFirstOrderItem(
     createOrderDto: CreateOrderDto,
   ): Promise<CreateOrderResponseDto> {
+    console.log('createOrder');
     const { restaurantId, customerId, orderItem } = createOrderDto;
     let createOrderAndFirstOrderItemResponse: ICreateOrderResponse;
     //TODO: Nếu là order Salechannel
     if (customerId) {
+      console.log('Salechannel');
       //TODO: Lấy thông tin địa chỉ nhà hàng, name và price của menuItem
       //TODO: name và price của từng menuItemTopping và thông tin địa chỉ customer
       const [
