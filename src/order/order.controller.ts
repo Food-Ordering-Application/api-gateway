@@ -46,6 +46,8 @@ import {
   PickCustomerAddressDto,
   ConfirmOrderCheckoutResponseDto,
   ConfirmOrderCheckoutDto,
+  ApprovePaypalOrderResponseDto,
+  ApprovePaypalOrderDto,
 } from './dto';
 import { ForbiddenResponseDto } from 'src/user/customer/dto';
 import { PoliciesGuard } from 'src/casl/guards/policy.guard';
@@ -261,6 +263,29 @@ export class OrderController {
     const { orderId } = params;
     return this.orderService.confirmOrderCheckout(
       confirmOrderCheckoutDto,
+      orderId,
+      req.user.userId,
+    );
+  }
+
+  @ApiOkResponse({ type: ApprovePaypalOrderResponseDto })
+  @ApiForbiddenResponse({
+    type: ForbiddenResponseDto,
+  })
+  @ApiBody({ type: ApprovePaypalOrderDto })
+  @ApiBearerAuth()
+  @UseGuards(CustomerJwtAuthGuard, PoliciesGuard)
+  @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, Customer))
+  @Patch('/:orderId/approve-paypal-order')
+  async approvePaypalOrder(
+    @Request() req,
+    @Param() params,
+    @Body()
+    approvePaypalOrderDto: ApprovePaypalOrderDto,
+  ): Promise<ApprovePaypalOrderResponseDto> {
+    const { orderId } = params;
+    return this.orderService.approvePaypalOrder(
+      approvePaypalOrderDto,
       orderId,
       req.user.userId,
     );

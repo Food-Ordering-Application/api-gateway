@@ -20,3 +20,5 @@ export { PickCustomerAddressDto } from './pick-customer-address.dto';
 export { OrderItem } from './order-item.dto';
 export { ConfirmOrderCheckoutResponseDto } from './confirm-order-checkout-response.dto';
 export { ConfirmOrderCheckoutDto } from './confirm-order-checkout.dto';
+export { ApprovePaypalOrderResponseDto } from './approve-paypal-order-response.dto';
+export { ApprovePaypalOrderDto } from './approve-paypal-order.dto';

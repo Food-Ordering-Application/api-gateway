@@ -22,6 +22,8 @@ import {
   PickCustomerAddressResponseDto,
   ConfirmOrderCheckoutDto,
   ConfirmOrderCheckoutResponseDto,
+  ApprovePaypalOrderDto,
+  ApprovePaypalOrderResponseDto,
 } from './dto';
 import {
   ICreateOrderResponse,
@@ -526,6 +528,40 @@ export class OrderService {
     return {
       statusCode: status,
       message,
+    };
+  }
+
+  async approvePaypalOrder(
+    approvePaypalOrderDto: ApprovePaypalOrderDto,
+    orderId: string,
+    customerId: string,
+  ): Promise<ApprovePaypalOrderResponseDto> {
+    //TODO:
+    const approvePaypalOrderResponse: ICreateOrderResponse = await this.orderServiceClient
+      .send('approvePaypalOrder', {
+        ...approvePaypalOrderDto,
+        orderId,
+        customerId,
+      })
+      .toPromise();
+
+    const { message, status, order } = approvePaypalOrderResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+
+    return {
+      statusCode: status,
+      message,
+      data: {
+        order: order,
+      },
     };
   }
 }
