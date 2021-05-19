@@ -79,6 +79,7 @@ export class OrderService {
           .toPromise(),
       ]);
       if (getRestaurantAddressInfoResponse.status !== HttpStatus.OK) {
+        console.log('getRestaurantAddress fail');
         throw new HttpException(
           {
             message: getRestaurantAddressInfoResponse.message,
@@ -88,6 +89,7 @@ export class OrderService {
       }
 
       if (getMenuItemInfoResponse.status !== HttpStatus.OK) {
+        console.log('getMenuItemInfo fail');
         throw new HttpException(
           {
             message: getMenuItemInfoResponse.message,
@@ -97,6 +99,7 @@ export class OrderService {
       }
 
       if (getCustomerAddressInfoResponse.status !== HttpStatus.OK) {
+        console.log('getCustomerAddressInfo fail');
         throw new HttpException(
           {
             message: getCustomerAddressInfoResponse.message,
