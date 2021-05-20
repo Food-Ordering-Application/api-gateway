@@ -30,6 +30,7 @@ import {
   IGetAddressResponse,
   IOrdersResponse,
   IGetMenuItemInfoResponse,
+  IConfirmOrderCheckoutResponse,
 } from './interfaces';
 import { ICustomerAddressResponse } from '../user/customer/interfaces';
 import { transformOrderItem } from './helpers/helpers';
@@ -506,7 +507,7 @@ export class OrderService {
     customerId: string,
   ): Promise<ConfirmOrderCheckoutResponseDto> {
     //TODO:
-    const confirmOrderCheckout: ISimpleResponse = await this.orderServiceClient
+    const confirmOrderCheckout: IConfirmOrderCheckoutResponse = await this.orderServiceClient
       .send('confirmOrderCheckout', {
         ...confirmOrderCheckoutDto,
         orderId,
@@ -514,7 +515,7 @@ export class OrderService {
       })
       .toPromise();
 
-    const { message, status } = confirmOrderCheckout;
+    const { message, status, paypalOrderId } = confirmOrderCheckout;
 
     if (status !== HttpStatus.OK) {
       throw new HttpException(
@@ -528,6 +529,9 @@ export class OrderService {
     return {
       statusCode: status,
       message,
+      data: {
+        paypalOrderId: paypalOrderId,
+      },
     };
   }
 

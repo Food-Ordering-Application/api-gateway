@@ -5,10 +5,4 @@ export class ForbiddenResponseDto {
   statusCode: number;
   @ApiProperty({ example: 'Forbidden', type: 'string' })
   message: string;
-  @ApiProperty({
-    example: {
-      user: null,
-    },
-  })
-  data: string;
 }

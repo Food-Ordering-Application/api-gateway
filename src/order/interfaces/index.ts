@@ -12,3 +12,5 @@ export { IGetAddressAndMenuItemResponse } from './get-address-and-menu-item-resp
 export { IAddressAndMenuItemData } from './address-and-menuitem-data.interface';
 export { IMenuItemData } from './menuitem-data.interface';
 export { IGetMenuItemInfoResponse } from './get-menuitem-info-response.interface';
+export { IConfirmOrderCheckout } from './confirm-order-checkout-response-data.interface';
+export { IConfirmOrderCheckoutResponse } from './confirm-order-checkout-response.interface';

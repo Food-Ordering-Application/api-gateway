@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IOrdersData } from '../interfaces';
+import { IConfirmOrderCheckout } from '../interfaces';
 
 export class ConfirmOrderCheckoutResponseDto {
   @ApiProperty({ example: 200 })
@@ -9,9 +9,11 @@ export class ConfirmOrderCheckoutResponseDto {
     type: 'string',
   })
   message: string;
-  // @ApiProperty({
-  //   example: {},
-  //   nullable: true,
-  // })
-  // data: IOrdersData;
+  @ApiProperty({
+    example: {
+      paypalOrderId: 'PAYPAL_ORDER_ID',
+    },
+    nullable: true,
+  })
+  data: IConfirmOrderCheckout;
 }
