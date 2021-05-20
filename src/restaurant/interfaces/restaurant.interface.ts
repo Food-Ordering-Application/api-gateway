@@ -7,4 +7,5 @@ export interface IRestaurant {
   numRate: number;
   rating: number;
   categories: CategoryType[];
+  merchantIdInPayPal: string;
 }

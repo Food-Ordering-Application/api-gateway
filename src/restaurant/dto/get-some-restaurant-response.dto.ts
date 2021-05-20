@@ -17,6 +17,7 @@ export class GetSomeRestaurantResponseDto {
           rating: 4.3,
           address: '528 Nguyễn Trãi, P. 8, Quận 5, TP. HCM',
           categories: ['RESTAURANT'],
+          merchantIdInPayPal: 'DD64LQSRDC2UN',
         },
       ],
     },
