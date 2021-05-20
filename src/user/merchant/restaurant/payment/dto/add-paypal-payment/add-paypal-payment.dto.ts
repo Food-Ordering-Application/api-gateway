@@ -8,5 +8,5 @@ export class AddPaypalPaymentDto {
     description: 'Id account paypal của restaurant',
   })
   @IsString()
-  merchantIdInPaypal: string;
+  merchantIdInPayPal: string;
 }
