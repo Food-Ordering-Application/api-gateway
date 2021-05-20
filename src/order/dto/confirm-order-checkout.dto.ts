@@ -18,4 +18,12 @@ export class ConfirmOrderCheckoutDto {
   })
   @IsString()
   paymentType: string;
+
+  @ApiProperty({
+    example: '6P4DS2J5E5HL8',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  paypalMerchantId: string;
 }
