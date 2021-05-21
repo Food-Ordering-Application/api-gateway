@@ -16,7 +16,9 @@ import { MerchantJwtPayload } from '../../../../auth/strategies/jwt-strategies/m
 import { InternalServerErrorResponseDto } from '../../../../shared/dto/internal-server-error.dto';
 import {
   AddPaypalPaymentDto,
+  AddPaypalPaymentResponseDto,
   FetchPaymentOfRestaurantResponseDto,
+  GetPayPalOnboardStatusResponseDto,
   GetPayPalSignUpLinkDto,
   GetPayPalSignUpLinkResponseDto,
 } from './dto';
@@ -69,14 +71,13 @@ export class PaymentController {
     @Payload() addPaypalPaymentDto: AddPaypalPaymentDto,
     @Param('merchantId') merchant,
     @Param('restaurantId') restaurant,
-  ) {
+  ): Promise<AddPaypalPaymentResponseDto> {
     const merchantPayload: MerchantJwtPayload = req.user;
     const { merchantId } = merchantPayload;
     if (merchantId !== merchant) {
       return {
         statusCode: 403,
         message: 'Unauthorized',
-        data: null,
       };
     }
     return await this.paymentService.addPaypalPayment(
@@ -107,6 +108,28 @@ export class PaymentController {
       merchant,
       restaurant,
       getPayPalSignUpLinkDto,
+    );
+  }
+
+  @UseGuards(MerchantJwtAuthGuard)
+  @Get('/paypal/onboard-status')
+  async getPayPalOnboardStatus(
+    @Req() req,
+    @Param('merchantId') merchant,
+    @Param('restaurantId') restaurant,
+  ): Promise<GetPayPalOnboardStatusResponseDto> {
+    const merchantPayload: MerchantJwtPayload = req.user;
+    const { merchantId } = merchantPayload;
+    if (merchantId !== merchant) {
+      return {
+        statusCode: 403,
+        message: 'Unauthorized',
+        data: null,
+      };
+    }
+    return await this.paymentService.getPayPalOnboardStatus(
+      merchant,
+      restaurant,
     );
   }
 }

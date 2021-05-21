@@ -5,12 +5,14 @@ import {
   AddPaypalPaymentDto,
   AddPaypalPaymentResponseDto,
   FetchPaymentOfRestaurantResponseDto,
+  GetPayPalOnboardStatusResponseDto,
   GetPayPalSignUpLinkDto,
   GetPayPalSignUpLinkResponseDto,
 } from './dto';
 import {
   IUserServiceAddPaypalPaymentResponse,
   IUserServiceFetchPaymentOfRestaurantResponse,
+  IUserServiceGetPayPalOnboardStatusResponse,
   IUserServiceGetPayPalSignUpLinkResponse,
 } from './interfaces';
 
@@ -79,6 +81,28 @@ export class PaymentService {
           merchantId,
           restaurantId,
           redirectUrl,
+        })
+        .toPromise();
+
+    const { status, message, data } = getPayPalSignUpLinkResponse;
+    if (status !== HttpStatus.OK) {
+      throw new HttpException({ message }, status);
+    }
+    return {
+      statusCode: 200,
+      message,
+      data,
+    };
+  }
+  async getPayPalOnboardStatus(
+    merchantId: string,
+    restaurantId: string,
+  ): Promise<GetPayPalOnboardStatusResponseDto> {
+    const getPayPalSignUpLinkResponse: IUserServiceGetPayPalOnboardStatusResponse =
+      await this.paymentServiceClient
+        .send('getPayPalOnboardStatus', {
+          merchantId,
+          restaurantId,
         })
         .toPromise();
 
