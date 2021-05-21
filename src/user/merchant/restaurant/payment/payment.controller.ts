@@ -17,6 +17,8 @@ import { InternalServerErrorResponseDto } from '../../../../shared/dto/internal-
 import {
   AddPaypalPaymentDto,
   FetchPaymentOfRestaurantResponseDto,
+  GetPayPalSignUpLinkDto,
+  GetPayPalSignUpLinkResponseDto,
 } from './dto';
 import { PaymentService } from './payment.service';
 
@@ -81,6 +83,30 @@ export class PaymentController {
       merchant,
       restaurant,
       addPaypalPaymentDto,
+    );
+  }
+
+  @UseGuards(MerchantJwtAuthGuard)
+  @Post('/paypal/get-signup-link')
+  async getPayPalSignUpLink(
+    @Req() req,
+    @Payload() getPayPalSignUpLinkDto: GetPayPalSignUpLinkDto,
+    @Param('merchantId') merchant,
+    @Param('restaurantId') restaurant,
+  ): Promise<GetPayPalSignUpLinkResponseDto> {
+    const merchantPayload: MerchantJwtPayload = req.user;
+    const { merchantId } = merchantPayload;
+    if (merchantId !== merchant) {
+      return {
+        statusCode: 403,
+        message: 'Unauthorized',
+        data: null,
+      };
+    }
+    return await this.paymentService.getPayPalSignUpLink(
+      merchant,
+      restaurant,
+      getPayPalSignUpLinkDto,
     );
   }
 }
