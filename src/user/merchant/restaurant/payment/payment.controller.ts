@@ -9,7 +9,14 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Payload } from '@nestjs/microservices';
-import { ApiInternalServerErrorResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiInternalServerErrorResponse,
+  ApiOkResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { MerchantJwtRequest } from 'src/auth/strategies/jwt-strategies/merchant-jwt-request.interface';
 import { MerchantJwtAuthGuard } from '../../../../auth/guards/jwts/merchant-jwt-auth.guard';
 import { MerchantJwtPayload } from '../../../../auth/strategies/jwt-strategies/merchant-jwt-payload.interface';
@@ -18,6 +25,7 @@ import {
   AddPaypalPaymentDto,
   AddPaypalPaymentResponseDto,
   FetchPaymentOfRestaurantResponseDto,
+  FetchPaymentOfRestaurantUnauthorizedResponseDto,
   GetPayPalOnboardStatusResponseDto,
   GetPayPalSignUpLinkDto,
   GetPayPalSignUpLinkResponseDto,
@@ -32,12 +40,11 @@ export class PaymentController {
 
   constructor(private paymentService: PaymentService) {}
 
-  // @ApiOkResponse({ type: FetchPaymentOfRestaurantResponseDto })
-  // @ApiUnauthorizedResponse({
-  //   type: FetchPaymentOfRestaurantUnauthorizedResponseDto,
-  // })
-  // @ApiQuery({ type: FetchPaymentDto, required: false })
-  // @ApiBearerAuth()
+  @ApiOkResponse({ type: FetchPaymentOfRestaurantResponseDto })
+  @ApiUnauthorizedResponse({
+    type: FetchPaymentOfRestaurantUnauthorizedResponseDto,
+  })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Get()
   async fetchPaymentOfRestaurant(
@@ -60,10 +67,9 @@ export class PaymentController {
     );
   }
 
-  // @ApiCreatedResponse({ type: AddPaypalPaymentResponseDto })
-  // @ApiConflictResponse({ type: AddPaypalPaymentConflictResponseDto })
-  // @ApiBody({ type: AddPaypalPaymentDto })
-  // @ApiBearerAuth()
+  @ApiOkResponse({ type: AddPaypalPaymentResponseDto })
+  @ApiBody({ type: AddPaypalPaymentDto })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Post('/paypal')
   async addPaypalPayment(
@@ -87,6 +93,9 @@ export class PaymentController {
     );
   }
 
+  @ApiOkResponse({ type: GetPayPalSignUpLinkResponseDto })
+  @ApiBody({ type: GetPayPalSignUpLinkDto })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Post('/paypal/get-signup-link')
   async getPayPalSignUpLink(
@@ -111,6 +120,8 @@ export class PaymentController {
     );
   }
 
+  @ApiOkResponse({ type: GetPayPalOnboardStatusResponseDto })
+  @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
   @Get('/paypal/onboard-status')
   async getPayPalOnboardStatus(
