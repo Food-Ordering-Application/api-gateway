@@ -82,6 +82,7 @@ export class GetRestaurantInformationResponseDto {
           },
         ],
         categories: ['RESTAURANT'],
+        merchantIdInPayPal: 'DD64LQSRDC2UN',
       },
     },
     nullable: true,

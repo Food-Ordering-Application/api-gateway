@@ -18,4 +18,5 @@ export interface IRestaurantDetail {
   };
   openHours?: IOpenHour[];
   categories?: CategoryType[];
+  merchantIdInPayPal: string;
 }
