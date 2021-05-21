@@ -11,6 +11,11 @@ import {
   UpdateCustomerAddressDto,
   DeleteCustomerAddressResponseDto,
   GetListCustomerAddressResponseDto,
+  SendResetPasswordEmailDto,
+  SendResetPasswordEmailResponseDto,
+  GetCustomerResetPasswordTokenResponse,
+  UpdateCustomerPasswordDto,
+  UpdateCustomerPasswordResponseDto,
 } from './dto/index';
 import * as constants from '../../constants';
 import {
@@ -19,6 +24,7 @@ import {
   ISimpleResponse,
   ICustomerAddressResponse,
   ICustomerAddressesResponse,
+  IGetCustomerResetPasswordTokenResponse,
 } from './interfaces/index';
 
 @Injectable()
@@ -30,10 +36,9 @@ export class CustomerService {
   async createCustomer(
     createCustomerDto: CreateCustomerDto,
   ): Promise<CreateCustomerResponseDto> {
-    const createCustomerResponse: IUserServiceResponse =
-      await this.userServiceClient
-        .send('createCustomer', createCustomerDto)
-        .toPromise();
+    const createCustomerResponse: IUserServiceResponse = await this.userServiceClient
+      .send('createCustomer', createCustomerDto)
+      .toPromise();
 
     if (createCustomerResponse.status !== HttpStatus.CREATED) {
       throw new HttpException(
@@ -55,10 +60,9 @@ export class CustomerService {
   async sendPhoneNumberOTPVerify(
     user: ICustomer,
   ): Promise<SendPhoneNumberOTPVerifyResponseDto> {
-    const sendPhoneNumberOTPVerifyResponse: ISimpleResponse =
-      await this.userServiceClient
-        .send('sendPhoneNumberOTPVerify', user)
-        .toPromise();
+    const sendPhoneNumberOTPVerifyResponse: ISimpleResponse = await this.userServiceClient
+      .send('sendPhoneNumberOTPVerify', user)
+      .toPromise();
     if (sendPhoneNumberOTPVerifyResponse.status !== HttpStatus.OK) {
       throw new HttpException(
         {
@@ -77,10 +81,9 @@ export class CustomerService {
     user: ICustomer,
     otp: string,
   ): Promise<VerifyCustomerPhoneNumberResponseDto> {
-    const verifyCustomerPhoneNumberResponse: ISimpleResponse =
-      await this.userServiceClient
-        .send('verifyCustomerPhoneNumber', { ...user, otp })
-        .toPromise();
+    const verifyCustomerPhoneNumberResponse: ISimpleResponse = await this.userServiceClient
+      .send('verifyCustomerPhoneNumber', { ...user, otp })
+      .toPromise();
     if (verifyCustomerPhoneNumberResponse.status !== HttpStatus.OK) {
       throw new HttpException(
         {
@@ -96,10 +99,9 @@ export class CustomerService {
   }
 
   async findCustomerByPhoneNumber(phoneNumber: string): Promise<ICustomer> {
-    const findCustomerResponse: IUserServiceResponse =
-      await this.userServiceClient
-        .send('findCustomerByPhoneNumber', phoneNumber)
-        .toPromise();
+    const findCustomerResponse: IUserServiceResponse = await this.userServiceClient
+      .send('findCustomerByPhoneNumber', phoneNumber)
+      .toPromise();
     if (findCustomerResponse.status !== HttpStatus.OK) {
       throw new HttpException(
         {
@@ -138,13 +140,12 @@ export class CustomerService {
     customerId: string,
     createCustomerAddressDto: CreateCustomerAddressDto,
   ): Promise<CreateCustomerAddressResponseDto> {
-    const createCustomerAddressResponse: ICustomerAddressResponse =
-      await this.userServiceClient
-        .send('createCustomerAddress', {
-          customerId,
-          ...createCustomerAddressDto,
-        })
-        .toPromise();
+    const createCustomerAddressResponse: ICustomerAddressResponse = await this.userServiceClient
+      .send('createCustomerAddress', {
+        customerId,
+        ...createCustomerAddressDto,
+      })
+      .toPromise();
 
     const { address, message, status } = createCustomerAddressResponse;
 
@@ -170,14 +171,13 @@ export class CustomerService {
     customerAddressId: string,
     updateCustomerAddressDto: UpdateCustomerAddressDto,
   ): Promise<CreateCustomerAddressResponseDto> {
-    const updateCustomerAddressResponse: ICustomerAddressResponse =
-      await this.userServiceClient
-        .send('updateCustomerAddress', {
-          customerId,
-          customerAddressId,
-          ...updateCustomerAddressDto,
-        })
-        .toPromise();
+    const updateCustomerAddressResponse: ICustomerAddressResponse = await this.userServiceClient
+      .send('updateCustomerAddress', {
+        customerId,
+        customerAddressId,
+        ...updateCustomerAddressDto,
+      })
+      .toPromise();
 
     const { address, message, status } = updateCustomerAddressResponse;
 
@@ -202,13 +202,12 @@ export class CustomerService {
     customerId: string,
     customerAddressId: string,
   ): Promise<DeleteCustomerAddressResponseDto> {
-    const deleteCustomerAddressResponse: ICustomerAddressResponse =
-      await this.userServiceClient
-        .send('deleteCustomerAddress', {
-          customerId,
-          customerAddressId,
-        })
-        .toPromise();
+    const deleteCustomerAddressResponse: ICustomerAddressResponse = await this.userServiceClient
+      .send('deleteCustomerAddress', {
+        customerId,
+        customerAddressId,
+      })
+      .toPromise();
 
     const { message, status } = deleteCustomerAddressResponse;
 
@@ -229,12 +228,11 @@ export class CustomerService {
   async getListCustomerAddress(
     customerId: string,
   ): Promise<GetListCustomerAddressResponseDto> {
-    const getListCustomerAddressResponse: ICustomerAddressesResponse =
-      await this.userServiceClient
-        .send('getListCustomerAddress', {
-          customerId,
-        })
-        .toPromise();
+    const getListCustomerAddressResponse: ICustomerAddressesResponse = await this.userServiceClient
+      .send('getListCustomerAddress', {
+        customerId,
+      })
+      .toPromise();
 
     const { message, status, addresses } = getListCustomerAddressResponse;
 
@@ -252,6 +250,88 @@ export class CustomerService {
       data: {
         customerAddresses: addresses,
       },
+    };
+  }
+
+  async sendResetPasswordEmail(
+    sendPasswordResetEmailDto: SendResetPasswordEmailDto,
+  ): Promise<SendResetPasswordEmailResponseDto> {
+    const sendResetPasswordEmailResponse: ISimpleResponse = await this.userServiceClient
+      .send('sendResetPasswordEmail', {
+        ...sendPasswordResetEmailDto,
+      })
+      .toPromise();
+
+    const { message, status } = sendResetPasswordEmailResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+    return {
+      statusCode: 200,
+      message: message,
+    };
+  }
+
+  async getCustomerResetPasswordToken(
+    resetToken: string,
+  ): Promise<GetCustomerResetPasswordTokenResponse> {
+    const getCustomerResetPasswordTokenResponse: IGetCustomerResetPasswordTokenResponse = await this.userServiceClient
+      .send('getCustomerResetPasswordToken', {
+        resetToken,
+      })
+      .toPromise();
+
+    const {
+      message,
+      status,
+      customerId,
+    } = getCustomerResetPasswordTokenResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+    return {
+      statusCode: 200,
+      message: message,
+      data: {
+        customerId: customerId,
+      },
+    };
+  }
+
+  async updateCustomerPassword(
+    updateCustomerPasswordDto: UpdateCustomerPasswordDto,
+  ): Promise<UpdateCustomerPasswordResponseDto> {
+    const updateCustomerPasswordResponse: ISimpleResponse = await this.userServiceClient
+      .send('updateCustomerPassword', {
+        ...updateCustomerPasswordDto,
+      })
+      .toPromise();
+
+    const { message, status } = updateCustomerPasswordResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+    return {
+      statusCode: 200,
+      message: message,
     };
   }
 }

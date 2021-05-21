@@ -42,6 +42,11 @@ import {
   UpdateCustomerAddressDto,
   DeleteCustomerAddressResponseDto,
   GetListCustomerAddressResponseDto,
+  SendResetPasswordEmailDto,
+  SendResetPasswordEmailResponseDto,
+  GetCustomerResetPasswordTokenResponse,
+  UpdateCustomerPasswordResponseDto,
+  UpdateCustomerPasswordDto,
 } from './dto/index';
 import { CustomerService } from './customer.service';
 import { LocalAuthGuard } from '../../auth/guards/locals/local-auth.guard';
@@ -268,5 +273,42 @@ export class CustomerController {
     }
 
     return this.customerService.getListCustomerAddress(customerId);
+  }
+
+  //! Gửi email đặt lại mật khẩu
+  @ApiOkResponse({ type: SendResetPasswordEmailResponseDto })
+  @ApiBody({ type: UpdateCustomerAddressDto })
+  @HttpCode(200)
+  @Post('/reset-password')
+  async sendResetPasswordEmail(
+    @Body()
+    sendPasswordResetEmailDto: SendResetPasswordEmailDto,
+  ): Promise<SendResetPasswordEmailResponseDto> {
+    return this.customerService.sendResetPasswordEmail(
+      sendPasswordResetEmailDto,
+    );
+  }
+
+  //! Lấy thông tin customer dựa trên resetPasswordToken
+  @ApiOkResponse({ type: GetCustomerResetPasswordTokenResponse })
+  @Get('/reset-password/:resetToken')
+  async getCustomerResetPasswordToken(
+    @Param() params,
+  ): Promise<GetCustomerResetPasswordTokenResponse> {
+    const { resetToken } = params;
+    return this.customerService.getCustomerResetPasswordToken(resetToken);
+  }
+
+  //! Cập nhật lại mật khẩu
+  @ApiOkResponse({ type: UpdateCustomerPasswordResponseDto })
+  @ApiBody({ type: UpdateCustomerPasswordDto })
+  @Patch('/new-password')
+  async updateCustomerPassword(
+    @Body()
+    updateCustomerPasswordDto: UpdateCustomerPasswordDto,
+  ): Promise<UpdateCustomerPasswordResponseDto> {
+    return this.customerService.updateCustomerPassword(
+      updateCustomerPasswordDto,
+    );
   }
 }
