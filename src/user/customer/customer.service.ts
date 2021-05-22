@@ -342,12 +342,16 @@ export class CustomerService {
     updateCustomerInfoDto: UpdateCustomerInfoDto,
     customerId,
   ): Promise<UpdateCustomerInfoResponseDto> {
+    console.log('UpdateCustomerInfoDTO', updateCustomerInfoDto);
+    console.log('customerId', customerId);
     const updateCustomerInfoResponse: IUpdateCustomerInfoResponse = await this.userServiceClient
       .send('updateCustomerInfo', {
         ...updateCustomerInfoDto,
         customerId,
       })
       .toPromise();
+
+    console.log('OK');
 
     const {
       message,
