@@ -6,15 +6,15 @@ import { OrderItem } from './order-item.dto';
 export class AddNewItemToOrderDto {
   @ApiProperty({
     example: {
-      menuItemId: 'e8f311bf-4687-451d-b55d-0d5c4b105acd',
+      menuItemId: '819fa0b6-7d12-46f5-8635-d2d9ed9ad12c',
       quantity: 2,
       orderItemToppings: [
         {
-          menuItemToppingId: 'e8f311bf-4687-451d-b55d-0d5c4b105acd',
+          toppingItemId: '819fa0b6-7d12-46f5-8635-d2d9ed9ad12c',
           quantity: 1,
         },
         {
-          menuItemToppingId: '17478751-c055-4111-9755-f5535e10b7a1',
+          toppingItemId: '5b24b40f-4899-420d-bd12-49be44d95eef',
           quantity: 1,
         },
       ],

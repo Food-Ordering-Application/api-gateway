@@ -47,6 +47,8 @@ import {
   GetCustomerResetPasswordTokenResponse,
   UpdateCustomerPasswordResponseDto,
   UpdateCustomerPasswordDto,
+  UpdateCustomerInfoResponseDto,
+  UpdateCustomerInfoDto,
 } from './dto/index';
 import { CustomerService } from './customer.service';
 import { LocalAuthGuard } from '../../auth/guards/locals/local-auth.guard';
@@ -277,7 +279,7 @@ export class CustomerController {
 
   //! Gửi email đặt lại mật khẩu
   @ApiOkResponse({ type: SendResetPasswordEmailResponseDto })
-  @ApiBody({ type: UpdateCustomerAddressDto })
+  @ApiBody({ type: SendResetPasswordEmailDto })
   @HttpCode(200)
   @Post('/reset-password')
   async sendResetPasswordEmail(
@@ -307,8 +309,41 @@ export class CustomerController {
     @Body()
     updateCustomerPasswordDto: UpdateCustomerPasswordDto,
   ): Promise<UpdateCustomerPasswordResponseDto> {
+    console.log('Hello there');
+    console.log(updateCustomerPasswordDto);
     return this.customerService.updateCustomerPassword(
       updateCustomerPasswordDto,
+    );
+  }
+
+  //! Cập nhật thông tin customer
+  @ApiOkResponse({ type: UpdateCustomerInfoResponseDto })
+  @ApiForbiddenResponse({
+    type: ForbiddenResponseDto,
+  })
+  @ApiBody({ type: UpdateCustomerInfoDto })
+  @ApiBearerAuth()
+  @UseGuards(CustomerJwtAuthGuard, PoliciesGuard)
+  @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, Customer))
+  @Patch('/:customerId/update-info')
+  async updateCustomerInfo(
+    @Request() req,
+    @Param() params,
+    @Body()
+    updateCustomerInfoDto: UpdateCustomerInfoDto,
+  ): Promise<UpdateCustomerInfoResponseDto> {
+    const { customerId } = params;
+    // Nếu không phải chính user đó
+    if (req.user.userId !== customerId) {
+      return {
+        statusCode: 403,
+        message: 'Forbidden',
+        data: null,
+      };
+    }
+    return this.customerService.updateCustomerInfo(
+      updateCustomerInfoDto,
+      customerId,
     );
   }
 }

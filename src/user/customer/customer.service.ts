@@ -16,6 +16,8 @@ import {
   GetCustomerResetPasswordTokenResponse,
   UpdateCustomerPasswordDto,
   UpdateCustomerPasswordResponseDto,
+  UpdateCustomerInfoResponseDto,
+  UpdateCustomerInfoDto,
 } from './dto/index';
 import * as constants from '../../constants';
 import {
@@ -25,6 +27,7 @@ import {
   ICustomerAddressResponse,
   ICustomerAddressesResponse,
   IGetCustomerResetPasswordTokenResponse,
+  IUpdateCustomerInfoResponse,
 } from './interfaces/index';
 
 @Injectable()
@@ -332,6 +335,46 @@ export class CustomerService {
     return {
       statusCode: 200,
       message: message,
+    };
+  }
+
+  async updateCustomerInfo(
+    updateCustomerInfoDto: UpdateCustomerInfoDto,
+    customerId,
+  ): Promise<UpdateCustomerInfoResponseDto> {
+    const updateCustomerInfoResponse: IUpdateCustomerInfoResponse = await this.userServiceClient
+      .send('updateCustomerInfo', {
+        ...updateCustomerInfoDto,
+        customerId,
+      })
+      .toPromise();
+
+    const {
+      message,
+      status,
+      avatar,
+      email,
+      gender,
+      name,
+    } = updateCustomerInfoResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+    return {
+      statusCode: 200,
+      message: message,
+      data: {
+        avatar: avatar || null,
+        email: email || null,
+        gender: gender || null,
+        name: name || null,
+      },
     };
   }
 }
