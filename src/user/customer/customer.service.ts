@@ -316,6 +316,7 @@ export class CustomerService {
   async updateCustomerPassword(
     updateCustomerPasswordDto: UpdateCustomerPasswordDto,
   ): Promise<UpdateCustomerPasswordResponseDto> {
+    console.log('updateCustomerPasswordDto', updateCustomerPasswordDto);
     const updateCustomerPasswordResponse: ISimpleResponse = await this.userServiceClient
       .send('updateCustomerPassword', {
         ...updateCustomerPasswordDto,
