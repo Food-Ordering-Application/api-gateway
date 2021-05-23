@@ -1,5 +1,5 @@
 import { PosOrderDto } from './pos-order.dto';
-import { OrdStatus, PType, State } from '../enums';
+import { OrdStatus, State } from '../enums';
 import { ISavePosOrderData } from '../../interfaces';
 
 export const orderExampleData: PosOrderDto = {
@@ -13,7 +13,6 @@ export const orderExampleData: PosOrderDto = {
   note: '',
   createdAt: new Date('2021-12-08T04:45:56.647Z'),
   updatedAt: new Date('2021-05-16T13:48:15.821Z'),
-  paymentType: PType.COD,
   status: OrdStatus.COMPLETED,
   orderItems: [
     {
