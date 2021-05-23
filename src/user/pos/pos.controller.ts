@@ -23,6 +23,7 @@ import {
 import { InternalServerErrorResponseDto } from 'src/shared/dto/internal-server-error.dto';
 import { PosLocalAuthGuard } from './../../auth/guards/locals/pos-local-auth.guard';
 import {
+  ConfirmOrderResponseDto,
   FetchDto,
   FetchMenuGroupOfRestaurantResponseDto,
   FetchMenuInformationUnauthorizedResponseDto,
@@ -226,5 +227,21 @@ export class PosController {
     }
 
     return await this.posService.savePosOrder(savePosOrderDto);
+  }
+
+  @UseGuards(PosJwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @Post('/order/:orderId/confirm')
+  async confirmDeliveryOrder(
+    @Request() req: PosJwtRequest,
+    @Param('orderId') orderId: string,
+  ): Promise<ConfirmOrderResponseDto> {
+    const { user } = req;
+    const { restaurantId, staffId } = user;
+    return await this.posService.confirmDeliveryOrder(
+      orderId,
+      staffId,
+      restaurantId,
+    );
   }
 }
