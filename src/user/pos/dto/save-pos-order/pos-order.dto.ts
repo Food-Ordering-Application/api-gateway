@@ -8,7 +8,7 @@ import {
   ValidateNested,
   IsOptional,
 } from 'class-validator';
-import { OrdStatus, PType } from '../enums';
+import { OrdStatus } from '../enums';
 import { PosOrderItemDto } from './pos-order-item.dto';
 
 export class PosOrderDto {
@@ -44,9 +44,6 @@ export class PosOrderDto {
 
   @IsDateString()
   updatedAt: Date;
-
-  @IsEnum(PType)
-  paymentType: PType;
 
   @IsEnum(OrdStatus)
   status: OrdStatus;

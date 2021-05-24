@@ -31,3 +31,6 @@ export { SendResetPasswordEmailDto } from './reset-password/send-pasword-reset-e
 export { GetCustomerResetPasswordTokenResponse } from './reset-password/get-customer-reset-password-token-response.dto';
 export { UpdateCustomerPasswordResponseDto } from './reset-password/update-customer-password-response.dto';
 export { UpdateCustomerPasswordDto } from './reset-password/update-customer-password.dto';
+
+export { UpdateCustomerInfoResponseDto } from './customer-info/update-customer-info-response.dto';
+export { UpdateCustomerInfoDto } from './customer-info/update-customer-info.dto';

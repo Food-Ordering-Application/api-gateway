@@ -16,6 +16,8 @@ import {
   GetCustomerResetPasswordTokenResponse,
   UpdateCustomerPasswordDto,
   UpdateCustomerPasswordResponseDto,
+  UpdateCustomerInfoResponseDto,
+  UpdateCustomerInfoDto,
 } from './dto/index';
 import * as constants from '../../constants';
 import {
@@ -25,6 +27,7 @@ import {
   ICustomerAddressResponse,
   ICustomerAddressesResponse,
   IGetCustomerResetPasswordTokenResponse,
+  IUpdateCustomerInfoResponse,
 } from './interfaces/index';
 
 @Injectable()
@@ -313,6 +316,7 @@ export class CustomerService {
   async updateCustomerPassword(
     updateCustomerPasswordDto: UpdateCustomerPasswordDto,
   ): Promise<UpdateCustomerPasswordResponseDto> {
+    console.log('updateCustomerPasswordDto', updateCustomerPasswordDto);
     const updateCustomerPasswordResponse: ISimpleResponse = await this.userServiceClient
       .send('updateCustomerPassword', {
         ...updateCustomerPasswordDto,
@@ -332,6 +336,50 @@ export class CustomerService {
     return {
       statusCode: 200,
       message: message,
+    };
+  }
+
+  async updateCustomerInfo(
+    updateCustomerInfoDto: UpdateCustomerInfoDto,
+    customerId,
+  ): Promise<UpdateCustomerInfoResponseDto> {
+    console.log('UpdateCustomerInfoDTO', updateCustomerInfoDto);
+    console.log('customerId', customerId);
+    const updateCustomerInfoResponse: IUpdateCustomerInfoResponse = await this.userServiceClient
+      .send('updateCustomerInfo', {
+        ...updateCustomerInfoDto,
+        customerId,
+      })
+      .toPromise();
+
+    console.log('OK');
+
+    const {
+      message,
+      status,
+      avatar,
+      email,
+      gender,
+      name,
+    } = updateCustomerInfoResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+    return {
+      statusCode: 200,
+      message: message,
+      data: {
+        avatar: avatar || null,
+        email: email || null,
+        gender: gender || null,
+        name: name || null,
+      },
     };
   }
 }

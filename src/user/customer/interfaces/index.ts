@@ -10,3 +10,5 @@ export { ICustomerAddressesResponse } from './customer-address/addresses-respons
 export { ICustomerAddressesData } from './customer-address/get-list-customer-address-data.interface';
 export { ICustomerIdData } from './create-customer/customer-id-data.interface';
 export { IGetCustomerResetPasswordTokenResponse } from './get-customer-reset-password-response.interface';
+export { IUpdateCustomerInfoData } from './update-customer-info-data.interface';
+export { IUpdateCustomerInfoResponse } from './update-customer-info-response.interface';
