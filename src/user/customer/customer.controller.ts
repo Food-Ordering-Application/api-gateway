@@ -50,6 +50,7 @@ import {
   UpdateCustomerInfoResponseDto,
   UpdateCustomerInfoDto,
   SendPhoneNumberOtpVerifyDto,
+  VerifyCustomerEmailResponseDto,
 } from './dto/index';
 import { CustomerService } from './customer.service';
 import { LocalAuthGuard } from '../../auth/guards/locals/local-auth.guard';
@@ -347,5 +348,15 @@ export class CustomerController {
       updateCustomerInfoDto,
       customerId,
     );
+  }
+
+  //! Lấy thông tin customer dựa trên resetPasswordToken
+  @ApiOkResponse({ type: VerifyCustomerEmailResponseDto })
+  @Get('/verify-email/:verifyEmailToken')
+  async verifyCustomerEmail(
+    @Param() params,
+  ): Promise<VerifyCustomerEmailResponseDto> {
+    const { verifyEmailToken } = params;
+    return this.customerService.verifyCustomerEmail(verifyEmailToken);
   }
 }

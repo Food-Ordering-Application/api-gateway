@@ -19,6 +19,7 @@ import {
   UpdateCustomerInfoResponseDto,
   UpdateCustomerInfoDto,
   SendPhoneNumberOtpVerifyDto,
+  VerifyCustomerEmailResponseDto,
 } from './dto/index';
 import * as constants from '../../constants';
 import {
@@ -377,6 +378,31 @@ export class CustomerService {
         gender: gender || null,
         name: name || null,
       },
+    };
+  }
+
+  async verifyCustomerEmail(
+    verifyEmailToken: string,
+  ): Promise<VerifyCustomerEmailResponseDto> {
+    const verifyCustomerEmailResponse: ISimpleResponse = await this.userServiceClient
+      .send('verifyCustomerEmail', {
+        verifyEmailToken,
+      })
+      .toPromise();
+
+    const { message, status } = verifyCustomerEmailResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+    return {
+      statusCode: 200,
+      message: message,
     };
   }
 }

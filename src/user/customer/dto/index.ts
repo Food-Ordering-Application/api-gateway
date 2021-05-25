@@ -35,3 +35,5 @@ export { UpdateCustomerPasswordDto } from './reset-password/update-customer-pass
 
 export { UpdateCustomerInfoResponseDto } from './customer-info/update-customer-info-response.dto';
 export { UpdateCustomerInfoDto } from './customer-info/update-customer-info.dto';
+
+export { VerifyCustomerEmailResponseDto } from './verify-customer-email/verify-customer-email-response.dto';
