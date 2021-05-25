@@ -9,6 +9,7 @@ export { LoginCustomerUnauthorizedResponseDto } from './login-customer/login-cus
 export { LoginCustomerDto } from './login-customer/login-customer.dto';
 
 export { SendPhoneNumberOTPVerifyResponseDto } from './send-otp/send-otp-response.dto';
+export { SendPhoneNumberOtpVerifyDto } from './send-otp/send-otp.dto';
 
 export { VerifyCustomerPhoneNumberResponseDto } from './verify-customer-phone-number/verify-customer-phone-number-response.dto';
 export { VerifyCustomerPhoneNumberUnauthorizedResponseDto } from './verify-customer-phone-number/verify-customer-phone-number-unauthorized-response.dto';

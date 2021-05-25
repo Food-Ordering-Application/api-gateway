@@ -49,6 +49,7 @@ import {
   UpdateCustomerPasswordDto,
   UpdateCustomerInfoResponseDto,
   UpdateCustomerInfoDto,
+  SendPhoneNumberOtpVerifyDto,
 } from './dto/index';
 import { CustomerService } from './customer.service';
 import { LocalAuthGuard } from '../../auth/guards/locals/local-auth.guard';
@@ -95,14 +96,15 @@ export class CustomerController {
 
   // Gửi mã OTP
   @ApiOkResponse({ type: SendPhoneNumberOTPVerifyResponseDto })
-  @ApiBearerAuth()
-  @UseGuards(CustomerJwtAuthGuard)
+  @ApiBody({ type: SendPhoneNumberOtpVerifyDto })
   @HttpCode(200)
   @Post('/send-otp')
   async sendOTPVerify(
-    @Request() req,
+    @Body() sendPhoneNumberOtpVerifyDto: SendPhoneNumberOtpVerifyDto,
   ): Promise<SendPhoneNumberOTPVerifyResponseDto> {
-    return this.customerService.sendPhoneNumberOTPVerify(req.user);
+    return this.customerService.sendPhoneNumberOTPVerify(
+      sendPhoneNumberOtpVerifyDto,
+    );
   }
 
   // Verified OTP
