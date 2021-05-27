@@ -4,6 +4,7 @@ import { USER_SERVICE, RESTAURANT_SERVICE, ORDER_SERVICE } from 'src/constants';
 import { IRestaurantServiceFetchMenuOfRestaurantResponse } from '../merchant/restaurant/menu/interfaces';
 import { IRestaurantServiceFetchMenuItemByMenuResponse } from '../merchant/restaurant/menu/menu-item/interfaces';
 import {
+  ConfirmOrderResponseDto,
   FetchDto,
   SavePosOrderDto,
   SavePosOrderResponseDto,
@@ -273,6 +274,32 @@ export class PosService {
       statusCode: 200,
       message,
       data,
+    };
+  }
+
+  async confirmDeliveryOrder(
+    orderId: string,
+    staffId: string,
+    restaurantId: string,
+  ): Promise<ConfirmOrderResponseDto> {
+    const restaurantConfirmOrderResponse: IOrderServiceSavePosOrderResponse =
+      await this.orderServiceClient
+        .send('restaurantConfirmOrder', {
+          orderId,
+          cashierId: staffId,
+          restaurantId,
+        })
+        .toPromise();
+
+    const { status, message } = restaurantConfirmOrderResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException({ message }, status);
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message,
     };
   }
 }
