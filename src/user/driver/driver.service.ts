@@ -4,6 +4,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { USER_SERVICE, DELIVERY_SERVICE, ORDER_SERVICE } from 'src/constants';
 import {
   IDeliveryServiceAcceptOrderResponse,
+  IOrderServiceCompleteOrderResponse,
   IOrderServicePickUpOrderResponse,
 } from './interfaces';
 
@@ -46,6 +47,27 @@ export class DriverService {
         .toPromise();
 
     const { status, message } = driverPickUpOrderResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException({ message }, status);
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message,
+    };
+  }
+
+  async completeOrder(driverId: string, orderId: string) {
+    const driverCompleteOrderResponse: IOrderServiceCompleteOrderResponse =
+      await this.orderServiceClient
+        .send('driverCompleteOrder', {
+          orderId,
+          driverId,
+        })
+        .toPromise();
+
+    const { status, message } = driverCompleteOrderResponse;
 
     if (status !== HttpStatus.OK) {
       throw new HttpException({ message }, status);

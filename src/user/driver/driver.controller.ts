@@ -42,4 +42,11 @@ export class DriverController {
     const driverId = MOCK_DRIVER_ID;
     return await this.driverService.pickUpOrder(driverId, orderId);
   }
+
+  @HttpCode(200)
+  @Post('/order/:orderId/complete')
+  async completeOrder(@Param('orderId') orderId: string) {
+    const driverId = MOCK_DRIVER_ID;
+    return await this.driverService.completeOrder(driverId, orderId);
+  }
 }
