@@ -28,6 +28,8 @@ import { ToppingItemController } from './merchant/restaurant/menu/topping-item/t
 import { ToppingItemService } from './merchant/restaurant/menu/topping-item/topping-item.service';
 import { PaymentService } from './merchant/restaurant/payment/payment.service';
 import { PaymentController } from './merchant/restaurant/payment/payment.controller';
+import { DriverController } from './driver/driver.controller';
+import { DriverService } from './driver/driver.service';
 
 @Module({
   imports: [
@@ -77,6 +79,21 @@ import { PaymentController } from './merchant/restaurant/payment/payment.control
           },
         }),
       },
+      {
+        name: constants.DELIVERY_SERVICE,
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.RMQ,
+          options: {
+            urls: [configService.get('AMQP_URL') as string],
+            queue: configService.get('DELIVERY_AMQP_QUEUE'),
+            queueOptions: {
+              durable: false,
+            },
+          },
+        }),
+      },
     ]),
     forwardRef(() => AuthModule),
     CaslModule,
@@ -94,6 +111,7 @@ import { PaymentController } from './merchant/restaurant/payment/payment.control
     ToppingGroupController,
     ToppingItemController,
     PaymentController,
+    DriverController,
   ],
   providers: [
     CustomerService,
@@ -108,6 +126,7 @@ import { PaymentController } from './merchant/restaurant/payment/payment.control
     ToppingGroupService,
     ToppingItemService,
     PaymentService,
+    DriverService,
   ],
   exports: [
     CustomerService,
@@ -122,6 +141,7 @@ import { PaymentController } from './merchant/restaurant/payment/payment.control
     ToppingGroupService,
     ToppingItemService,
     PaymentService,
+    DriverService,
   ],
 })
 export class UserModule {}
