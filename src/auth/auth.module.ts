@@ -13,6 +13,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JWT_SECRET } from '../constants';
 import { CustomerJwtStrategy } from './strategies/jwt-strategies/customer-jwt.strategy';
 import { AdminJwtStrategy } from './strategies/jwt-strategies/admin-jwt.strategy';
+import { DriverLocalStrategy } from './strategies/local-strategies/driver-local.strategy';
+import { DriverJwtStrategy } from './strategies/jwt-strategies/driver-jwt.strategy';
 
 @Module({
   imports: [
@@ -32,6 +34,8 @@ import { AdminJwtStrategy } from './strategies/jwt-strategies/admin-jwt.strategy
     AuthService,
     CustomerLocalStrategy,
     CustomerJwtStrategy,
+    DriverLocalStrategy,
+    DriverJwtStrategy,
     MerchantLocalStrategy,
     MerchantJwtStrategy,
     AdminLocalStrategy,
