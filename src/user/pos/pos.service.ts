@@ -10,6 +10,8 @@ import {
   SavePosOrderResponseDto,
   VerifyAppKeyDto,
   VerifyAppKeyResponseDto,
+  VoidOrderDto,
+  VoidOrderResponseDto,
 } from './dto';
 import {
   IOrderServiceSavePosOrderResponse,
@@ -292,6 +294,36 @@ export class PosService {
         .toPromise();
 
     const { status, message } = restaurantConfirmOrderResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException({ message }, status);
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message,
+    };
+  }
+
+  async voidDeliveryOrder(
+    orderId: string,
+    staffId: string,
+    restaurantId: string,
+    voidOrderDto: VoidOrderDto,
+  ): Promise<VoidOrderResponseDto> {
+    const { cashierNote, orderItemIds } = voidOrderDto;
+    const restaurantVoidOrderResponse: IOrderServiceSavePosOrderResponse =
+      await this.orderServiceClient
+        .send('restaurantVoidOrder', {
+          orderId,
+          cashierId: staffId,
+          restaurantId,
+          orderItemIds,
+          cashierNote,
+        })
+        .toPromise();
+
+    const { status, message } = restaurantVoidOrderResponse;
 
     if (status !== HttpStatus.OK) {
       throw new HttpException({ message }, status);
