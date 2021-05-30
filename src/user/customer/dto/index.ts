@@ -9,6 +9,7 @@ export { LoginCustomerUnauthorizedResponseDto } from './login-customer/login-cus
 export { LoginCustomerDto } from './login-customer/login-customer.dto';
 
 export { SendPhoneNumberOTPVerifyResponseDto } from './send-otp/send-otp-response.dto';
+export { SendPhoneNumberOtpVerifyDto } from './send-otp/send-otp.dto';
 
 export { VerifyCustomerPhoneNumberResponseDto } from './verify-customer-phone-number/verify-customer-phone-number-response.dto';
 export { VerifyCustomerPhoneNumberUnauthorizedResponseDto } from './verify-customer-phone-number/verify-customer-phone-number-unauthorized-response.dto';
@@ -34,3 +35,5 @@ export { UpdateCustomerPasswordDto } from './reset-password/update-customer-pass
 
 export { UpdateCustomerInfoResponseDto } from './customer-info/update-customer-info-response.dto';
 export { UpdateCustomerInfoDto } from './customer-info/update-customer-info.dto';
+
+export { VerifyCustomerEmailResponseDto } from './verify-customer-email/verify-customer-email-response.dto';

@@ -22,3 +22,5 @@ export { ConfirmOrderCheckoutResponseDto } from './confirm-order-checkout-respon
 export { ConfirmOrderCheckoutDto } from './confirm-order-checkout.dto';
 export { ApprovePaypalOrderResponseDto } from './approve-paypal-order-response.dto';
 export { ApprovePaypalOrderDto } from './approve-paypal-order.dto';
+export { GetListOrderOfDriverResponseDto } from './get-list-order-of-driver-response.dto';
+export { GetListOrderOfDriverDto } from './get-list-order-of-driver.dto';

@@ -18,6 +18,8 @@ import {
   UpdateCustomerPasswordResponseDto,
   UpdateCustomerInfoResponseDto,
   UpdateCustomerInfoDto,
+  SendPhoneNumberOtpVerifyDto,
+  VerifyCustomerEmailResponseDto,
 } from './dto/index';
 import * as constants from '../../constants';
 import {
@@ -28,6 +30,7 @@ import {
   ICustomerAddressesResponse,
   IGetCustomerResetPasswordTokenResponse,
   IUpdateCustomerInfoResponse,
+  IVerifyCustomerEmail,
 } from './interfaces/index';
 
 @Injectable()
@@ -61,10 +64,10 @@ export class CustomerService {
   }
 
   async sendPhoneNumberOTPVerify(
-    user: ICustomer,
+    sendPhoneNumberOtpVerifyDto: SendPhoneNumberOtpVerifyDto,
   ): Promise<SendPhoneNumberOTPVerifyResponseDto> {
     const sendPhoneNumberOTPVerifyResponse: ISimpleResponse = await this.userServiceClient
-      .send('sendPhoneNumberOTPVerify', user)
+      .send('sendPhoneNumberOTPVerify', { ...sendPhoneNumberOtpVerifyDto })
       .toPromise();
     if (sendPhoneNumberOTPVerifyResponse.status !== HttpStatus.OK) {
       throw new HttpException(
@@ -343,16 +346,12 @@ export class CustomerService {
     updateCustomerInfoDto: UpdateCustomerInfoDto,
     customerId,
   ): Promise<UpdateCustomerInfoResponseDto> {
-    console.log('UpdateCustomerInfoDTO', updateCustomerInfoDto);
-    console.log('customerId', customerId);
     const updateCustomerInfoResponse: IUpdateCustomerInfoResponse = await this.userServiceClient
       .send('updateCustomerInfo', {
         ...updateCustomerInfoDto,
         customerId,
       })
       .toPromise();
-
-    console.log('OK');
 
     const {
       message,
@@ -380,6 +379,32 @@ export class CustomerService {
         gender: gender || null,
         name: name || null,
       },
+    };
+  }
+
+  async verifyCustomerEmail(
+    verifyEmailToken: string,
+  ): Promise<VerifyCustomerEmailResponseDto> {
+    const verifyCustomerEmailResponse: IVerifyCustomerEmail = await this.userServiceClient
+      .send('verifyCustomerEmail', {
+        verifyEmailToken,
+      })
+      .toPromise();
+
+    const { message, status, email } = verifyCustomerEmailResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+    return {
+      statusCode: 200,
+      message: message,
+      email: email,
     };
   }
 }

@@ -1,33 +1,44 @@
 import {
   Body,
   Controller,
-  Get,
   HttpCode,
   Param,
   Post,
-  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
 import {
-  ApiBearerAuth,
   ApiBody,
+  ApiConflictResponse,
+  ApiCreatedResponse,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
-  ApiQuery,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { AuthService } from 'src/auth/auth.service';
 import { InternalServerErrorResponseDto } from 'src/shared/dto/internal-server-error.dto';
+import { AuthService } from '../../auth/auth.service';
+import { DriverLocalAuthGuard } from '../../auth/guards/locals/driver-local-auth.guard';
+import { CustomerService } from '../customer/customer.service';
 import { DriverService } from './driver.service';
+import {
+  LoginDriverDto,
+  LoginDriverResponseDto,
+  LoginDriverUnauthorizedResponseDto,
+  RegisterDriverConflictResponseDto,
+  RegisterDriverCreatedResponseDto,
+  RegisterDriverDto,
+} from './dto';
 
 const MOCK_DRIVER_ID = 'a22f3f78-be7f-11eb-8529-0242ac130003';
 @ApiTags('driver')
 @ApiInternalServerErrorResponse({ type: InternalServerErrorResponseDto })
 @Controller('user/driver')
 export class DriverController {
-  constructor(private driverService: DriverService) {}
+  constructor(
+    private driverService: DriverService,
+    private authService: AuthService,
+  ) {}
 
   @HttpCode(200)
   @Post('/order/:orderId/accept')
@@ -48,5 +59,27 @@ export class DriverController {
   async completeOrder(@Param('orderId') orderId: string) {
     const driverId = MOCK_DRIVER_ID;
     return await this.driverService.completeOrder(driverId, orderId);
+  }
+
+  //! Đăng nhập driver
+  @ApiOkResponse({ type: LoginDriverResponseDto })
+  @ApiUnauthorizedResponse({ type: LoginDriverUnauthorizedResponseDto })
+  @ApiBody({ type: LoginDriverDto })
+  @UseGuards(DriverLocalAuthGuard)
+  @HttpCode(200)
+  @Post('/login')
+  async loginDriver(@Request() req): Promise<LoginDriverResponseDto> {
+    return this.authService.driverLogin(req.user);
+  }
+
+  //! Đăng ký driver
+  @ApiCreatedResponse({ type: RegisterDriverCreatedResponseDto })
+  @ApiConflictResponse({ type: RegisterDriverConflictResponseDto })
+  @ApiBody({ type: RegisterDriverDto })
+  @Post()
+  async registerDriver(
+    @Body() registerDriverDto: RegisterDriverDto,
+  ): Promise<RegisterDriverCreatedResponseDto> {
+    return this.driverService.registerDriver(registerDriverDto);
   }
 }

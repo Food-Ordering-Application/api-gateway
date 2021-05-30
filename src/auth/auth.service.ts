@@ -14,6 +14,7 @@ import { AdminService } from 'src/user/admin/admin.service';
 import { IAdmin } from 'src/user/admin/interfaces';
 import { AdminJwtPayload } from './strategies/jwt-strategies/admin-jwt-payload.interface';
 import { PosJwtPayload } from './strategies/jwt-strategies/pos-jwt-payload.interface';
+import { DriverService } from '../user/driver/driver.service';
 
 @Injectable()
 export class AuthService {
@@ -21,6 +22,7 @@ export class AuthService {
 
   constructor(
     private customerService: CustomerService,
+    private driverService: DriverService,
     private merchantService: MerchantService,
     private adminService: AdminService,
     private posService: PosService,
@@ -53,6 +55,37 @@ export class AuthService {
       message: 'Customer login successfully',
       data: {
         user: user,
+        access_token: this.jwtService.sign(payload),
+      },
+    };
+  }
+
+  async validateDriver(phoneNumber: string, pass: string): Promise<any> {
+    const driver = await this.driverService.findDriverByPhonenumber(
+      phoneNumber,
+    );
+
+    if (driver) {
+      const isMatch = await bcrypt.compare(pass, driver.password);
+      if (isMatch) {
+        delete driver.password;
+        return driver;
+      }
+    }
+    return null;
+  }
+
+  async driverLogin(driver: any) {
+    const payload = {
+      phoneNumber: driver.phoneNumber,
+      sub: driver.id,
+      isDriver: true,
+    };
+    return {
+      statusCode: 200,
+      message: 'Driver login successfully',
+      data: {
+        user: driver,
         access_token: this.jwtService.sign(payload),
       },
     };

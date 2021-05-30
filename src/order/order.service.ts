@@ -24,6 +24,8 @@ import {
   ConfirmOrderCheckoutResponseDto,
   ApprovePaypalOrderDto,
   ApprovePaypalOrderResponseDto,
+  GetListOrderOfDriverResponseDto,
+  GetListOrderOfDriverDto,
 } from './dto';
 import {
   ICreateOrderResponse,
@@ -575,6 +577,40 @@ export class OrderService {
       message,
       data: {
         order: order,
+      },
+    };
+  }
+
+  async getListOrderOfDriver(
+    driverId: string,
+    callerId: string,
+    getListOrderOfDriverDto: GetListOrderOfDriverDto,
+  ): Promise<GetListOrderOfDriverResponseDto> {
+    //TODO:
+    const getListOrderOfDriverResponse: IOrdersResponse = await this.orderServiceClient
+      .send('getListOrderOfDriver', {
+        driverId,
+        callerId,
+        ...getListOrderOfDriverDto,
+      })
+      .toPromise();
+
+    const { message, status, orders } = getListOrderOfDriverResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+
+    return {
+      statusCode: status,
+      message,
+      data: {
+        orders: orders,
       },
     };
   }
