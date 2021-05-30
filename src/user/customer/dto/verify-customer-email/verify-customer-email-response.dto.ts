@@ -8,4 +8,9 @@ export class VerifyCustomerEmailResponseDto {
     type: 'string',
   })
   message: string;
+  @ApiProperty({
+    example: 'thachdau16t@gmail.com',
+    type: 'string',
+  })
+  email: string;
 }

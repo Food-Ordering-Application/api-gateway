@@ -48,6 +48,8 @@ import {
   ConfirmOrderCheckoutDto,
   ApprovePaypalOrderResponseDto,
   ApprovePaypalOrderDto,
+  GetListOrderOfDriverDto,
+  GetListOrderOfDriverResponseDto,
 } from './dto';
 import { ForbiddenResponseDto } from 'src/user/customer/dto';
 import { PoliciesGuard } from 'src/casl/guards/policy.guard';
@@ -268,6 +270,7 @@ export class OrderController {
     );
   }
 
+  //! Approve Paypal Order
   @ApiOkResponse({ type: ApprovePaypalOrderResponseDto })
   @ApiForbiddenResponse({
     type: ForbiddenResponseDto,
@@ -288,6 +291,30 @@ export class OrderController {
       approvePaypalOrderDto,
       orderId,
       req.user.userId,
+    );
+  }
+
+  //! Get one order ON_GOING, PICKED_UP of driver
+  @ApiOkResponse({ type: GetListOrderOfDriverResponseDto })
+  @ApiForbiddenResponse({
+    type: ForbiddenResponseDto,
+  })
+  @ApiQuery({ type: GetListOrderOfDriverDto })
+  @ApiBearerAuth()
+  @UseGuards(CustomerJwtAuthGuard, PoliciesGuard)
+  @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, Customer))
+  @Get('/driver/:driverId/list-order')
+  async getListOrderOfDriver(
+    @Request() req,
+    @Param() params,
+    @Query()
+    getListOrderOfDriverDto: GetListOrderOfDriverDto,
+  ): Promise<GetListOrderOfDriverResponseDto> {
+    const { driverId } = params;
+    return this.orderService.getListOrderOfDriver(
+      driverId,
+      req.user.userId,
+      getListOrderOfDriverDto,
     );
   }
 }

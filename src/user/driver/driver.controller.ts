@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   HttpCode,
   Param,
@@ -8,6 +9,8 @@ import {
 } from '@nestjs/common';
 import {
   ApiBody,
+  ApiConflictResponse,
+  ApiCreatedResponse,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiTags,
@@ -16,11 +19,15 @@ import {
 import { InternalServerErrorResponseDto } from 'src/shared/dto/internal-server-error.dto';
 import { AuthService } from '../../auth/auth.service';
 import { DriverLocalAuthGuard } from '../../auth/guards/locals/driver-local-auth.guard';
+import { CustomerService } from '../customer/customer.service';
 import { DriverService } from './driver.service';
 import {
   LoginDriverDto,
   LoginDriverResponseDto,
   LoginDriverUnauthorizedResponseDto,
+  RegisterDriverConflictResponseDto,
+  RegisterDriverCreatedResponseDto,
+  RegisterDriverDto,
 } from './dto';
 
 const MOCK_DRIVER_ID = 'a22f3f78-be7f-11eb-8529-0242ac130003';
@@ -63,5 +70,16 @@ export class DriverController {
   @Post('/login')
   async loginDriver(@Request() req): Promise<LoginDriverResponseDto> {
     return this.authService.driverLogin(req.user);
+  }
+
+  //! Đăng ký driver
+  @ApiCreatedResponse({ type: RegisterDriverCreatedResponseDto })
+  @ApiConflictResponse({ type: RegisterDriverConflictResponseDto })
+  @ApiBody({ type: RegisterDriverDto })
+  @Post()
+  async registerDriver(
+    @Body() registerDriverDto: RegisterDriverDto,
+  ): Promise<RegisterDriverCreatedResponseDto> {
+    return this.driverService.registerDriver(registerDriverDto);
   }
 }

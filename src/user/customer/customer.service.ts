@@ -30,6 +30,7 @@ import {
   ICustomerAddressesResponse,
   IGetCustomerResetPasswordTokenResponse,
   IUpdateCustomerInfoResponse,
+  IVerifyCustomerEmail,
 } from './interfaces/index';
 
 @Injectable()
@@ -384,13 +385,13 @@ export class CustomerService {
   async verifyCustomerEmail(
     verifyEmailToken: string,
   ): Promise<VerifyCustomerEmailResponseDto> {
-    const verifyCustomerEmailResponse: ISimpleResponse = await this.userServiceClient
+    const verifyCustomerEmailResponse: IVerifyCustomerEmail = await this.userServiceClient
       .send('verifyCustomerEmail', {
         verifyEmailToken,
       })
       .toPromise();
 
-    const { message, status } = verifyCustomerEmailResponse;
+    const { message, status, email } = verifyCustomerEmailResponse;
 
     if (status !== HttpStatus.OK) {
       throw new HttpException(
@@ -403,6 +404,7 @@ export class CustomerService {
     return {
       statusCode: 200,
       message: message,
+      email: email,
     };
   }
 }

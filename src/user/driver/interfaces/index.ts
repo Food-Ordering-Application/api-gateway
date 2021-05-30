@@ -4,3 +4,4 @@ export { IOrderServiceCompleteOrderResponse } from './order-service-complete-ord
 export { IDriverResponse } from './driver-response.interface';
 export { IDriver } from './driver.interface';
 export { ILoginDriverData } from './login-customer/login-driver-data.interface';
+export { IDriverData } from './register-driver/register-driver-data.interface';

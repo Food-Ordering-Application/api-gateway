@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { USER_SERVICE, DELIVERY_SERVICE, ORDER_SERVICE } from 'src/constants';
+import { RegisterDriverCreatedResponseDto, RegisterDriverDto } from './dto';
 import {
   IDeliveryServiceAcceptOrderResponse,
   IDriver,
@@ -81,7 +82,7 @@ export class DriverService {
     const findDriverByPhonenumberResponse: IDriverResponse = await this.userServiceClient
       .send('findDriverByPhonenumber', phoneNumber)
       .toPromise();
-    const { message, status, user } = findDriverByPhonenumberResponse;
+    const { message, status, driver } = findDriverByPhonenumberResponse;
     if (status !== HttpStatus.OK) {
       throw new HttpException(
         {
@@ -90,6 +91,32 @@ export class DriverService {
         status,
       );
     }
-    return user;
+    return driver;
+  }
+
+  async registerDriver(
+    registerDriverDto: RegisterDriverDto,
+  ): Promise<RegisterDriverCreatedResponseDto> {
+    const registerDriverResponse: IDriverResponse = await this.userServiceClient
+      .send('registerDriver', registerDriverDto)
+      .toPromise();
+
+    const { message, status, driver } = registerDriverResponse;
+
+    if (status !== HttpStatus.CREATED) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+    return {
+      statusCode: 201,
+      message: message,
+      data: {
+        driver: driver,
+      },
+    };
   }
 }
