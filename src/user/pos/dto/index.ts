@@ -17,3 +17,5 @@ export { PosOrderDto } from './save-pos-order/pos-order.dto';
 export { SavePosOrderResponseDto } from './save-pos-order/save-pos-order-response.dto';
 export { SavePosOrderUnauthorizedResponseDto } from './save-pos-order/save-pos-order-unauthorized-response.dto';
 export { ConfirmOrderResponseDto } from './confirm-order/confirm-order-response-dto';
+export { VoidOrderDto } from './void-order/void-order.dto';
+export { VoidOrderResponseDto } from './void-order/void-order-response.dto';

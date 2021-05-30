@@ -41,6 +41,8 @@ import {
   VerifyAppKeyDto,
   VerifyAppKeyResponseDto,
   VerifyAppKeyUnauthorizedResponseDto,
+  VoidOrderDto,
+  VoidOrderResponseDto,
 } from './dto';
 import { PosService } from './pos.service';
 import { PosJwtAuthGuard } from 'src/auth/guards/jwts/pos-jwt-auth.guard';
@@ -229,6 +231,7 @@ export class PosController {
     return await this.posService.savePosOrder(savePosOrderDto);
   }
 
+  @ApiOkResponse({ type: ConfirmOrderResponseDto })
   @UseGuards(PosJwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post('/order/:orderId/confirm')
@@ -242,6 +245,25 @@ export class PosController {
       orderId,
       staffId,
       restaurantId,
+    );
+  }
+
+  @ApiOkResponse({ type: VoidOrderResponseDto })
+  @UseGuards(PosJwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @Post('/order/:orderId/void')
+  async voidDeliveryOrder(
+    @Request() req: PosJwtRequest,
+    @Param('orderId') orderId: string,
+    @Body() voidOrderDto: VoidOrderDto,
+  ): Promise<VoidOrderResponseDto> {
+    const { user } = req;
+    const { restaurantId, staffId } = user;
+    return await this.posService.voidDeliveryOrder(
+      orderId,
+      staffId,
+      restaurantId,
+      voidOrderDto,
     );
   }
 }
