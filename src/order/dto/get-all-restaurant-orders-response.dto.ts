@@ -28,11 +28,15 @@ export class GetAllRestaurantOrderResponseDto {
             id: '9259d7db-5946-4e0b-96dc-688d91a14a92',
             customerId: '849768fd-f8b8-4c50-be38-2fa34407e8bd',
             driverId: null,
+            customerName: 'Phúc',
+            customerPhoneNumber: '0123456789',
             customerAddress: '475A Điện Biên Phủ, Phường 25, Bình Thạnh',
             customerGeom: {
               type: 'Point',
               coordinates: [10.8019386669912, 106.714684816185],
             },
+            restaurantName: 'Quán Ăn Maika',
+            restaurantPhoneNumber: '0949657934',
             restaurantAddress: '528 Nguyễn Trãi, P. 8, Quận 5, TP. HCM',
             restaurantGeom: {
               type: 'Point',

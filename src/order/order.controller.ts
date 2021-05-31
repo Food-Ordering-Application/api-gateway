@@ -90,7 +90,6 @@ export class OrderController {
     @Body()
     getOrderAssociatedWithCusAndResDto: GetOrderAssociatedWithCusAndResDto,
   ): Promise<GetOrderAssociatedWithCusAndResResponseDto> {
-    console.log('haha');
     return this.orderService.getOrderAssociatedWithCusAndRes(
       getOrderAssociatedWithCusAndResDto,
     );
