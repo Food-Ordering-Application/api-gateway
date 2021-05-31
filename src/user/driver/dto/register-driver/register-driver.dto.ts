@@ -23,6 +23,15 @@ export class RegisterDriverDto {
   @ApiProperty({ example: '053168469', required: true })
   @IsString()
   IDNumber: string;
+  @ApiProperty({ example: '59-Z1 011.01', required: true })
+  @IsString()
+  licensePlate: string;
+  @ApiProperty({ example: 'somelink.jpg', required: true })
+  @IsString()
+  avatar: string;
+  @ApiProperty({ example: 'DD64LQSRDC2UN', required: true })
+  @IsString()
+  merchantIdInPaypal: string;
   @ApiProperty({ example: 'somelink.jpg', required: true })
   @IsString()
   identityCardImageUrl: string;
