@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { USER_SERVICE, RESTAURANT_SERVICE, ORDER_SERVICE } from 'src/constants';
+import { ISimpleResponse } from '../merchant/interfaces';
 import { IRestaurantServiceFetchMenuOfRestaurantResponse } from '../merchant/restaurant/menu/interfaces';
 import { IRestaurantServiceFetchMenuItemByMenuResponse } from '../merchant/restaurant/menu/menu-item/interfaces';
 import {
@@ -8,6 +9,8 @@ import {
   FetchDto,
   SavePosOrderDto,
   SavePosOrderResponseDto,
+  UpdateMenuItemDto,
+  UpdateMenuItemResponseDto,
   VerifyAppKeyDto,
   VerifyAppKeyResponseDto,
   VoidOrderDto,
@@ -325,6 +328,31 @@ export class PosService {
 
     const { status, message } = restaurantVoidOrderResponse;
 
+    if (status !== HttpStatus.OK) {
+      throw new HttpException({ message }, status);
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message,
+    };
+  }
+
+  async updateMenuItem(
+    menuItemId: string,
+    restaurantId: string,
+    updateMenuItemDto: UpdateMenuItemDto,
+  ): Promise<UpdateMenuItemResponseDto> {
+    const updateMenuItemResponse: ISimpleResponse =
+      await this.restaurantServiceClient
+        .send('updateMenuItem', {
+          menuItemId,
+          restaurantId,
+          data: updateMenuItemDto,
+        })
+        .toPromise();
+
+    const { status, message } = updateMenuItemResponse;
     if (status !== HttpStatus.OK) {
       throw new HttpException({ message }, status);
     }

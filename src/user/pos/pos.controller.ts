@@ -6,6 +6,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Query,
   Request,
@@ -38,6 +39,8 @@ import {
   SavePosOrderDto,
   SavePosOrderResponseDto,
   SavePosOrderUnauthorizedResponseDto,
+  UpdateMenuItemDto,
+  UpdateMenuItemResponseDto,
   VerifyAppKeyDto,
   VerifyAppKeyResponseDto,
   VerifyAppKeyUnauthorizedResponseDto,
@@ -264,6 +267,26 @@ export class PosController {
       staffId,
       restaurantId,
       voidOrderDto,
+    );
+  }
+
+  // Update menu item
+  @ApiOkResponse({ type: UpdateMenuItemResponseDto })
+  @ApiBody({ type: UpdateMenuItemDto })
+  @ApiBearerAuth()
+  @UseGuards(PosJwtAuthGuard)
+  @Patch('menu-item/:menuItemId')
+  async updateMenuItem(
+    @Request() req: PosJwtRequest,
+    @Param('menuItemId') menuItem,
+    @Body() updateMenuItemDto: UpdateMenuItemDto,
+  ): Promise<UpdateMenuItemResponseDto> {
+    const { user } = req;
+    const { restaurantId, staffId } = user;
+    return await this.posService.updateMenuItem(
+      menuItem,
+      restaurantId,
+      updateMenuItemDto,
     );
   }
 }
