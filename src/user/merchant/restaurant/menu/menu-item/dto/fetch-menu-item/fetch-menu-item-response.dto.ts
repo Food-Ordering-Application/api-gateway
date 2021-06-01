@@ -1,6 +1,7 @@
 import { POSITION_GAP } from '../../../../../../../constants';
 import { ApiProperty } from '@nestjs/swagger';
 import { IFetchMenuItemData } from '../../interfaces';
+import { State } from 'src/user/pos/dto/enums';
 
 export class FetchMenuItemByMenuResponseDto {
   @ApiProperty({ example: 200 })
@@ -19,6 +20,7 @@ export class FetchMenuItemByMenuResponseDto {
           price: 40000,
           imageUrl: 'http://lorempixel.com/640/480',
           index: POSITION_GAP,
+          state: State.IN_STOCK,
           isActive: true,
         },
       ],

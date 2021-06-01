@@ -1,6 +1,7 @@
 import { POSITION_GAP } from '../../../../../../../constants';
 import { ApiProperty } from '@nestjs/swagger';
 import { IFetchToppingItemData } from '../../interfaces';
+import { State } from 'src/user/pos/dto/enums';
 
 export class FetchToppingItemByMenuResponseDto {
   @ApiProperty({ example: 200 })
@@ -19,6 +20,7 @@ export class FetchToppingItemByMenuResponseDto {
           price: 9000,
           maxQuantity: 2,
           index: POSITION_GAP,
+          state: State.IN_STOCK,
           isActive: true,
         },
       ],
