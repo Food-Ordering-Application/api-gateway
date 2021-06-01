@@ -41,6 +41,8 @@ import {
   SavePosOrderUnauthorizedResponseDto,
   UpdateMenuItemDto,
   UpdateMenuItemResponseDto,
+  UpdateToppingItemDto,
+  UpdateToppingItemResponseDto,
   VerifyAppKeyDto,
   VerifyAppKeyResponseDto,
   VerifyAppKeyUnauthorizedResponseDto,
@@ -287,6 +289,25 @@ export class PosController {
       menuItem,
       restaurantId,
       updateMenuItemDto,
+    );
+  }
+
+  @ApiOkResponse({ type: UpdateToppingItemResponseDto })
+  @ApiBody({ type: UpdateToppingItemDto })
+  @ApiBearerAuth()
+  @UseGuards(PosJwtAuthGuard)
+  @Patch('topping-item/:toppingItemId')
+  async updateToppingItem(
+    @Request() req: PosJwtRequest,
+    @Param('toppingItemId') toppingItem,
+    @Body() updateToppingItemDto: UpdateToppingItemDto,
+  ): Promise<UpdateToppingItemResponseDto> {
+    const { user } = req;
+    const { restaurantId, staffId } = user;
+    return await this.posService.updateToppingItem(
+      toppingItem,
+      restaurantId,
+      updateToppingItemDto,
     );
   }
 }

@@ -21,3 +21,5 @@ export { VoidOrderDto } from './void-order/void-order.dto';
 export { VoidOrderResponseDto } from './void-order/void-order-response.dto';
 export { UpdateMenuItemResponseDto } from './update-menu-item/update-menu-item-response.dto';
 export { UpdateMenuItemDto } from './update-menu-item/update-menu-item.dto';
+export { UpdateToppingItemDto } from './update-topping-item/update-topping-item.dto';
+export { UpdateToppingItemResponseDto } from './update-topping-item/update-topping-item-response.dto';

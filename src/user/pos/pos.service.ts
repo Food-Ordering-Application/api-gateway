@@ -11,6 +11,8 @@ import {
   SavePosOrderResponseDto,
   UpdateMenuItemDto,
   UpdateMenuItemResponseDto,
+  UpdateToppingItemDto,
+  UpdateToppingItemResponseDto,
   VerifyAppKeyDto,
   VerifyAppKeyResponseDto,
   VoidOrderDto,
@@ -353,6 +355,31 @@ export class PosService {
         .toPromise();
 
     const { status, message } = updateMenuItemResponse;
+    if (status !== HttpStatus.OK) {
+      throw new HttpException({ message }, status);
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message,
+    };
+  }
+
+  async updateToppingItem(
+    toppingItemId: string,
+    restaurantId: string,
+    updateToppingItemDto: UpdateToppingItemDto,
+  ): Promise<UpdateToppingItemResponseDto> {
+    const updateToppingItemResponse: ISimpleResponse =
+      await this.restaurantServiceClient
+        .send('updateToppingItem', {
+          toppingItemId,
+          restaurantId,
+          data: updateToppingItemDto,
+        })
+        .toPromise();
+
+    const { status, message } = updateToppingItemResponse;
     if (status !== HttpStatus.OK) {
       throw new HttpException({ message }, status);
     }
