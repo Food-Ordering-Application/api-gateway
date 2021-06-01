@@ -1,5 +1,6 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { IsBoolean, IsNumber, IsString, IsUUID } from 'class-validator';
+import { IsBoolean, IsEnum, IsNumber, IsString, IsUUID } from 'class-validator';
+import { State } from 'src/user/pos/dto/enums';
 import { POSITION_GAP } from '../../../../../../../constants';
 
 export class UpdateToppingItemFullDto {
@@ -55,6 +56,13 @@ export class UpdateToppingItemFullDto {
   })
   @IsNumber()
   index: number;
+
+  @ApiProperty({
+    example: State.OUT_OF_STOCK,
+    enum: State,
+  })
+  @IsEnum(State)
+  state: State;
 }
 
 export class UpdateToppingItemDto extends PartialType(
