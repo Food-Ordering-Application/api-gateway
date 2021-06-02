@@ -27,8 +27,10 @@ import {
   ApprovePaypalOrderResponseDto,
   GetListOrderOfDriverResponseDto,
   GetListOrderOfDriverDto,
-  GetOngoingOrdersOfCustomerDto,
+  GetDraftOrdersOfCustomerDto,
   GetOngoingOrdersOfCustomerResponseDto,
+  GetDraftOrdersOfCustomerResponseDto,
+  GetOngoingOrdersOfCustomerDto,
 } from './dto';
 import {
   ICreateOrderResponse,
@@ -619,6 +621,36 @@ export class OrderService {
         .toPromise();
 
     const { message, status, orders } = getOngoingOrdersOfCustomer;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+
+    return {
+      statusCode: status,
+      message,
+      data: {
+        orders: orders,
+      },
+    };
+  }
+
+  async getDraftOrdersOfCustomer(
+    getDraftOrdersOfCustomerDto: GetDraftOrdersOfCustomerDto,
+  ): Promise<GetDraftOrdersOfCustomerResponseDto> {
+    const getDraftOrdersOfCustomer: IOrdersResponse =
+      await this.orderServiceClient
+        .send('getDraftOrdersOfCustomer', {
+          ...getDraftOrdersOfCustomerDto,
+        })
+        .toPromise();
+
+    const { message, status, orders } = getDraftOrdersOfCustomer;
 
     if (status !== HttpStatus.OK) {
       throw new HttpException(

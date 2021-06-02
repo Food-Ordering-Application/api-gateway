@@ -52,6 +52,8 @@ import {
   GetListOrderOfDriverResponseDto,
   GetOngoingOrdersOfCustomerResponseDto,
   GetOngoingOrdersOfCustomerParams,
+  GetDraftOrdersOfCustomerResponseDto,
+  GetDraftOrdersOfCustomerParams,
 } from './dto';
 import { ForbiddenResponseDto } from 'src/user/customer/dto';
 import { PoliciesGuard } from 'src/casl/guards/policy.guard';
@@ -331,6 +333,24 @@ export class OrderController {
     const { user } = req;
     const { userId } = user;
     return this.orderService.getOngoingOrdersOfCustomer({
+      customerId: userId,
+      offset,
+      limit,
+    });
+  }
+
+  @ApiOkResponse({ type: GetDraftOrdersOfCustomerResponseDto })
+  @ApiQuery({ type: GetDraftOrdersOfCustomerParams })
+  @ApiBearerAuth()
+  @UseGuards(CustomerJwtAuthGuard)
+  @Get('/get-drafts')
+  async getDraftOrdersOfCustomer(
+    @Request() req,
+    @Query() { offset, limit }: GetDraftOrdersOfCustomerParams,
+  ): Promise<GetDraftOrdersOfCustomerResponseDto> {
+    const { user } = req;
+    const { userId } = user;
+    return this.orderService.getDraftOrdersOfCustomer({
       customerId: userId,
       offset,
       limit,
