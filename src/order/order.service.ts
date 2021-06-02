@@ -31,7 +31,7 @@ import {
   GetOngoingOrdersOfCustomerResponseDto,
   GetDraftOrdersOfCustomerResponseDto,
   GetOngoingOrdersOfCustomerDto,
-  GetOrderHistoryOfCustomerDto,
+  GetOrderHistoryOfCustomerPayload,
   GetOrderHistoryOfCustomerResponseDto,
 } from './dto';
 import {
@@ -673,7 +673,7 @@ export class OrderService {
   }
 
   async getOrderHistoryOfCustomer(
-    getOrderHistoryOfCustomerDto: GetOrderHistoryOfCustomerDto,
+    getOrderHistoryOfCustomerDto: GetOrderHistoryOfCustomerPayload,
   ): Promise<GetOrderHistoryOfCustomerResponseDto> {
     const getOrderHistoryOfCustomer: IOrdersResponse =
       await this.orderServiceClient

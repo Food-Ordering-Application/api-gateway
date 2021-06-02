@@ -35,4 +35,5 @@ export { GetDraftOrdersOfCustomerResponseDto } from './get-draft-orders-of-custo
 export { GetDraftOrdersOfCustomerDto } from './get-draft-orders-of-customer/get-draft-orders-of-customer.dto';
 export { GetOrderHistoryOfCustomerParams } from './get-order-history-of-customer/get-order-history-of-customer-params';
 export { GetOrderHistoryOfCustomerResponseDto } from './get-order-history-of-customer/get-order-history-of-customer-response.dto';
+export { GetOrderHistoryOfCustomerPayload } from './get-order-history-of-customer/get-order-history-of-customer.payload';
 export { GetOrderHistoryOfCustomerDto } from './get-order-history-of-customer/get-order-history-of-customer.dto';

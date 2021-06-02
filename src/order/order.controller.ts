@@ -56,6 +56,7 @@ import {
   GetDraftOrdersOfCustomerParams,
   GetOrderHistoryOfCustomerResponseDto,
   GetOrderHistoryOfCustomerParams,
+  GetOrderHistoryOfCustomerPayload,
   GetOrderHistoryOfCustomerDto,
 } from './dto';
 import { ForbiddenResponseDto } from 'src/user/customer/dto';
@@ -368,11 +369,13 @@ export class OrderController {
   async getOrderHistoryOfCustomer(
     @Request() req,
     @Query() queries: GetOrderHistoryOfCustomerParams,
+    @Body() getOrderHistoryOfCustomerDto: GetOrderHistoryOfCustomerDto,
   ): Promise<GetOrderHistoryOfCustomerResponseDto> {
     const { user } = req;
     const { userId } = user;
-    const { offset, limit, filter = null, from, to } = queries;
-    const getOrderHistoryPayload: GetOrderHistoryOfCustomerDto = {
+    const { offset, limit } = queries;
+    const { filter, from, to } = getOrderHistoryOfCustomerDto;
+    const getOrderHistoryPayload: GetOrderHistoryOfCustomerPayload = {
       customerId: userId,
       offset,
       limit,
