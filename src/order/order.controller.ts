@@ -50,6 +50,14 @@ import {
   ApprovePaypalOrderDto,
   GetListOrderOfDriverDto,
   GetListOrderOfDriverResponseDto,
+  GetOngoingOrdersOfCustomerResponseDto,
+  GetOngoingOrdersOfCustomerParams,
+  GetDraftOrdersOfCustomerResponseDto,
+  GetDraftOrdersOfCustomerParams,
+  GetOrderHistoryOfCustomerResponseDto,
+  GetOrderHistoryOfCustomerParams,
+  GetOrderHistoryOfCustomerPayload,
+  GetOrderHistoryOfCustomerDto,
 } from './dto';
 import { ForbiddenResponseDto } from 'src/user/customer/dto';
 import { PoliciesGuard } from 'src/casl/guards/policy.guard';
@@ -315,5 +323,66 @@ export class OrderController {
       req.user.userId,
       getListOrderOfDriverDto,
     );
+  }
+
+  @ApiOkResponse({ type: GetOngoingOrdersOfCustomerResponseDto })
+  @ApiQuery({ type: GetOngoingOrdersOfCustomerParams })
+  @ApiBearerAuth()
+  @UseGuards(CustomerJwtAuthGuard)
+  @Post('/get-ongoing')
+  async getOngoingOrdersOfCustomer(
+    @Request() req,
+    @Query() { offset, limit }: GetOngoingOrdersOfCustomerParams,
+  ): Promise<GetOngoingOrdersOfCustomerResponseDto> {
+    const { user } = req;
+    const { userId } = user;
+    return this.orderService.getOngoingOrdersOfCustomer({
+      customerId: userId,
+      offset,
+      limit,
+    });
+  }
+
+  @ApiOkResponse({ type: GetDraftOrdersOfCustomerResponseDto })
+  @ApiQuery({ type: GetDraftOrdersOfCustomerParams })
+  @ApiBearerAuth()
+  @UseGuards(CustomerJwtAuthGuard)
+  @Post('/get-drafts')
+  async getDraftOrdersOfCustomer(
+    @Request() req,
+    @Query() { offset, limit }: GetDraftOrdersOfCustomerParams,
+  ): Promise<GetDraftOrdersOfCustomerResponseDto> {
+    const { user } = req;
+    const { userId } = user;
+    return this.orderService.getDraftOrdersOfCustomer({
+      customerId: userId,
+      offset,
+      limit,
+    });
+  }
+
+  @ApiOkResponse({ type: GetOrderHistoryOfCustomerResponseDto })
+  @ApiQuery({ type: GetOrderHistoryOfCustomerParams })
+  @ApiBearerAuth()
+  @UseGuards(CustomerJwtAuthGuard)
+  @Post('/get-history')
+  async getOrderHistoryOfCustomer(
+    @Request() req,
+    @Query() queries: GetOrderHistoryOfCustomerParams,
+    @Body() getOrderHistoryOfCustomerDto: GetOrderHistoryOfCustomerDto,
+  ): Promise<GetOrderHistoryOfCustomerResponseDto> {
+    const { user } = req;
+    const { userId } = user;
+    const { offset, limit } = queries;
+    const { filter, from, to } = getOrderHistoryOfCustomerDto;
+    const getOrderHistoryPayload: GetOrderHistoryOfCustomerPayload = {
+      customerId: userId,
+      offset,
+      limit,
+      filter,
+      from,
+      to,
+    };
+    return this.orderService.getOrderHistoryOfCustomer(getOrderHistoryPayload);
   }
 }
