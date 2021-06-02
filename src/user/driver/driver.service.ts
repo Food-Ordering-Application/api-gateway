@@ -1,8 +1,19 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { USER_SERVICE, DELIVERY_SERVICE, ORDER_SERVICE } from 'src/constants';
-import { RegisterDriverCreatedResponseDto, RegisterDriverDto } from './dto';
+import { ISimpleResponse } from '../merchant/interfaces';
 import {
+  ApproveDepositMoneyIntoMainAccountWalletDto,
+  ApproveDepositMoneyIntoMainAccountWalletOkResponseDto,
+  DepositMoneyIntoMainAccountWalletDto,
+  DepositMoneyIntoMainAccountWalletOkResponseDto,
+  RegisterDriverCreatedResponseDto,
+  RegisterDriverDto,
+  WithdrawMoneyToPaypalAccountDto,
+  WithdrawMoneyToPaypalAccountOkResponseDto,
+} from './dto';
+import {
+  ICreateDepositMoneyIntoMainAccountWalletResponse,
   IDeliveryServiceAcceptOrderResponse,
   IDriver,
   IDriverResponse,
@@ -117,6 +128,110 @@ export class DriverService {
       data: {
         driver: driver,
       },
+    };
+  }
+
+  //! CreateOrder Nạp tiền vào tài khoản chính driver
+  async depositMoneyIntoMainAccountWallet(
+    driverId: string,
+    callerId: string,
+    depositMoneyIntoMainAccountWalletDto: DepositMoneyIntoMainAccountWalletDto,
+  ): Promise<DepositMoneyIntoMainAccountWalletOkResponseDto> {
+    const depositMoneyIntoMainAccountWalletResponse: ICreateDepositMoneyIntoMainAccountWalletResponse = await this.userServiceClient
+      .send('depositMoneyIntoMainAccountWallet', {
+        ...depositMoneyIntoMainAccountWalletDto,
+        callerId,
+        driverId,
+      })
+      .toPromise();
+
+    const {
+      message,
+      status,
+      paypalOrderId,
+    } = depositMoneyIntoMainAccountWalletResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+    return {
+      statusCode: 200,
+      message: message,
+      data: {
+        paypalOrderId,
+      },
+    };
+  }
+
+  //! ApproveOrder Nạp tiền vào tài khoản chính driver
+  async approveDepositMoneyIntoMainAccountWallet(
+    approveDepositMoneyIntoMainAccountWalletDto: ApproveDepositMoneyIntoMainAccountWalletDto,
+    driverId: string,
+    callerId: string,
+  ): Promise<ApproveDepositMoneyIntoMainAccountWalletOkResponseDto> {
+    //TODO:
+    const approveDepositMoneyIntoMainAccountWalletResponse: ISimpleResponse = await this.userServiceClient
+      .send('approveDepositMoneyIntoMainAccountWallet', {
+        ...approveDepositMoneyIntoMainAccountWalletDto,
+        driverId,
+        callerId,
+      })
+      .toPromise();
+
+    const {
+      message,
+      status,
+    } = approveDepositMoneyIntoMainAccountWalletResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+
+    return {
+      statusCode: status,
+      message,
+    };
+  }
+
+  //! Rút tiền từ ví vào tài khoản paypal của driver
+  async withdrawMoneyToPaypalAccount(
+    withdrawMoneyToPaypalAccountDto: WithdrawMoneyToPaypalAccountDto,
+    driverId: string,
+    callerId: string,
+  ): Promise<WithdrawMoneyToPaypalAccountOkResponseDto> {
+    //TODO:
+    const withdrawMoneyToPaypalAccountResponse: ISimpleResponse = await this.userServiceClient
+      .send('withdrawMoneyToPaypalAccount', {
+        ...withdrawMoneyToPaypalAccountDto,
+        driverId,
+        callerId,
+      })
+      .toPromise();
+
+    const { message, status } = withdrawMoneyToPaypalAccountResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+
+    return {
+      statusCode: status,
+      message,
     };
   }
 }

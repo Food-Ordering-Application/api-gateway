@@ -5,3 +5,5 @@ export { IDriverResponse } from './driver-response.interface';
 export { IDriver } from './driver.interface';
 export { ILoginDriverData } from './login-customer/login-driver-data.interface';
 export { IDriverData } from './register-driver/register-driver-data.interface';
+export { ICreateDepositMoneyIntoMainAccountWalletResponse } from './create-deposit-money-into-main-account-wallet-response.interface';
+export { ICreateDepositMoneyIntoMainAccountWalletData } from './create-deposit-money-into-main-account-wallet-data.interface';
