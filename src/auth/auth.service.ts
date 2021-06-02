@@ -76,6 +76,7 @@ export class AuthService {
   }
 
   async driverLogin(driver: any) {
+    console.log('Driver', driver);
     const payload = {
       phoneNumber: driver.phoneNumber,
       sub: driver.id,

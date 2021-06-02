@@ -110,7 +110,7 @@ export class DriverController {
     const { driverId } = params;
     return this.driverService.depositMoneyIntoMainAccountWallet(
       driverId,
-      req.user.id,
+      req.user.userId,
       depositMoneyIntoMainAccountWalletDto,
     );
   }
@@ -157,10 +157,11 @@ export class DriverController {
     withdrawMoneyToPaypalAccountDto: WithdrawMoneyToPaypalAccountDto,
   ): Promise<WithdrawMoneyToPaypalAccountOkResponseDto> {
     const { driverId } = params;
+    console.log('Req.user', req.user.userId);
     return this.driverService.withdrawMoneyToPaypalAccount(
       withdrawMoneyToPaypalAccountDto,
       driverId,
-      req.user.id,
+      req.user.userId,
     );
   }
 }
