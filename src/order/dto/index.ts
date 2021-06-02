@@ -33,3 +33,6 @@ export { GetOngoingOrdersOfCustomerDto } from './get-ongoing-orders-of-customer/
 export { GetDraftOrdersOfCustomerParams } from './get-draft-orders-of-customer/get-draft-orders-of-customer-params';
 export { GetDraftOrdersOfCustomerResponseDto } from './get-draft-orders-of-customer/get-draft-orders-of-customer-response.dto';
 export { GetDraftOrdersOfCustomerDto } from './get-draft-orders-of-customer/get-draft-orders-of-customer.dto';
+export { GetOrderHistoryOfCustomerParams } from './get-order-history-of-customer/get-order-history-of-customer-params';
+export { GetOrderHistoryOfCustomerResponseDto } from './get-order-history-of-customer/get-order-history-of-customer-response.dto';
+export { GetOrderHistoryOfCustomerDto } from './get-order-history-of-customer/get-order-history-of-customer.dto';

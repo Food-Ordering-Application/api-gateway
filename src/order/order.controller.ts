@@ -54,6 +54,9 @@ import {
   GetOngoingOrdersOfCustomerParams,
   GetDraftOrdersOfCustomerResponseDto,
   GetDraftOrdersOfCustomerParams,
+  GetOrderHistoryOfCustomerResponseDto,
+  GetOrderHistoryOfCustomerParams,
+  GetOrderHistoryOfCustomerDto,
 } from './dto';
 import { ForbiddenResponseDto } from 'src/user/customer/dto';
 import { PoliciesGuard } from 'src/casl/guards/policy.guard';
@@ -325,7 +328,7 @@ export class OrderController {
   @ApiQuery({ type: GetOngoingOrdersOfCustomerParams })
   @ApiBearerAuth()
   @UseGuards(CustomerJwtAuthGuard)
-  @Get('/get-ongoing')
+  @Post('/get-ongoing')
   async getOngoingOrdersOfCustomer(
     @Request() req,
     @Query() { offset, limit }: GetOngoingOrdersOfCustomerParams,
@@ -343,7 +346,7 @@ export class OrderController {
   @ApiQuery({ type: GetDraftOrdersOfCustomerParams })
   @ApiBearerAuth()
   @UseGuards(CustomerJwtAuthGuard)
-  @Get('/get-drafts')
+  @Post('/get-drafts')
   async getDraftOrdersOfCustomer(
     @Request() req,
     @Query() { offset, limit }: GetDraftOrdersOfCustomerParams,
@@ -355,5 +358,28 @@ export class OrderController {
       offset,
       limit,
     });
+  }
+
+  @ApiOkResponse({ type: GetOrderHistoryOfCustomerResponseDto })
+  @ApiQuery({ type: GetOrderHistoryOfCustomerParams })
+  @ApiBearerAuth()
+  @UseGuards(CustomerJwtAuthGuard)
+  @Post('/get-history')
+  async getOrderHistoryOfCustomer(
+    @Request() req,
+    @Query() queries: GetOrderHistoryOfCustomerParams,
+  ): Promise<GetOrderHistoryOfCustomerResponseDto> {
+    const { user } = req;
+    const { userId } = user;
+    const { offset, limit, filter = null, from, to } = queries;
+    const getOrderHistoryPayload: GetOrderHistoryOfCustomerDto = {
+      customerId: userId,
+      offset,
+      limit,
+      filter,
+      from,
+      to,
+    };
+    return this.orderService.getOrderHistoryOfCustomer(getOrderHistoryPayload);
   }
 }

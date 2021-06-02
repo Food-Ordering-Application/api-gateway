@@ -31,6 +31,8 @@ import {
   GetOngoingOrdersOfCustomerResponseDto,
   GetDraftOrdersOfCustomerResponseDto,
   GetOngoingOrdersOfCustomerDto,
+  GetOrderHistoryOfCustomerDto,
+  GetOrderHistoryOfCustomerResponseDto,
 } from './dto';
 import {
   ICreateOrderResponse,
@@ -651,6 +653,36 @@ export class OrderService {
         .toPromise();
 
     const { message, status, orders } = getDraftOrdersOfCustomer;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+
+    return {
+      statusCode: status,
+      message,
+      data: {
+        orders: orders,
+      },
+    };
+  }
+
+  async getOrderHistoryOfCustomer(
+    getOrderHistoryOfCustomerDto: GetOrderHistoryOfCustomerDto,
+  ): Promise<GetOrderHistoryOfCustomerResponseDto> {
+    const getOrderHistoryOfCustomer: IOrdersResponse =
+      await this.orderServiceClient
+        .send('getOrderHistoryOfCustomer', {
+          ...getOrderHistoryOfCustomerDto,
+        })
+        .toPromise();
+
+    const { message, status, orders } = getOrderHistoryOfCustomer;
 
     if (status !== HttpStatus.OK) {
       throw new HttpException(
