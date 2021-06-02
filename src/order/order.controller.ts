@@ -50,6 +50,8 @@ import {
   ApprovePaypalOrderDto,
   GetListOrderOfDriverDto,
   GetListOrderOfDriverResponseDto,
+  GetOngoingOrdersOfCustomerResponseDto,
+  GetOngoingOrdersOfCustomerParams,
 } from './dto';
 import { ForbiddenResponseDto } from 'src/user/customer/dto';
 import { PoliciesGuard } from 'src/casl/guards/policy.guard';
@@ -315,5 +317,23 @@ export class OrderController {
       req.user.userId,
       getListOrderOfDriverDto,
     );
+  }
+
+  @ApiOkResponse({ type: GetOngoingOrdersOfCustomerResponseDto })
+  @ApiQuery({ type: GetOngoingOrdersOfCustomerParams })
+  @ApiBearerAuth()
+  @UseGuards(CustomerJwtAuthGuard)
+  @Get('/get-ongoing')
+  async getOngoingOrdersOfCustomer(
+    @Request() req,
+    @Query() { offset, limit }: GetOngoingOrdersOfCustomerParams,
+  ): Promise<GetOngoingOrdersOfCustomerResponseDto> {
+    const { user } = req;
+    const { userId } = user;
+    return this.orderService.getOngoingOrdersOfCustomer({
+      customerId: userId,
+      offset,
+      limit,
+    });
   }
 }

@@ -24,3 +24,6 @@ export { ApprovePaypalOrderResponseDto } from './approve-paypal-order-response.d
 export { ApprovePaypalOrderDto } from './approve-paypal-order.dto';
 export { GetListOrderOfDriverResponseDto } from './get-list-order-of-driver-response.dto';
 export { GetListOrderOfDriverDto } from './get-list-order-of-driver.dto';
+export { GetOngoingOrdersOfCustomerParams } from './get-ongoing-orders-of-customer/get-ongoing-orders-of-customer-params';
+export { GetOngoingOrdersOfCustomerResponseDto } from './get-ongoing-orders-of-customer/get-ongoing-orders-of-customer-response.dto';
+export { GetOngoingOrdersOfCustomerDto } from './get-ongoing-orders-of-customer/get-ongoing-orders-of-customer.dto';
