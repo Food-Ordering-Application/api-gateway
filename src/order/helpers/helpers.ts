@@ -6,15 +6,15 @@ export const transformOrderItem = (
   menuItem: { name: string; price: number },
   orderItem: OrderItem,
 ) => {
-  console.log('MenuItem', menuItem);
-  console.log('MenuItemToppings', menuItemToppings);
-  console.log('OrderItem', orderItem);
+  // console.log('MenuItem', menuItem);
+  // console.log('MenuItemToppings', menuItemToppings);
+  // console.log('OrderItem', orderItem);
   //? Nếu orderItem ko có topping
   if (
     !orderItem.orderItemToppings ||
     orderItem.orderItemToppings.length === 0
   ) {
-    console.log('Orderitem no topping');
+    // console.log('Orderitem no topping');
     return {
       ...orderItem,
       name: menuItem.name,
@@ -23,7 +23,7 @@ export const transformOrderItem = (
     };
   } else {
     //? Nếu orderItem có topping
-    console.log('Orderitem have topping');
+    // console.log('Orderitem have topping');
     const transformOrderItemToppings = orderItem.orderItemToppings.map(
       (orderItemTopping) => {
         const findMenuItemToppingInfo = menuItemToppings.find(
@@ -35,7 +35,7 @@ export const transformOrderItem = (
             );
           },
         );
-        console.log('FindMenuItemToppingInfo', findMenuItemToppingInfo);
+        // console.log('FindMenuItemToppingInfo', findMenuItemToppingInfo);
 
         return {
           ...orderItemTopping,

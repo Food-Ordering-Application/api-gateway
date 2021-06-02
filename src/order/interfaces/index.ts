@@ -14,3 +14,6 @@ export { IMenuItemData } from './menuitem-data.interface';
 export { IGetMenuItemInfoResponse } from './get-menuitem-info-response.interface';
 export { IConfirmOrderCheckout } from './confirm-order-checkout-response-data.interface';
 export { IConfirmOrderCheckoutResponse } from './confirm-order-checkout-response.interface';
+export { CreateOrderPayload } from './create-order-payload.interface';
+export { IGetOrderActorInfoResponse } from './get-order-actor-information-response.interface';
+export { IActorInformationForOrderData } from './actor-information-for-order-data.interface';

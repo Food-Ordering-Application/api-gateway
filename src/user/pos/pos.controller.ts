@@ -6,6 +6,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Query,
   Request,
@@ -38,6 +39,10 @@ import {
   SavePosOrderDto,
   SavePosOrderResponseDto,
   SavePosOrderUnauthorizedResponseDto,
+  UpdateMenuItemDto,
+  UpdateMenuItemResponseDto,
+  UpdateToppingItemDto,
+  UpdateToppingItemResponseDto,
   VerifyAppKeyDto,
   VerifyAppKeyResponseDto,
   VerifyAppKeyUnauthorizedResponseDto,
@@ -264,6 +269,45 @@ export class PosController {
       staffId,
       restaurantId,
       voidOrderDto,
+    );
+  }
+
+  // Update menu item
+  @ApiOkResponse({ type: UpdateMenuItemResponseDto })
+  @ApiBody({ type: UpdateMenuItemDto })
+  @ApiBearerAuth()
+  @UseGuards(PosJwtAuthGuard)
+  @Patch('menu-item/:menuItemId')
+  async updateMenuItem(
+    @Request() req: PosJwtRequest,
+    @Param('menuItemId') menuItem,
+    @Body() updateMenuItemDto: UpdateMenuItemDto,
+  ): Promise<UpdateMenuItemResponseDto> {
+    const { user } = req;
+    const { restaurantId, staffId } = user;
+    return await this.posService.updateMenuItem(
+      menuItem,
+      restaurantId,
+      updateMenuItemDto,
+    );
+  }
+
+  @ApiOkResponse({ type: UpdateToppingItemResponseDto })
+  @ApiBody({ type: UpdateToppingItemDto })
+  @ApiBearerAuth()
+  @UseGuards(PosJwtAuthGuard)
+  @Patch('topping-item/:toppingItemId')
+  async updateToppingItem(
+    @Request() req: PosJwtRequest,
+    @Param('toppingItemId') toppingItem,
+    @Body() updateToppingItemDto: UpdateToppingItemDto,
+  ): Promise<UpdateToppingItemResponseDto> {
+    const { user } = req;
+    const { restaurantId, staffId } = user;
+    return await this.posService.updateToppingItem(
+      toppingItem,
+      restaurantId,
+      updateToppingItemDto,
     );
   }
 }

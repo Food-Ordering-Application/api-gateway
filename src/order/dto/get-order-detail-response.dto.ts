@@ -75,8 +75,12 @@ export class GetOrderDetailResponseDto {
           id: 'b42e5f64-bb12-42f0-bf3c-ce7975ff0c76',
           customerId: 'da552594-d925-4311-ab2f-303d26abdae1',
           driverId: null,
+          customerName: 'Phúc',
+          customerPhoneNumber: '0123456789',
           customerAddress: null,
           customerGeom: null,
+          restaurantName: 'Quán Ăn Maika',
+          restaurantPhoneNumber: '0949657934',
           restaurantAddress: '629 Ray Lane',
           restaurantGeom: {
             type: 'Point',

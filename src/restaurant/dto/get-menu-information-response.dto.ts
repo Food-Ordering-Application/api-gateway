@@ -1,3 +1,4 @@
+import { State } from './../../user/pos/dto/enums/state.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { IGetMenuAndMenuGroupsAndMenuItemsData } from '../interfaces';
 
@@ -27,6 +28,7 @@ export class GetMenuInformationResponseDto {
               description: 'Mì cay Hàn Quốc',
               price: 40000,
               imageUrl: 'http://lorempixel.com/640/480',
+              state: State.IN_STOCK,
             },
             {
               id: '749bae27-4f9d-4504-a951-23fd5418bf6f',
@@ -34,6 +36,7 @@ export class GetMenuInformationResponseDto {
               description: 'Mì cay Hàn Quốc',
               price: 40000,
               imageUrl: 'http://lorempixel.com/640/480',
+              state: State.OUT_OF_STOCK,
             },
           ],
         },

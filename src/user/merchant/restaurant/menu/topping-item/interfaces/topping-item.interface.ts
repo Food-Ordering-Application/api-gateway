@@ -1,3 +1,5 @@
+import { State } from 'src/user/pos/dto/enums';
+
 export class IToppingItem {
   id: string;
   menuId: string;
@@ -6,5 +8,6 @@ export class IToppingItem {
   price: number;
   maxQuantity: number;
   index: number;
+  state: State;
   isActive: boolean;
 }

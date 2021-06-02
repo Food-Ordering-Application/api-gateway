@@ -1,3 +1,4 @@
+import { State } from 'src/user/pos/dto/enums';
 import { IToppingGroup } from './index';
 import { IMenuItemTopping } from './menu-item-topping.interface';
 
@@ -11,4 +12,5 @@ export interface IToppingItem {
   maxQuantity?: number;
   index?: number;
   isActive?: boolean;
+  state: State;
 }

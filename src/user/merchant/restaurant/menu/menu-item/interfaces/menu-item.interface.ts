@@ -1,3 +1,5 @@
+import { State } from 'src/user/pos/dto/enums';
+
 export class IMenuItem {
   id: string;
   menuId: string;
@@ -7,4 +9,5 @@ export class IMenuItem {
   imageUrl: string;
   index: number;
   isActive: boolean;
+  state: State;
 }

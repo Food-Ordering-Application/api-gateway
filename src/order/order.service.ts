@@ -1,3 +1,4 @@
+import { CreateOrderPayload } from './interfaces/create-order-payload.interface';
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import * as constants from '../constants';
 import { ClientProxy } from '@nestjs/microservices';
@@ -33,6 +34,7 @@ import {
   IOrdersResponse,
   IGetMenuItemInfoResponse,
   IConfirmOrderCheckoutResponse,
+  IGetOrderActorInfoResponse,
 } from './interfaces';
 import { ICustomerAddressResponse } from '../user/customer/interfaces';
 import { transformOrderItem } from './helpers/helpers';
@@ -53,138 +55,124 @@ export class OrderService {
     createOrderDto: CreateOrderDto,
   ): Promise<CreateOrderResponseDto> {
     console.log('createOrder');
-    const { restaurantId, customerId, orderItem } = createOrderDto;
-    let createOrderAndFirstOrderItemResponse: ICreateOrderResponse;
-    //TODO: Nếu là order Salechannel
-    if (customerId) {
-      console.log('Salechannel');
-      //TODO: Lấy thông tin địa chỉ nhà hàng, name và price của menuItem
-      //TODO: name và price của từng menuItemTopping và thông tin địa chỉ customer
-      const [
-        getRestaurantAddressInfoResponse,
-        getMenuItemInfoResponse,
-        getCustomerAddressInfoResponse,
-      ]: [
-        IGetAddressResponse,
-        IGetMenuItemInfoResponse,
-        IGetAddressResponse,
-      ] = await Promise.all([
-        this.restaurantServiceClient
-          .send('getRestaurantAddressInfo', {
-            restaurantId,
-          })
-          .toPromise(),
-        this.restaurantServiceClient
-          .send('getMenuItemInfo', {
-            orderItem,
-          })
-          .toPromise(),
-        this.userServiceClient
-          .send('getDefaultCustomerAddressInfo', { customerId })
-          .toPromise(),
-      ]);
-      if (getRestaurantAddressInfoResponse.status !== HttpStatus.OK) {
-        console.log('getRestaurantAddress fail');
-        throw new HttpException(
-          {
-            message: getRestaurantAddressInfoResponse.message,
-          },
-          getRestaurantAddressInfoResponse.status,
-        );
-      }
 
-      if (getMenuItemInfoResponse.status !== HttpStatus.OK) {
-        console.log('getMenuItemInfo fail');
-        throw new HttpException(
-          {
-            message: getMenuItemInfoResponse.message,
-          },
-          getMenuItemInfoResponse.status,
-        );
-      }
+    // Lấy thông tin nhà hàng
+    // Thông tin địa chỉ customer (neu la sale channel)
+    // Name và price của menuItem
+    // Name và price của từng menuItemTopping
+    const { restaurantId, customerId, orderItem, cashierId } = createOrderDto;
+    const isSaleChannelOrder = !!customerId;
 
-      if (getCustomerAddressInfoResponse.status !== HttpStatus.OK) {
-        console.log('getCustomerAddressInfo fail');
-        throw new HttpException(
-          {
-            message: getCustomerAddressInfoResponse.message,
-          },
-          getCustomerAddressInfoResponse.status,
-        );
-      }
-
-      const { menuItemToppings, menuItem } = getMenuItemInfoResponse.data;
-
-      const tfOrderItem = transformOrderItem(
-        menuItemToppings,
-        menuItem,
-        orderItem,
-      );
-
-      createOrderAndFirstOrderItemResponse = await this.orderServiceClient
-        .send('createOrderAndFirstOrderItem', {
-          ...createOrderDto,
-          restaurantGeom: getRestaurantAddressInfoResponse.data.geom,
-          customerGeom: getCustomerAddressInfoResponse.data.geom,
-          restaurantAddress: getRestaurantAddressInfoResponse.data.address,
-          customerAddress: getCustomerAddressInfoResponse.data.address,
-          orderItem: tfOrderItem,
+    const [
+      getCustomerInfoResponse,
+      getRestaurantInfoResponse,
+      getMenuItemInfoResponse,
+    ]: [
+      IGetOrderActorInfoResponse,
+      IGetOrderActorInfoResponse,
+      IGetMenuItemInfoResponse,
+    ] = await Promise.all([
+      isSaleChannelOrder
+        ? this.userServiceClient
+            .send('getCustomerInformationToCreateDelivery', { customerId })
+            .toPromise()
+        : null,
+      this.restaurantServiceClient
+        .send('getRestaurantInformationToCreateDelivery', {
+          restaurantId,
         })
-        .toPromise();
-
-      console.log('Successfully Sent');
-    } else {
-      const [getRestaurantAddressInfoResponse, getMenuItemInfoResponse]: [
-        IGetAddressResponse,
-        IGetMenuItemInfoResponse,
-      ] = await Promise.all([
-        this.restaurantServiceClient
-          .send('getRestaurantAddressInfo', {
-            restaurantId,
-          })
-          .toPromise(),
-        this.restaurantServiceClient
-          .send('getMenuItemInfo', {
-            orderItem,
-          })
-          .toPromise(),
-      ]);
-
-      if (getRestaurantAddressInfoResponse.status !== HttpStatus.OK) {
-        throw new HttpException(
-          {
-            message: getRestaurantAddressInfoResponse.message,
-          },
-          getRestaurantAddressInfoResponse.status,
-        );
-      }
-
-      if (getMenuItemInfoResponse.status !== HttpStatus.OK) {
-        throw new HttpException(
-          {
-            message: getMenuItemInfoResponse.message,
-          },
-          getMenuItemInfoResponse.status,
-        );
-      }
-      const { menuItemToppings, menuItem } = getMenuItemInfoResponse.data;
-
-      const tfOrderItem = transformOrderItem(
-        menuItemToppings,
-        menuItem,
-        orderItem,
-      );
-
-      createOrderAndFirstOrderItemResponse = await this.orderServiceClient
-        .send('createOrderAndFirstOrderItem', {
-          ...createOrderDto,
-          restaurantGeom: getRestaurantAddressInfoResponse.data.geom,
-          restaurantAddress: getRestaurantAddressInfoResponse.data.address,
-          orderItem: tfOrderItem,
+        .toPromise(),
+      this.restaurantServiceClient
+        .send('getMenuItemInfo', {
+          orderItem,
         })
-        .toPromise();
+        .toPromise(),
+    ]);
+
+    // catch error response
+    const responses: (
+      | (IGetOrderActorInfoResponse & { label: string })
+      | (IGetMenuItemInfoResponse & { label: string })
+    )[] = [
+      { ...getMenuItemInfoResponse, label: 'getMenuItemInfo' },
+      { ...getRestaurantInfoResponse, label: 'getRestaurantInfo' },
+      { ...getCustomerInfoResponse, label: 'getCustomerInfo' },
+    ];
+    const firstErrorResponse = responses
+      .filter(
+        (response) =>
+          response != null &&
+          response?.status &&
+          response?.status !== HttpStatus.OK,
+      )
+      .find(({ status = HttpStatus.OK }) => status !== HttpStatus.OK);
+
+    if (firstErrorResponse) {
+      console.log(firstErrorResponse.label + ' fail');
+      throw new HttpException(
+        {
+          message: firstErrorResponse.message,
+        },
+        firstErrorResponse.status,
+      );
     }
 
+    // create payload to create order
+    let customerPayload = null;
+    if (isSaleChannelOrder) {
+      const {
+        data: {
+          address: customerAddress,
+          geom: customerGeom,
+          name: customerName,
+          phoneNumber: customerPhoneNumber,
+        },
+      } = getCustomerInfoResponse;
+      customerPayload = {
+        customerId,
+        customerName,
+        customerPhoneNumber,
+        customerAddress,
+        customerGeom,
+      };
+    }
+
+    const {
+      data: {
+        address: restaurantAddress,
+        geom: restaurantGeom,
+        name: restaurantName,
+        phoneNumber: restaurantPhoneNumber,
+      },
+    } = getRestaurantInfoResponse;
+    const restaurantPayload = {
+      restaurantId,
+      restaurantName,
+      restaurantPhoneNumber,
+      restaurantAddress,
+      restaurantGeom,
+    };
+
+    const {
+      data: { menuItemToppings, menuItem },
+    } = getMenuItemInfoResponse;
+
+    const tfOrderItem = transformOrderItem(
+      menuItemToppings,
+      menuItem,
+      orderItem,
+    );
+
+    const createOrderPayload: CreateOrderPayload = {
+      orderItem: tfOrderItem,
+      customer: customerPayload,
+      restaurant: restaurantPayload,
+      cashierId,
+    };
+    // create order
+    const createOrderAndFirstOrderItemResponse: ICreateOrderResponse = await this.orderServiceClient
+      .send('createOrderAndFirstOrderItem', createOrderPayload)
+      .toPromise();
     const { message, order, status } = createOrderAndFirstOrderItemResponse;
 
     if (status !== HttpStatus.CREATED) {
@@ -463,7 +451,6 @@ export class OrderService {
       .toPromise();
 
     const { address } = updateDefaultCustomerAddressResponse;
-    console.log(address);
 
     if (updateDefaultCustomerAddressResponse.status !== HttpStatus.OK) {
       throw new HttpException(
