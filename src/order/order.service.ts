@@ -33,6 +33,7 @@ import {
   GetOngoingOrdersOfCustomerDto,
   GetOrderHistoryOfCustomerPayload,
   GetOrderHistoryOfCustomerResponseDto,
+  EventPaypalOrderOccurDto,
 } from './dto';
 import {
   ICreateOrderResponse,
@@ -176,10 +177,9 @@ export class OrderService {
       cashierId,
     };
     // create order
-    const createOrderAndFirstOrderItemResponse: ICreateOrderResponse =
-      await this.orderServiceClient
-        .send('createOrderAndFirstOrderItem', createOrderPayload)
-        .toPromise();
+    const createOrderAndFirstOrderItemResponse: ICreateOrderResponse = await this.orderServiceClient
+      .send('createOrderAndFirstOrderItem', createOrderPayload)
+      .toPromise();
     const { message, order, status } = createOrderAndFirstOrderItemResponse;
 
     if (status !== HttpStatus.CREATED) {
@@ -202,13 +202,12 @@ export class OrderService {
   async getOrderAssociatedWithCusAndRes(
     getOrderAssociatedWithCusAndResDto: GetOrderAssociatedWithCusAndResDto,
   ): Promise<GetOrderAssociatedWithCusAndResResponseDto> {
-    const getOrderAssociatedWithCusAndResResponse: ICreateOrderResponse =
-      await this.orderServiceClient
-        .send(
-          'getOrderAssociatedWithCusAndRes',
-          getOrderAssociatedWithCusAndResDto,
-        )
-        .toPromise();
+    const getOrderAssociatedWithCusAndResResponse: ICreateOrderResponse = await this.orderServiceClient
+      .send(
+        'getOrderAssociatedWithCusAndRes',
+        getOrderAssociatedWithCusAndResDto,
+      )
+      .toPromise();
 
     const { message, order, status } = getOrderAssociatedWithCusAndResResponse;
 
@@ -234,12 +233,11 @@ export class OrderService {
     orderId: string,
   ): Promise<AddNewItemToOrderResponseDto> {
     //TODO: Lấy thông tin name và price của món được gửi lên + topping nếu có
-    const getMenuItemInfoResponse: IGetMenuItemInfoResponse =
-      await this.restaurantServiceClient
-        .send('getMenuItemInfo', {
-          orderItem: addNewItemToOrderDto.sendItem,
-        })
-        .toPromise();
+    const getMenuItemInfoResponse: IGetMenuItemInfoResponse = await this.restaurantServiceClient
+      .send('getMenuItemInfo', {
+        orderItem: addNewItemToOrderDto.sendItem,
+      })
+      .toPromise();
 
     if (getMenuItemInfoResponse.status !== HttpStatus.OK) {
       throw new HttpException(
@@ -258,14 +256,13 @@ export class OrderService {
     );
 
     //TODO: Thêm món đó vào order
-    const addNewOrderItemToOrderDtoResponse: ICreateOrderResponse =
-      await this.orderServiceClient
-        .send('addNewItemToOrder', {
-          ...addNewItemToOrderDto,
-          sendItem: tfOrderItem,
-          orderId,
-        })
-        .toPromise();
+    const addNewOrderItemToOrderDtoResponse: ICreateOrderResponse = await this.orderServiceClient
+      .send('addNewItemToOrder', {
+        ...addNewItemToOrderDto,
+        sendItem: tfOrderItem,
+        orderId,
+      })
+      .toPromise();
 
     const { message, order, status } = addNewOrderItemToOrderDtoResponse;
 
@@ -290,13 +287,12 @@ export class OrderService {
     reduceOrderItemQuantityDto: ReduceOrderItemQuantityDto,
     orderId: string,
   ): Promise<ReduceOrderItemQuantityResponseDto> {
-    const reduceQuantityOrderItemResponse: ICreateOrderResponse =
-      await this.orderServiceClient
-        .send('reduceOrderItemQuantity', {
-          ...reduceOrderItemQuantityDto,
-          orderId,
-        })
-        .toPromise();
+    const reduceQuantityOrderItemResponse: ICreateOrderResponse = await this.orderServiceClient
+      .send('reduceOrderItemQuantity', {
+        ...reduceOrderItemQuantityDto,
+        orderId,
+      })
+      .toPromise();
     const { message, order, status } = reduceQuantityOrderItemResponse;
     if (status !== HttpStatus.OK) {
       throw new HttpException(
@@ -319,13 +315,12 @@ export class OrderService {
     increaseOrderItemQuantityDto: IncreaseOrderItemQuantityDto,
     orderId: string,
   ): Promise<IncreaseOrderItemQuantityResponseDto> {
-    const increaseOrderItemQuantityResponse: ICreateOrderResponse =
-      await this.orderServiceClient
-        .send('increaseOrderItemQuantity', {
-          ...increaseOrderItemQuantityDto,
-          orderId,
-        })
-        .toPromise();
+    const increaseOrderItemQuantityResponse: ICreateOrderResponse = await this.orderServiceClient
+      .send('increaseOrderItemQuantity', {
+        ...increaseOrderItemQuantityDto,
+        orderId,
+      })
+      .toPromise();
     const { message, order, status } = increaseOrderItemQuantityResponse;
     if (status !== HttpStatus.OK) {
       throw new HttpException(
@@ -348,10 +343,9 @@ export class OrderService {
     removeOrderItemDto: RemoveOrderItemDto,
     orderId: string,
   ): Promise<RemoveOrderItemResponseDto> {
-    const removeOrderItemResponse: ICreateOrderResponse =
-      await this.orderServiceClient
-        .send('removeOrderItem', { ...removeOrderItemDto, orderId })
-        .toPromise();
+    const removeOrderItemResponse: ICreateOrderResponse = await this.orderServiceClient
+      .send('removeOrderItem', { ...removeOrderItemDto, orderId })
+      .toPromise();
 
     const { message, order, status } = removeOrderItemResponse;
 
@@ -375,10 +369,9 @@ export class OrderService {
   async getAllRestaurantOrder(
     getAllRestaurantOrderDto: GetAllRestaurantOrderDto,
   ): Promise<GetAllRestaurantOrderResponseDto> {
-    const getAllRestaurantOrderResponse: IOrdersResponse =
-      await this.orderServiceClient
-        .send('getOrdersOfRestaurant', { ...getAllRestaurantOrderDto })
-        .toPromise();
+    const getAllRestaurantOrderResponse: IOrdersResponse = await this.orderServiceClient
+      .send('getOrdersOfRestaurant', { ...getAllRestaurantOrderDto })
+      .toPromise();
 
     const { message, orders, status } = getAllRestaurantOrderResponse;
 
@@ -400,10 +393,9 @@ export class OrderService {
   }
 
   async getOrderDetail(orderId: string): Promise<GetOrderDetailResponseDto> {
-    const getAllRestaurantOrderResponse: ICreateOrderResponse =
-      await this.orderServiceClient
-        .send('getOrderDetail', { orderId })
-        .toPromise();
+    const getAllRestaurantOrderResponse: ICreateOrderResponse = await this.orderServiceClient
+      .send('getOrderDetail', { orderId })
+      .toPromise();
 
     const { message, order, status } = getAllRestaurantOrderResponse;
 
@@ -428,13 +420,12 @@ export class OrderService {
     updateOrderItemQuantityDto: UpdateOrderItemQuantityDto,
     orderId: string,
   ): Promise<UpdateOrderItemQuantityResponseDto> {
-    const updateOrderItemQuantityResponse: ICreateOrderResponse =
-      await this.orderServiceClient
-        .send('updateOrderItemQuantity', {
-          ...updateOrderItemQuantityDto,
-          orderId,
-        })
-        .toPromise();
+    const updateOrderItemQuantityResponse: ICreateOrderResponse = await this.orderServiceClient
+      .send('updateOrderItemQuantity', {
+        ...updateOrderItemQuantityDto,
+        orderId,
+      })
+      .toPromise();
     const { message, order, status } = updateOrderItemQuantityResponse;
     if (status !== HttpStatus.OK) {
       throw new HttpException(
@@ -459,13 +450,12 @@ export class OrderService {
     orderId: string,
   ): Promise<PickCustomerAddressResponseDto> {
     //TODO: Update địa chỉ mặc định của customer
-    const updateDefaultCustomerAddressResponse: ICustomerAddressResponse =
-      await this.userServiceClient
-        .send('updateDefaultCustomerAddress', {
-          customerId,
-          customerAddressId,
-        })
-        .toPromise();
+    const updateDefaultCustomerAddressResponse: ICustomerAddressResponse = await this.userServiceClient
+      .send('updateDefaultCustomerAddress', {
+        customerId,
+        customerAddressId,
+      })
+      .toPromise();
 
     const { address } = updateDefaultCustomerAddressResponse;
 
@@ -478,16 +468,15 @@ export class OrderService {
       );
     }
     //TODO: Update lại thông tin delivery. Tính toán lại shippingFee trả về thông tin order
-    const updateDeliveryAddressResponse: ICreateOrderResponse =
-      await this.orderServiceClient
-        .send('updateDeliveryAddress', {
-          orderId,
-          newAddress: {
-            address: address.address,
-            geom: address.geom,
-          },
-        })
-        .toPromise();
+    const updateDeliveryAddressResponse: ICreateOrderResponse = await this.orderServiceClient
+      .send('updateDeliveryAddress', {
+        orderId,
+        newAddress: {
+          address: address.address,
+          geom: address.geom,
+        },
+      })
+      .toPromise();
     const { message, order, status } = updateDeliveryAddressResponse;
 
     if (status !== HttpStatus.OK) {
@@ -514,14 +503,13 @@ export class OrderService {
     customerId: string,
   ): Promise<ConfirmOrderCheckoutResponseDto> {
     //TODO:
-    const confirmOrderCheckout: IConfirmOrderCheckoutResponse =
-      await this.orderServiceClient
-        .send('confirmOrderCheckout', {
-          ...confirmOrderCheckoutDto,
-          orderId,
-          customerId,
-        })
-        .toPromise();
+    const confirmOrderCheckout: IConfirmOrderCheckoutResponse = await this.orderServiceClient
+      .send('confirmOrderCheckout', {
+        ...confirmOrderCheckoutDto,
+        orderId,
+        customerId,
+      })
+      .toPromise();
 
     const { message, status, paypalOrderId } = confirmOrderCheckout;
 
@@ -549,14 +537,13 @@ export class OrderService {
     customerId: string,
   ): Promise<ApprovePaypalOrderResponseDto> {
     //TODO:
-    const approvePaypalOrderResponse: ICreateOrderResponse =
-      await this.orderServiceClient
-        .send('approvePaypalOrder', {
-          ...approvePaypalOrderDto,
-          orderId,
-          customerId,
-        })
-        .toPromise();
+    const approvePaypalOrderResponse: ICreateOrderResponse = await this.orderServiceClient
+      .send('approvePaypalOrder', {
+        ...approvePaypalOrderDto,
+        orderId,
+        customerId,
+      })
+      .toPromise();
 
     const { message, status, order } = approvePaypalOrderResponse;
 
@@ -583,14 +570,13 @@ export class OrderService {
     callerId: string,
     getListOrderOfDriverDto: GetListOrderOfDriverDto,
   ): Promise<GetListOrderOfDriverResponseDto> {
-    const getListOrderOfDriverResponse: IOrdersResponse =
-      await this.orderServiceClient
-        .send('getListOrderOfDriver', {
-          driverId,
-          callerId,
-          ...getListOrderOfDriverDto,
-        })
-        .toPromise();
+    const getListOrderOfDriverResponse: IOrdersResponse = await this.orderServiceClient
+      .send('getListOrderOfDriver', {
+        driverId,
+        callerId,
+        ...getListOrderOfDriverDto,
+      })
+      .toPromise();
 
     const { message, status, orders } = getListOrderOfDriverResponse;
 
@@ -615,12 +601,11 @@ export class OrderService {
   async getOngoingOrdersOfCustomer(
     getOngoingOrdersOfCustomerDto: GetOngoingOrdersOfCustomerDto,
   ): Promise<GetOngoingOrdersOfCustomerResponseDto> {
-    const getOngoingOrdersOfCustomer: IOrdersResponse =
-      await this.orderServiceClient
-        .send('getOnGoingOrdersOfCustomer', {
-          ...getOngoingOrdersOfCustomerDto,
-        })
-        .toPromise();
+    const getOngoingOrdersOfCustomer: IOrdersResponse = await this.orderServiceClient
+      .send('getOnGoingOrdersOfCustomer', {
+        ...getOngoingOrdersOfCustomerDto,
+      })
+      .toPromise();
 
     const { message, status, orders } = getOngoingOrdersOfCustomer;
 
@@ -645,12 +630,11 @@ export class OrderService {
   async getDraftOrdersOfCustomer(
     getDraftOrdersOfCustomerDto: GetDraftOrdersOfCustomerDto,
   ): Promise<GetDraftOrdersOfCustomerResponseDto> {
-    const getDraftOrdersOfCustomer: IOrdersResponse =
-      await this.orderServiceClient
-        .send('getDraftOrdersOfCustomer', {
-          ...getDraftOrdersOfCustomerDto,
-        })
-        .toPromise();
+    const getDraftOrdersOfCustomer: IOrdersResponse = await this.orderServiceClient
+      .send('getDraftOrdersOfCustomer', {
+        ...getDraftOrdersOfCustomerDto,
+      })
+      .toPromise();
 
     const { message, status, orders } = getDraftOrdersOfCustomer;
 
@@ -675,12 +659,11 @@ export class OrderService {
   async getOrderHistoryOfCustomer(
     getOrderHistoryOfCustomerDto: GetOrderHistoryOfCustomerPayload,
   ): Promise<GetOrderHistoryOfCustomerResponseDto> {
-    const getOrderHistoryOfCustomer: IOrdersResponse =
-      await this.orderServiceClient
-        .send('getOrderHistoryOfCustomer', {
-          ...getOrderHistoryOfCustomerDto,
-        })
-        .toPromise();
+    const getOrderHistoryOfCustomer: IOrdersResponse = await this.orderServiceClient
+      .send('getOrderHistoryOfCustomer', {
+        ...getOrderHistoryOfCustomerDto,
+      })
+      .toPromise();
 
     const { message, status, orders } = getOrderHistoryOfCustomer;
 
@@ -700,5 +683,13 @@ export class OrderService {
         orders: orders,
       },
     };
+  }
+
+  async eventPaypalOrderOccur(
+    eventPaypalOrderOccurDto: EventPaypalOrderOccurDto,
+  ) {
+    this.orderServiceClient.emit('eventPaypalOrderOccur', {
+      ...eventPaypalOrderOccurDto,
+    });
   }
 }

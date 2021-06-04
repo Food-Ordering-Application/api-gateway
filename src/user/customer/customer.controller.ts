@@ -359,13 +359,4 @@ export class CustomerController {
     const { verifyEmailToken } = params;
     return this.customerService.verifyCustomerEmail(verifyEmailToken);
   }
-
-  //! Event payment order
-  @Post('/event/order')
-  async eventPaypalOrderOccur(
-    @Body()
-    eventPaypalOrderOccurDto,
-  ) {
-    console.log('Body', eventPaypalOrderOccurDto);
-  }
 }

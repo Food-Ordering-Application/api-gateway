@@ -58,6 +58,7 @@ import {
   GetOrderHistoryOfCustomerParams,
   GetOrderHistoryOfCustomerPayload,
   GetOrderHistoryOfCustomerDto,
+  EventPaypalOrderOccurDto,
 } from './dto';
 import { ForbiddenResponseDto } from 'src/user/customer/dto';
 import { PoliciesGuard } from 'src/casl/guards/policy.guard';
@@ -384,5 +385,15 @@ export class OrderController {
       to,
     };
     return this.orderService.getOrderHistoryOfCustomer(getOrderHistoryPayload);
+  }
+
+  //! Event payment order
+  @Post('/events')
+  async eventPaypalOrderOccur(
+    @Body()
+    eventPaypalOrderOccurDto: EventPaypalOrderOccurDto,
+  ) {
+    console.log('Body', eventPaypalOrderOccurDto);
+    this.orderService.eventPaypalOrderOccur(eventPaypalOrderOccurDto);
   }
 }

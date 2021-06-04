@@ -37,3 +37,5 @@ export { GetOrderHistoryOfCustomerParams } from './get-order-history-of-customer
 export { GetOrderHistoryOfCustomerResponseDto } from './get-order-history-of-customer/get-order-history-of-customer-response.dto';
 export { GetOrderHistoryOfCustomerPayload } from './get-order-history-of-customer/get-order-history-of-customer.payload';
 export { GetOrderHistoryOfCustomerDto } from './get-order-history-of-customer/get-order-history-of-customer.dto';
+export { PaypalResource } from './paypal-order-resource.dto';
+export { EventPaypalOrderOccurDto } from './event-paypal-order-occur.dto';
