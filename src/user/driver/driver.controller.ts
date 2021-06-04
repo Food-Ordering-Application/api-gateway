@@ -19,8 +19,6 @@ import {
   ApiResponse,
   ApiTags,
   ApiUnauthorizedResponse,
-  getSchemaPath,
-  refs,
 } from '@nestjs/swagger';
 import { InternalServerErrorResponseDto } from 'src/shared/dto/internal-server-error.dto';
 import { AuthService } from '../../auth/auth.service';

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsString, ValidateNested } from 'class-validator';
+import { IsOptional, IsString, ValidateNested } from 'class-validator';
 import { PaypalResource } from '.';
 
 export class EventPaypalOrderOccurDto {
@@ -9,6 +9,7 @@ export class EventPaypalOrderOccurDto {
     required: false,
   })
   @IsString()
+  @IsOptional()
   event_type?: string;
   @ApiProperty({
     example: {
@@ -18,5 +19,6 @@ export class EventPaypalOrderOccurDto {
   })
   @ValidateNested()
   @Type(() => PaypalResource)
+  @IsOptional()
   resource?: PaypalResource;
 }
