@@ -66,16 +66,17 @@ export class AuthService {
     const driver = await this.driverService.findDriverByPhonenumber(
       phoneNumber,
     );
-    console.log('pass', pass);
     console.log('driver.password', driver.password);
 
     if (driver) {
       const isMatch = await bcrypt.compare(pass, driver.password);
       if (isMatch) {
         delete driver.password;
+        console.log('Match');
         return driver;
       }
     }
+    console.log('not match');
     return null;
   }
 
