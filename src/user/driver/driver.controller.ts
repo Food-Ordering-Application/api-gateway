@@ -26,6 +26,7 @@ import { InternalServerErrorResponseDto } from 'src/shared/dto/internal-server-e
 import { AuthService } from '../../auth/auth.service';
 import { DriverJwtAuthGuard } from '../../auth/guards/jwts/driver-jwt-auth.guard';
 import { DriverLocalAuthGuard } from '../../auth/guards/locals/driver-local-auth.guard';
+import { EventPaypalOrderOccurDto } from '../../order/dto';
 import { ForbiddenResponseDto } from '../customer/dto';
 import { DriverService } from './driver.service';
 import {
@@ -185,5 +186,15 @@ export class DriverController {
       driverId,
       req.user.userId,
     );
+  }
+
+  //! Sự kiện nạp, rút tiền driver
+  @Post('/events')
+  async eventPaypalOrderOccur(
+    @Body()
+    eventPaypalOrderOccurDto: EventPaypalOrderOccurDto,
+  ) {
+    console.log('eventPaypalOrderOccurDto', eventPaypalOrderOccurDto);
+    this.driverService.eventPaypalOrderOccur(eventPaypalOrderOccurDto);
   }
 }

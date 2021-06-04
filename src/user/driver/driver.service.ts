@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { USER_SERVICE, DELIVERY_SERVICE, ORDER_SERVICE } from 'src/constants';
+import { EventPaypalOrderOccurDto } from '../../order/dto';
 import { ISimpleResponse } from '../merchant/interfaces';
 import {
   ApproveDepositMoneyIntoMainAccountWalletDto,
@@ -233,5 +234,13 @@ export class DriverService {
       statusCode: status,
       message,
     };
+  }
+
+  async eventPaypalOrderOccur(
+    eventPaypalOrderOccurDto: EventPaypalOrderOccurDto,
+  ) {
+    this.orderServiceClient.emit('eventPaypalOrderOccur', {
+      ...eventPaypalOrderOccurDto,
+    });
   }
 }
