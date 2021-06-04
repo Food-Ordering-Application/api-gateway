@@ -61,9 +61,13 @@ export class AuthService {
   }
 
   async validateDriver(phoneNumber: string, pass: string): Promise<any> {
+    console.log('phoneNumber', phoneNumber);
+    console.log('pass', pass);
     const driver = await this.driverService.findDriverByPhonenumber(
       phoneNumber,
     );
+    console.log('pass', pass);
+    console.log('driver.password', driver.password);
 
     if (driver) {
       const isMatch = await bcrypt.compare(pass, driver.password);
