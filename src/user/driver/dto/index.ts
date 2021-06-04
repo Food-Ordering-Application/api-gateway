@@ -10,3 +10,7 @@ export { ApproveDepositMoneyIntoMainAccountWalletOkResponseDto } from './payin-w
 export { ApproveDepositMoneyIntoMainAccountWalletDto } from './payin-withdraw/approve-deposit-money-to-main-wallet.dto';
 export { WithdrawMoneyToPaypalAccountOkResponseDto } from './payin-withdraw/withdraw-money-to-paypal-account-response.dto';
 export { WithdrawMoneyToPaypalAccountDto } from './payin-withdraw/withdraw-money-to-paypal-account.dto';
+export { WithdrawMoneyToPaypalAccountForbiddenResponse1Dto } from './payin-withdraw/withdraw-money-to-paypal-account-response1.dto';
+export { WithdrawMoneyToPaypalAccountForbiddenResponse2Dto } from './payin-withdraw/withdraw-money-to-paypal-account-response2.dto';
+export { WithdrawMoneyToPaypalAccountInternalResponse1Dto } from './payin-withdraw/withdraw-money-to-paypal-account-internal-response1.dto';
+export { WithdrawMoneyToPaypalAccountInternalResponse2Dto } from './payin-withdraw/withdraw-money-to-paypal-account-internal-response2.dto';

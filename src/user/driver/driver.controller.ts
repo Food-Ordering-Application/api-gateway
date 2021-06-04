@@ -16,8 +16,11 @@ import {
   ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
+  ApiResponse,
   ApiTags,
   ApiUnauthorizedResponse,
+  getSchemaPath,
+  refs,
 } from '@nestjs/swagger';
 import { InternalServerErrorResponseDto } from 'src/shared/dto/internal-server-error.dto';
 import { AuthService } from '../../auth/auth.service';
@@ -37,6 +40,10 @@ import {
   RegisterDriverCreatedResponseDto,
   RegisterDriverDto,
   WithdrawMoneyToPaypalAccountDto,
+  WithdrawMoneyToPaypalAccountForbiddenResponse1Dto,
+  WithdrawMoneyToPaypalAccountForbiddenResponse2Dto,
+  WithdrawMoneyToPaypalAccountInternalResponse1Dto,
+  WithdrawMoneyToPaypalAccountInternalResponse2Dto,
   WithdrawMoneyToPaypalAccountOkResponseDto,
 } from './dto';
 
@@ -144,7 +151,22 @@ export class DriverController {
   @ApiOkResponse({
     type: WithdrawMoneyToPaypalAccountOkResponseDto,
   })
-  @ApiForbiddenResponse({ type: ForbiddenResponseDto })
+  @ApiResponse({
+    status: 4031,
+    type: WithdrawMoneyToPaypalAccountForbiddenResponse1Dto,
+  })
+  @ApiResponse({
+    status: 4032,
+    type: WithdrawMoneyToPaypalAccountForbiddenResponse2Dto,
+  })
+  @ApiResponse({
+    status: 500,
+    type: WithdrawMoneyToPaypalAccountInternalResponse1Dto,
+  })
+  @ApiResponse({
+    status: 5002,
+    type: WithdrawMoneyToPaypalAccountInternalResponse2Dto,
+  })
   @ApiBody({ type: WithdrawMoneyToPaypalAccountDto })
   @ApiBearerAuth()
   @HttpCode(200)
