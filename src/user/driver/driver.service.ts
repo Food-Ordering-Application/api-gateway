@@ -239,7 +239,7 @@ export class DriverService {
   async eventPaypalOrderOccur(
     eventPaypalOrderOccurDto: EventPaypalOrderOccurDto,
   ) {
-    this.orderServiceClient.emit('eventPaypalOrderOccur', {
+    this.userServiceClient.emit('eventPaypalOrderOccur', {
       ...eventPaypalOrderOccurDto,
     });
   }
