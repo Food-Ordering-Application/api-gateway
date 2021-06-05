@@ -1,3 +1,5 @@
+import { IAccountWallet } from './account-wallet.interface';
+
 export interface IDriver {
   id: string;
   phoneNumber?: string;
@@ -10,7 +12,7 @@ export interface IDriver {
   identityCardImageUrl?: string;
   driverLicenseImageUrl?: string;
   vehicleRegistrationCertificateImageUrl?: string;
-  walletId?: string;
+  wallet?: IAccountWallet;
   isVerified?: boolean;
   isBanned?: boolean;
 }

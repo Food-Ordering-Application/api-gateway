@@ -8,6 +8,8 @@ import {
   ApproveDepositMoneyIntoMainAccountWalletOkResponseDto,
   DepositMoneyIntoMainAccountWalletDto,
   DepositMoneyIntoMainAccountWalletOkResponseDto,
+  GetListDriverTransactionHistoryDto,
+  GetListDriverTransactionHistoryOkResponseDto,
   RegisterDriverCreatedResponseDto,
   RegisterDriverDto,
   WithdrawMoneyToPaypalAccountDto,
@@ -18,6 +20,7 @@ import {
   IDeliveryServiceAcceptOrderResponse,
   IDriver,
   IDriverResponse,
+  IDriverTransactionsResponse,
   IOrderServiceCompleteOrderResponse,
   IOrderServicePickUpOrderResponse,
 } from './interfaces';
@@ -242,5 +245,44 @@ export class DriverService {
     this.userServiceClient.emit('eventPaypalOrderOccur', {
       ...eventPaypalOrderOccurDto,
     });
+  }
+
+  //! Lấy danh sách lịch sử giao dịch (nạp,rút) tiền của driver
+  async getListDriverTransactionHistory(
+    driverId: string,
+    callerId: string,
+    getListDriverTransactionHistoryDto: GetListDriverTransactionHistoryDto,
+  ): Promise<GetListDriverTransactionHistoryOkResponseDto> {
+    //TODO:
+    const getListDriverTransactionHistoryResponse: IDriverTransactionsResponse = await this.userServiceClient
+      .send('getListDriverTransactionHistory', {
+        ...getListDriverTransactionHistoryDto,
+        driverId,
+        callerId,
+      })
+      .toPromise();
+
+    const {
+      message,
+      status,
+      driverTransactions,
+    } = getListDriverTransactionHistoryResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+
+    return {
+      statusCode: status,
+      message,
+      data: {
+        driverTransactions: driverTransactions,
+      },
+    };
   }
 }

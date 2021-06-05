@@ -14,3 +14,5 @@ export { WithdrawMoneyToPaypalAccountForbiddenResponse1Dto } from './payin-withd
 export { WithdrawMoneyToPaypalAccountForbiddenResponse2Dto } from './payin-withdraw/withdraw-money-to-paypal-account-response2.dto';
 export { WithdrawMoneyToPaypalAccountInternalResponse1Dto } from './payin-withdraw/withdraw-money-to-paypal-account-internal-response1.dto';
 export { WithdrawMoneyToPaypalAccountInternalResponse2Dto } from './payin-withdraw/withdraw-money-to-paypal-account-internal-response2.dto';
+export { GetListDriverTransactionHistoryOkResponseDto } from './payin-withdraw/get-list-transaction-history-ok-response.dto';
+export { GetListDriverTransactionHistoryDto } from './payin-withdraw/get-list-transaction-history.dto';

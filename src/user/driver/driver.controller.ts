@@ -1,10 +1,12 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   Param,
   Patch,
   Post,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -16,6 +18,7 @@ import {
   ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
+  ApiQuery,
   ApiResponse,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -32,6 +35,7 @@ import {
   ApproveDepositMoneyIntoMainAccountWalletOkResponseDto,
   DepositMoneyIntoMainAccountWalletDto,
   DepositMoneyIntoMainAccountWalletOkResponseDto,
+  GetListDriverTransactionHistoryDto,
   LoginDriverDto,
   LoginDriverResponseDto,
   LoginDriverUnauthorizedResponseDto,
@@ -45,6 +49,7 @@ import {
   WithdrawMoneyToPaypalAccountInternalResponse2Dto,
   WithdrawMoneyToPaypalAccountOkResponseDto,
 } from './dto';
+import { GetListDriverTransactionHistoryOkResponseDto } from './dto/payin-withdraw/get-list-transaction-history-ok-response.dto';
 
 const MOCK_DRIVER_ID = 'a22f3f78-be7f-11eb-8529-0242ac130003';
 @ApiTags('driver')
@@ -194,5 +199,26 @@ export class DriverController {
   ) {
     console.log('eventPaypalOrderOccurDto', eventPaypalOrderOccurDto);
     this.driverService.eventPaypalOrderOccur(eventPaypalOrderOccurDto);
+  }
+
+  //! Lấy danh sách lịch sử giao dịch (nạp,rút) tiền của driver
+  @ApiOkResponse({ type: GetListDriverTransactionHistoryOkResponseDto })
+  @ApiForbiddenResponse({ type: ForbiddenResponseDto })
+  @ApiQuery({ type: GetListDriverTransactionHistoryDto })
+  @ApiBearerAuth()
+  @UseGuards(DriverJwtAuthGuard)
+  @Get('/:driverId/transaction-histories')
+  async getListDriverTransactionHistory(
+    @Request() req,
+    @Param() params,
+    @Query()
+    getListDriverTransactionHistoryDto: GetListDriverTransactionHistoryDto,
+  ): Promise<GetListDriverTransactionHistoryOkResponseDto> {
+    const { driverId } = params;
+    return this.driverService.getListDriverTransactionHistory(
+      driverId,
+      req.user.userId,
+      getListDriverTransactionHistoryDto,
+    );
   }
 }
