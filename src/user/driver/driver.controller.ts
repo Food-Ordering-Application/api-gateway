@@ -192,7 +192,7 @@ export class DriverController {
   }
 
   //! Sự kiện nạp, rút tiền driver
-  @Post('/events')
+  @Post('/events/receive')
   async eventPaypalOrderOccur(
     @Body()
     eventPaypalOrderOccurDto: EventPaypalOrderOccurDto,
