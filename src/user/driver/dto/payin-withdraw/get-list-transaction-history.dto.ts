@@ -6,7 +6,10 @@ import {
   IsString,
   Max,
 } from 'class-validator';
-import { EGetListDriverTransactionHistory } from '../../enums';
+import {
+  EGeneralTransactionStatus,
+  EGetListDriverTransactionHistory,
+} from '../../enums';
 
 export class GetListDriverTransactionHistoryDto {
   @ApiProperty({
@@ -25,6 +28,14 @@ export class GetListDriverTransactionHistoryDto {
   @IsInt()
   @Max(25)
   size: number;
+
+  @ApiProperty({
+    example: EGeneralTransactionStatus.ALL,
+    enum: EGeneralTransactionStatus,
+  })
+  @IsString()
+  @IsOptional()
+  transactionStatus: string;
 
   @ApiProperty({
     example: '2021-06-02T17:15:33.558Z',
