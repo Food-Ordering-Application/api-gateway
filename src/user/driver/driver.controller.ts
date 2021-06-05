@@ -61,6 +61,16 @@ export class DriverController {
     private authService: AuthService,
   ) {}
 
+  //! Sự kiện nạp, rút tiền driver
+  @Post('/events/receive')
+  async eventPaypalOrderOccur(
+    @Body()
+    eventPaypalOrderOccurDto: EventPaypalOrderOccurDto,
+  ) {
+    console.log('eventPaypalOrderOccurDto', eventPaypalOrderOccurDto);
+    this.driverService.eventPaypalOrderOccur(eventPaypalOrderOccurDto);
+  }
+
   @HttpCode(200)
   @Post('/order/:orderId/accept')
   async acceptOrder(@Param('orderId') orderId: string) {
@@ -189,16 +199,6 @@ export class DriverController {
       driverId,
       req.user.userId,
     );
-  }
-
-  //! Sự kiện nạp, rút tiền driver
-  @Post('/events/receive')
-  async eventPaypalOrderOccur(
-    @Body()
-    eventPaypalOrderOccurDto: EventPaypalOrderOccurDto,
-  ) {
-    console.log('eventPaypalOrderOccurDto', eventPaypalOrderOccurDto);
-    this.driverService.eventPaypalOrderOccur(eventPaypalOrderOccurDto);
   }
 
   //! Lấy danh sách lịch sử giao dịch (nạp,rút) tiền của driver
