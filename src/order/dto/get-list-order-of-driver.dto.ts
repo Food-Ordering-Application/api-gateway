@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsString, Max } from 'class-validator';
+import {
+  IsDateString,
+  IsInt,
+  IsOptional,
+  IsString,
+  Max,
+} from 'class-validator';
 import { EDriverOrderType } from '../enums';
 
 export class GetListOrderOfDriverDto {
@@ -19,4 +25,20 @@ export class GetListOrderOfDriverDto {
   @IsInt()
   @Max(25)
   size: number;
+
+  @ApiProperty({
+    example: '2021-06-02T17:15:33.558Z',
+    description: 'ISO-8601 date string format',
+  })
+  @IsDateString()
+  @IsOptional()
+  from: Date;
+
+  @ApiProperty({
+    example: '2021-06-02T17:15:33.558Z',
+    description: 'ISO-8601 date string format',
+  })
+  @IsDateString()
+  @IsOptional()
+  to: Date;
 }
