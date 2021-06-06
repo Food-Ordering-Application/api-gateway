@@ -16,3 +16,4 @@ export { WithdrawMoneyToPaypalAccountInternalResponse1Dto } from './payin-withdr
 export { WithdrawMoneyToPaypalAccountInternalResponse2Dto } from './payin-withdraw/withdraw-money-to-paypal-account-internal-response2.dto';
 export { GetListDriverTransactionHistoryOkResponseDto } from './payin-withdraw/get-list-transaction-history-ok-response.dto';
 export { GetListDriverTransactionHistoryDto } from './payin-withdraw/get-list-transaction-history.dto';
+export { GetMainAccountWalletBalanceOkResponseDto } from './payin-withdraw/get-main-account-wallet-balance-ok-response.dto';

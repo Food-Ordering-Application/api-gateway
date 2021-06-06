@@ -36,6 +36,7 @@ import {
   DepositMoneyIntoMainAccountWalletDto,
   DepositMoneyIntoMainAccountWalletOkResponseDto,
   GetListDriverTransactionHistoryDto,
+  GetMainAccountWalletBalanceOkResponseDto,
   LoginDriverDto,
   LoginDriverResponseDto,
   LoginDriverUnauthorizedResponseDto,
@@ -219,6 +220,23 @@ export class DriverController {
       driverId,
       req.user.userId,
       getListDriverTransactionHistoryDto,
+    );
+  }
+
+  //! Lấy thông tin balance của tài khoản chính
+  @ApiOkResponse({ type: GetMainAccountWalletBalanceOkResponseDto })
+  @ApiForbiddenResponse({ type: ForbiddenResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(DriverJwtAuthGuard)
+  @Get('/:driverId/account-wallet')
+  async getMainAccountWalletBalance(
+    @Request() req,
+    @Param() params,
+  ): Promise<GetMainAccountWalletBalanceOkResponseDto> {
+    const { driverId } = params;
+    return this.driverService.getMainAccountWalletBalance(
+      driverId,
+      req.user.userId,
     );
   }
 }

@@ -10,12 +10,14 @@ import {
   DepositMoneyIntoMainAccountWalletOkResponseDto,
   GetListDriverTransactionHistoryDto,
   GetListDriverTransactionHistoryOkResponseDto,
+  GetMainAccountWalletBalanceOkResponseDto,
   RegisterDriverCreatedResponseDto,
   RegisterDriverDto,
   WithdrawMoneyToPaypalAccountDto,
   WithdrawMoneyToPaypalAccountOkResponseDto,
 } from './dto';
 import {
+  IAccountWalletResponse,
   ICreateDepositMoneyIntoMainAccountWalletResponse,
   IDeliveryServiceAcceptOrderResponse,
   IDriver,
@@ -282,6 +284,43 @@ export class DriverService {
       message,
       data: {
         driverTransactions: driverTransactions,
+      },
+    };
+  }
+
+  //! Lấy danh sách lịch sử giao dịch (nạp,rút) tiền của driver
+  async getMainAccountWalletBalance(
+    driverId: string,
+    callerId: string,
+  ): Promise<GetMainAccountWalletBalanceOkResponseDto> {
+    //TODO:
+    const getMainAccountWalletBalanceResponse: IAccountWalletResponse = await this.userServiceClient
+      .send('getMainAccountWalletBalance', {
+        driverId,
+        callerId,
+      })
+      .toPromise();
+
+    const {
+      message,
+      status,
+      accountWallet,
+    } = getMainAccountWalletBalanceResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+
+    return {
+      statusCode: status,
+      message,
+      data: {
+        accountWallet: accountWallet,
       },
     };
   }
