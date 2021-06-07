@@ -13,6 +13,8 @@ import {
   GetMainAccountWalletBalanceOkResponseDto,
   RegisterDriverCreatedResponseDto,
   RegisterDriverDto,
+  UpdateIsActiveOfDriverDto,
+  UpdateIsActiveOfDriverOkResponseDto,
   WithdrawMoneyToPaypalAccountDto,
   WithdrawMoneyToPaypalAccountOkResponseDto,
 } from './dto';
@@ -23,6 +25,7 @@ import {
   IDriver,
   IDriverResponse,
   IDriverTransactionsResponse,
+  IIsActiveResponse,
   IOrderServiceCompleteOrderResponse,
   IOrderServicePickUpOrderResponse,
 } from './interfaces';
@@ -321,6 +324,41 @@ export class DriverService {
       message,
       data: {
         accountWallet: accountWallet,
+      },
+    };
+  }
+
+  //! Update thông tin isActive của driver
+  async updateIsActiveOfDriver(
+    driverId: string,
+    callerId: string,
+    updateIsActiveOfDriverDto: UpdateIsActiveOfDriverDto,
+  ): Promise<UpdateIsActiveOfDriverOkResponseDto> {
+    //TODO:
+    const updateIsActiveOfDriverResponse: IIsActiveResponse = await this.userServiceClient
+      .send('updateIsActiveOfDriver', {
+        driverId,
+        callerId,
+        ...updateIsActiveOfDriverDto,
+      })
+      .toPromise();
+
+    const { message, status, isActive } = updateIsActiveOfDriverResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+
+    return {
+      statusCode: status,
+      message,
+      data: {
+        isActive: isActive,
       },
     };
   }

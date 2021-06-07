@@ -43,6 +43,8 @@ import {
   RegisterDriverConflictResponseDto,
   RegisterDriverCreatedResponseDto,
   RegisterDriverDto,
+  UpdateIsActiveOfDriverDto,
+  UpdateIsActiveOfDriverOkResponseDto,
   WithdrawMoneyToPaypalAccountDto,
   WithdrawMoneyToPaypalAccountForbiddenResponse1Dto,
   WithdrawMoneyToPaypalAccountForbiddenResponse2Dto,
@@ -237,6 +239,27 @@ export class DriverController {
     return this.driverService.getMainAccountWalletBalance(
       driverId,
       req.user.userId,
+    );
+  }
+
+  //! Update thông tin isActive của driver
+  @ApiOkResponse({ type: UpdateIsActiveOfDriverOkResponseDto })
+  @ApiQuery({ type: UpdateIsActiveOfDriverDto })
+  @ApiForbiddenResponse({ type: ForbiddenResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(DriverJwtAuthGuard)
+  @Patch('/:driverId/update-isactive')
+  async updateIsActiveOfDriver(
+    @Request() req,
+    @Param() params,
+    @Query()
+    updateIsActiveOfDriverDto: UpdateIsActiveOfDriverDto,
+  ): Promise<UpdateIsActiveOfDriverOkResponseDto> {
+    const { driverId } = params;
+    return this.driverService.updateIsActiveOfDriver(
+      driverId,
+      req.user.userId,
+      updateIsActiveOfDriverDto,
     );
   }
 }

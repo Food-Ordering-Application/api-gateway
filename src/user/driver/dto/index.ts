@@ -17,3 +17,5 @@ export { WithdrawMoneyToPaypalAccountInternalResponse2Dto } from './payin-withdr
 export { GetListDriverTransactionHistoryOkResponseDto } from './payin-withdraw/get-list-transaction-history-ok-response.dto';
 export { GetListDriverTransactionHistoryDto } from './payin-withdraw/get-list-transaction-history.dto';
 export { GetMainAccountWalletBalanceOkResponseDto } from './payin-withdraw/get-main-account-wallet-balance-ok-response.dto';
+export { UpdateIsActiveOfDriverOkResponseDto } from './update-isactive/update-isactive-of-driver-ok-response.dto';
+export { UpdateIsActiveOfDriverDto } from './update-isactive/update-isactive-of-driver.dto';

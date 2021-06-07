@@ -15,3 +15,5 @@ export { IWithdrawTransaction } from './withdraw-transaction.interface';
 export { IDriverTransactionsResponse } from './driver-transactions-response.interface';
 export { IAccountWalletResponse } from './account-wallet-response.interface';
 export { IAccountWalletData } from './account-wallet-data.interface';
+export { IIsActiveData } from './isactive-data.interface';
+export { IIsActiveResponse } from './isActive-response.interface';
