@@ -18,13 +18,12 @@ export class GetListOrderOfDriverDto {
   query: string;
 
   @ApiProperty({ example: 2, required: true })
-  @IsInt()
-  page: number;
+  @IsString()
+  page: string;
 
   @ApiProperty({ example: 25, required: true })
-  @IsInt()
-  @Max(25)
-  size: number;
+  @IsString()
+  size: string;
 
   @ApiProperty({
     example: '2021-06-02T17:15:33.558Z',

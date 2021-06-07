@@ -302,7 +302,7 @@ export class OrderController {
     );
   }
 
-  //! Get one order ON_GOING, PICKED_UP of driver
+  //! Get list order ON_GOING, PICKED_UP of driver
   @ApiOkResponse({ type: GetListOrderOfDriverResponseDto })
   @ApiForbiddenResponse({
     type: ForbiddenResponseDto,
