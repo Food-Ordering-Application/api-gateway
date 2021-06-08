@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IMainBalanceData } from '../../interfaces';
 
 export class ApproveDepositMoneyIntoMainAccountWalletOkResponseDto {
   @ApiProperty({ example: 200 })
@@ -8,4 +9,10 @@ export class ApproveDepositMoneyIntoMainAccountWalletOkResponseDto {
     type: 'string',
   })
   message: string;
+  @ApiProperty({
+    example: {
+      mainBalance: 699000,
+    },
+  })
+  data: IMainBalanceData;
 }

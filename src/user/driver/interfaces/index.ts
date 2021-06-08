@@ -17,3 +17,5 @@ export { IAccountWalletResponse } from './account-wallet-response.interface';
 export { IAccountWalletData } from './account-wallet-data.interface';
 export { IIsActiveData } from './isactive-data.interface';
 export { IIsActiveResponse } from './isActive-response.interface';
+export { IMainBalanceResponse } from './main-balance-response.interface';
+export { IMainBalanceData } from './main-balance-data.interface';

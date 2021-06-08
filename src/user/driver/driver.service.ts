@@ -26,6 +26,7 @@ import {
   IDriverResponse,
   IDriverTransactionsResponse,
   IIsActiveResponse,
+  IMainBalanceResponse,
   IOrderServiceCompleteOrderResponse,
   IOrderServicePickUpOrderResponse,
 } from './interfaces';
@@ -184,7 +185,7 @@ export class DriverService {
     callerId: string,
   ): Promise<ApproveDepositMoneyIntoMainAccountWalletOkResponseDto> {
     //TODO:
-    const approveDepositMoneyIntoMainAccountWalletResponse: ISimpleResponse = await this.userServiceClient
+    const approveDepositMoneyIntoMainAccountWalletResponse: IMainBalanceResponse = await this.userServiceClient
       .send('approveDepositMoneyIntoMainAccountWallet', {
         ...approveDepositMoneyIntoMainAccountWalletDto,
         driverId,
@@ -195,6 +196,7 @@ export class DriverService {
     const {
       message,
       status,
+      mainBalance,
     } = approveDepositMoneyIntoMainAccountWalletResponse;
 
     if (status !== HttpStatus.OK) {
@@ -209,6 +211,9 @@ export class DriverService {
     return {
       statusCode: status,
       message,
+      data: {
+        mainBalance: mainBalance,
+      },
     };
   }
 
