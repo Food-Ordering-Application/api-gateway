@@ -391,7 +391,7 @@ export class OrderController {
   @Post('/events')
   async eventPaypalOrderOccur(
     @Body()
-    eventPaypalOrderOccurDto: EventPaypalOrderOccurDto,
+    eventPaypalOrderOccurDto,
   ) {
     console.log('Body', eventPaypalOrderOccurDto);
     this.orderService.eventPaypalOrderOccur(eventPaypalOrderOccurDto);
