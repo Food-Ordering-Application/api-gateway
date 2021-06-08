@@ -74,24 +74,27 @@ export class DriverController {
     this.driverService.eventPaypalOrderOccur(eventPaypalOrderOccurDto);
   }
 
+  @UseGuards(DriverLocalAuthGuard)
   @HttpCode(200)
   @Post('/order/:orderId/accept')
-  async acceptOrder(@Param('orderId') orderId: string) {
-    const driverId = MOCK_DRIVER_ID;
+  async acceptOrder(@Param('orderId') orderId: string, @Request() req) {
+    const driverId = req.user.userId;
     return await this.driverService.acceptOrder(driverId, orderId);
   }
 
+  @UseGuards(DriverLocalAuthGuard)
   @HttpCode(200)
   @Post('/order/:orderId/pickup')
-  async pickUpOrder(@Param('orderId') orderId: string) {
-    const driverId = MOCK_DRIVER_ID;
+  async pickUpOrder(@Param('orderId') orderId: string, @Request() req) {
+    const driverId = req.user.userId;
     return await this.driverService.pickUpOrder(driverId, orderId);
   }
 
+  @UseGuards(DriverLocalAuthGuard)
   @HttpCode(200)
   @Post('/order/:orderId/complete')
-  async completeOrder(@Param('orderId') orderId: string) {
-    const driverId = MOCK_DRIVER_ID;
+  async completeOrder(@Param('orderId') orderId: string, @Request() req) {
+    const driverId = req.user.userId;
     return await this.driverService.completeOrder(driverId, orderId);
   }
 
