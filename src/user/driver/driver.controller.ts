@@ -74,7 +74,7 @@ export class DriverController {
     this.driverService.eventPaypalOrderOccur(eventPaypalOrderOccurDto);
   }
 
-  @UseGuards(DriverLocalAuthGuard)
+  @UseGuards(DriverJwtAuthGuard)
   @HttpCode(200)
   @Post('/order/:orderId/accept')
   async acceptOrder(@Param('orderId') orderId: string, @Request() req) {
@@ -82,7 +82,7 @@ export class DriverController {
     return await this.driverService.acceptOrder(driverId, orderId);
   }
 
-  @UseGuards(DriverLocalAuthGuard)
+  @UseGuards(DriverJwtAuthGuard)
   @HttpCode(200)
   @Post('/order/:orderId/pickup')
   async pickUpOrder(@Param('orderId') orderId: string, @Request() req) {
@@ -90,7 +90,7 @@ export class DriverController {
     return await this.driverService.pickUpOrder(driverId, orderId);
   }
 
-  @UseGuards(DriverLocalAuthGuard)
+  @UseGuards(DriverJwtAuthGuard)
   @HttpCode(200)
   @Post('/order/:orderId/complete')
   async completeOrder(@Param('orderId') orderId: string, @Request() req) {
