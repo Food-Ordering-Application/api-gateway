@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ICity } from './../../interfaces';
+import { ICity } from '../../interfaces';
 
 export class GetDistrictsResponseDto {
   @ApiProperty({ example: 200 })
@@ -11,9 +11,11 @@ export class GetDistrictsResponseDto {
   message: string;
   @ApiProperty({
     example: {
-      id: 5,
-      name: 'TP. Hồ Chí Minh',
-      districts: [{ id: 145, name: 'Quận 5' }],
+      city: {
+        id: 5,
+        name: 'TP. Hồ Chí Minh',
+        districts: [{ id: 145, name: 'Quận 5' }],
+      },
     },
   })
   data: {
