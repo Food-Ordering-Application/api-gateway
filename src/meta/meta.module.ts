@@ -28,4 +28,4 @@ import { MetaService } from './meta.service';
   controllers: [MetaController],
   providers: [MetaService],
 })
-export class GeoModule {}
+export class MetaModule {}

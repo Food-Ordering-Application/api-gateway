@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ICity } from 'src/geo/interfaces';
+import { ICity, IGetCityData } from 'src/geo/interfaces';
 
 export class GetCityResponseDto {
   @ApiProperty({ example: 200 })
@@ -17,7 +17,5 @@ export class GetCityResponseDto {
       },
     },
   })
-  data: {
-    city: ICity;
-  };
+  data: IGetCityData;
 }

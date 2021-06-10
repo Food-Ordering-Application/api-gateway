@@ -1,16 +1,17 @@
-import { GetDistrictsResponseDto } from './dto/get-districts/get-districts-response.dto';
-import { GetCitiesResponseDto } from './dto/get-all-cities/get-all-cities-response.dto';
-import { Controller, Get, HttpCode, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, UseGuards } from '@nestjs/common';
 import {
   ApiBearerAuth,
+  ApiBody,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { AnyJwtAuthGuard } from 'src/auth/guards/jwts/any-jwt-auth.guard';
 import { InternalServerErrorResponseDto } from 'src/shared/dto/internal-server-error.dto';
 import { GetCityDto, GetCityResponseDto, GetDistrictsDto } from './dto';
+import { GetCitiesResponseDto } from './dto/get-all-cities/get-all-cities-response.dto';
+import { GetDistrictsResponseDto } from './dto/get-districts/get-districts-response.dto';
 import { GeoService } from './geo.service';
-import { AnyJwtAuthGuard } from 'src/auth/guards/jwts/any-jwt-auth.guard';
 
 @ApiTags('geocode')
 @ApiInternalServerErrorResponse({ type: InternalServerErrorResponseDto })
@@ -20,22 +21,24 @@ export class GeoController {
 
   @ApiOkResponse({ type: GetDistrictsResponseDto })
   @ApiBearerAuth()
+  @ApiBody({ type: GetDistrictsDto })
   @UseGuards(AnyJwtAuthGuard)
   @HttpCode(200)
   @Post('/get-districts')
   async getDistrictsOfCity(
-    getDistrictsDto: GetDistrictsDto,
+    @Body() getDistrictsDto: GetDistrictsDto,
   ): Promise<GetDistrictsResponseDto> {
     return await this.geoService.getDistrictsOfCity(getDistrictsDto);
   }
 
   @ApiOkResponse({ type: GetCityResponseDto })
   @ApiBearerAuth()
+  @ApiBody({ type: GetCityDto })
   @UseGuards(AnyJwtAuthGuard)
   @HttpCode(200)
   @Post('/get-city')
   async getCityFromLocation(
-    getCityDto: GetCityDto,
+    @Body() getCityDto: GetCityDto,
   ): Promise<GetCityResponseDto> {
     return await this.geoService.getCityFromLocation(getCityDto);
   }

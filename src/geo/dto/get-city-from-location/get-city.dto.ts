@@ -6,10 +6,8 @@ import { Position } from 'src/shared/dto/position.dto';
 export class GetCityDto {
   @ApiProperty({
     example: {
-      position: {
-        latitude: 10.7548816691903,
-        longitude: 106.669695864843,
-      },
+      latitude: 10.7548816691903,
+      longitude: 106.669695864843,
     },
   })
   @ValidateNested()
