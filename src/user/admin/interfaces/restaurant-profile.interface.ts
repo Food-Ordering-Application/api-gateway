@@ -3,8 +3,10 @@ export interface IRestaurantProfile {
   posAppKey: string;
   name: string;
   phone: string;
-  area: string;
+  cityId: number;
   city: string;
+  areaId: number;
+  area: string;
   address: string;
   contractId: number;
   isActive: boolean;

@@ -1,5 +1,4 @@
-import { IOpenHour } from '.';
-import { CategoryType } from '../../shared/enum/category-type.enum';
+import { IOpenHour, ICategory } from '.';
 
 export interface IRestaurantDetail {
   id: string;
@@ -10,13 +9,17 @@ export interface IRestaurantDetail {
   numRate: number;
   rating: number;
   address: string;
+  cityId: number;
   city: string;
+  areaId: number;
   area: string;
-  geo: {
+  position: {
     latitude: number;
     longitude: number;
   };
+  isFavorite: boolean;
   openHours?: IOpenHour[];
-  categories?: CategoryType[];
+  categories?: ICategory[];
+  isOpening: boolean;
   merchantIdInPayPal: string;
 }

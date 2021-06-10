@@ -54,7 +54,6 @@ import {
 } from './dto';
 import { GetListDriverTransactionHistoryOkResponseDto } from './dto/payin-withdraw/get-list-transaction-history-ok-response.dto';
 
-const MOCK_DRIVER_ID = 'a22f3f78-be7f-11eb-8529-0242ac130003';
 @ApiTags('driver')
 @ApiInternalServerErrorResponse({ type: InternalServerErrorResponseDto })
 @Controller('user/driver')

@@ -1,10 +1,9 @@
-import { OpenHourDto } from './open-hours-data.dto';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsArray, IsEnum, IsString, ValidateNested } from 'class-validator';
-import { CategoryType } from '../../../../../shared/enum/category-type.enum';
-import { GeospatialDataDto } from './geospatial-data.dto';
 import { Type } from 'class-transformer';
+import { IsArray, IsInt, IsString, ValidateNested } from 'class-validator';
+import { GeospatialDataDto } from './geospatial-data.dto';
 import { OpenHoursDataExample } from './open-hours-data-example';
+import { OpenHourDto } from './open-hours-data.dto';
 
 export class CreateRestaurantDto {
   @ApiProperty({
@@ -39,16 +38,16 @@ export class CreateRestaurantDto {
   geo: GeospatialDataDto;
 
   @ApiProperty({
-    example: 'Hồ Chí Minh',
+    example: 5,
     required: true,
     description: 'Thành phố',
   })
-  @IsString()
-  city: string;
+  @IsInt()
+  cityId: number;
 
-  @ApiProperty({ example: 'TPHCM', required: true, description: 'Khu vực' })
-  @IsString()
-  area: string;
+  @ApiProperty({ example: 143, required: true, description: 'Khu vực' })
+  @IsInt()
+  areaId: number;
 
   @ApiProperty({
     example: OpenHoursDataExample,
@@ -62,15 +61,12 @@ export class CreateRestaurantDto {
   openHours: OpenHourDto[];
 
   @ApiProperty({
-    example: [CategoryType.RESTAURANT],
-    enum: CategoryType,
-    required: true,
-    description: 'Loại hình quán',
-    type: [CategoryType],
+    example: [1, 5],
+    nullable: true,
   })
   @IsArray()
-  @IsEnum(CategoryType, { each: true })
-  categories: CategoryType[];
+  @IsInt({ each: true })
+  categoryIds: number[];
 
   @ApiProperty({
     example: 'http://lorempixel.com/640/480',
