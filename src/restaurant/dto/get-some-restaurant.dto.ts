@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
+  IsArray,
   IsEnum,
   IsInt,
   IsOptional,
@@ -48,10 +49,8 @@ export class GetSomeRestaurantDto {
 
   @ApiProperty({
     example: {
-      position: {
-        latitude: 10.7548816691903,
-        longitude: 106.669695864843,
-      },
+      latitude: 10.7548816691903,
+      longitude: 106.669695864843,
     },
   })
   @ValidateNested()
@@ -61,18 +60,21 @@ export class GetSomeRestaurantDto {
   @ApiProperty({
     example: RestaurantSortType.NEARBY,
     enum: RestaurantSortType,
-    required: true,
+    type: 'number',
+    required: false,
   })
   @IsEnum(RestaurantSortType)
+  @IsInt()
   @IsOptional()
   sortId?: RestaurantSortType;
 
   @ApiProperty({
-    example: RestaurantFilterType.OPENING,
+    example: [RestaurantFilterType.OPENING],
     enum: RestaurantFilterType,
-    required: true,
+    required: false,
   })
   @IsEnum(RestaurantFilterType, { each: true })
+  @IsArray()
   @IsOptional()
   filterIds?: RestaurantFilterType[];
 }
