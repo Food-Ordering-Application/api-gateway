@@ -1,3 +1,6 @@
+import { CustomerJwtAuthGuard } from 'src/auth/guards/jwts/jwt-auth.guard';
+import { UpdateFavoriteRestaurantDto } from './dto/update-favorite-restaurant/update-favorite-restaurant.dto';
+import { UpdateFavoriteRestaurantParamsDto } from './dto/update-favorite-restaurant/update-favorite-restaurant-params.dto';
 import {
   Controller,
   Get,
@@ -6,7 +9,11 @@ import {
   Post,
   HttpCode,
   Param,
+  Request,
   Query,
+  UseGuards,
+  Put,
+  Req,
 } from '@nestjs/common';
 import { RestaurantService } from './restaurant.service';
 import {
@@ -18,8 +25,10 @@ import {
   GetSomeRestaurantDto,
   GetToppingInfoOfAMenuResponseDto,
   GetToppingInfoOfAMenuDto,
+  UpdateFavoriteRestaurantResponseDto,
 } from './dto/index';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
@@ -27,6 +36,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { InternalServerErrorResponseDto } from 'src/shared/dto/internal-server-error.dto';
+import { OptionCustomerJwtAuthGuard } from 'src/auth/guards/jwts/optional-customer-jwt-auth.guard';
 
 @ApiTags('restaurants')
 @ApiInternalServerErrorResponse({ type: InternalServerErrorResponseDto })
@@ -49,13 +59,19 @@ export class RestaurantController {
   }
 
   // Lấy thông tin chi tiết 1 nhà hàng
+  @UseGuards(OptionCustomerJwtAuthGuard)
   @ApiOkResponse({ type: GetRestaurantInformationResponseDto })
   @Get('/:restaurantId')
   getRestaurantInformation(
+    @Request() req,
     @Param() params,
   ): Promise<GetRestaurantInformationResponseDto> {
     const { restaurantId } = params;
-    return this.restaurantService.getRestaurantInformation(restaurantId);
+    const customerId = req.user?.userId;
+    return this.restaurantService.getRestaurantInformation(
+      restaurantId,
+      customerId,
+    );
   }
 
   // Lấy thông tin về Menu, MenuGroup, MenuItems của nhà hàng
