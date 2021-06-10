@@ -1,4 +1,5 @@
-import { CategoryType } from './../../shared/enum/category-type.enum';
+import { ICategory } from 'src/user/merchant/restaurant/interfaces';
+
 export interface IRestaurant {
   id: string;
   name: string;
@@ -6,6 +7,8 @@ export interface IRestaurant {
   coverImageUrl: string;
   numRate: number;
   rating: number;
-  categories: CategoryType[];
+  position: { latitude: number; longitude: number };
+  categories: ICategory[];
+  isOpening: boolean;
   merchantIdInPayPal: string;
 }

@@ -1,3 +1,4 @@
+import { MetaModule } from './meta/meta.module';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -8,9 +9,14 @@ import { CaslModule } from './casl/casl.module';
 import { RestaurantModule } from './restaurant/restaurant.module';
 import { OrderModule } from './order/order.module';
 import * as Joi from 'joi';
+import { GeoModule } from './geo/geo.module';
 
 @Module({
   imports: [
+    MetaModule,
+    GeoModule,
+    RestaurantModule,
+    OrderModule,
     UserModule,
     AuthModule,
     ConfigModule.forRoot({
@@ -20,8 +26,6 @@ import * as Joi from 'joi';
       // envFilePath: '../.env',
     }),
     CaslModule,
-    RestaurantModule,
-    OrderModule,
   ],
   controllers: [AppController],
   providers: [AppService],

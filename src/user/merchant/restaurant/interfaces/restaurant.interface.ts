@@ -8,7 +8,7 @@ export interface IRestaurant {
   coverImageUrl: string;
   videoUrl?: string;
   verifiedImageUrl?: string;
-  geo: {
+  position: {
     latitude: number;
     longitude: number;
   };
@@ -16,7 +16,9 @@ export interface IRestaurant {
   categories?: ICategory[];
   address: string;
   city: string;
+  cityId: number;
   area: string;
+  areaId: number;
   isActive: boolean;
   isVerified: boolean;
   isBanned: boolean;

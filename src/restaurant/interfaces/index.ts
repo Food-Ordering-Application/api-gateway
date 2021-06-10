@@ -15,3 +15,5 @@ export { IGetMenuItemToppingsData } from './get-menu-item-toppings-data.interfac
 export { IMenuInformationResponse } from './get-menu-information-response.interface';
 export { IOpenHour } from './open-hour.interface';
 export { IRestaurant } from './restaurant.interface';
+export { IUpdateFavoriteRestaurantResponse } from './update-favorite-restaurant-response.interface';
+export { IGetFavoriteRestaurantsResponse } from './get-favorite-restaurants-response.interface';

@@ -100,9 +100,11 @@ import { DriverService } from './driver/driver.service';
   ],
   controllers: [
     CustomerController,
+    PosController,
+    DriverController,
     MerchantController,
     AdminController,
-    PosController,
+    PaymentController,
     RestaurantController,
     StaffController,
     MenuController,
@@ -110,8 +112,6 @@ import { DriverService } from './driver/driver.service';
     MenuItemController,
     ToppingGroupController,
     ToppingItemController,
-    PaymentController,
-    DriverController,
   ],
   providers: [
     CustomerService,

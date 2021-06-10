@@ -1,0 +1,33 @@
+import { RestaurantFilterType, RestaurantSortType } from 'src/restaurant/enums';
+import { ICategory } from 'src/restaurant/interfaces';
+
+export interface IMetaData {
+  deliveryService: {
+    // thoi gian cho phep giao hang
+    serviceStartTime: string;
+    serviceEndTime: string;
+    // thoi gian giao hang toi da
+    maxDeliverTime: number;
+    minDeliverTime: number;
+    averageTimePer1km: number;
+    // thoi gian giao hang du kien =
+    // max(thoi gian chuan bi, thoi gian shipper toi cua hang) +
+    // thoi gian di chuyen cua shipper (average_time_per_1km * distance)
+    deliverEstimateTime: {
+      merchantTime: number; // thoi gian chuan bi cua nha hang
+      stepTime: number;
+    };
+    closeTimeWarning: number; // 30' truoc gio dong
+    callCenter: string;
+    distanceLimit: number; // gioi han dat 10km
+  };
+  categories: ICategory[];
+  restaurantFilterType: {
+    name: 'Đang mở' | 'Ưu đãi';
+    id: RestaurantFilterType;
+  }[];
+  restaurantSortType: {
+    name: 'Gần đây' | 'Đánh giá';
+    id: RestaurantSortType;
+  }[];
+}
