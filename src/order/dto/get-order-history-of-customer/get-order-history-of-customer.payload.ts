@@ -5,6 +5,6 @@ export class GetOrderHistoryOfCustomerPayload {
   offset: number;
   limit: number;
   filter: OrderHistoryFilter;
-  from: Date;
-  to: Date;
+  from: string;
+  to: string;
 }
