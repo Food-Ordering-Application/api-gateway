@@ -1,4 +1,6 @@
 export interface ICategory {
-  id: string;
-  type: string;
+  id: number;
+  name: string;
+  iconUrl: string;
+  displayOrder: number;
 }
