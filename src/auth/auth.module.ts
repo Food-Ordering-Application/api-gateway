@@ -1,3 +1,4 @@
+import { AnonymousStrategy } from './strategies/anonymous.strategy';
 import { PosJwtStrategy } from './strategies/jwt-strategies/pos-jwt.strategy';
 import { PosLocalStrategy } from './strategies/local-strategies/pos-local.strategy';
 import { AdminLocalStrategy } from './strategies/local-strategies/admin-local.strategy';
@@ -42,6 +43,7 @@ import { DriverJwtStrategy } from './strategies/jwt-strategies/driver-jwt.strate
     AdminJwtStrategy,
     PosLocalStrategy,
     PosJwtStrategy,
+    AnonymousStrategy,
   ],
   exports: [AuthService],
 })
