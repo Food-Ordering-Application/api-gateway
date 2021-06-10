@@ -1,32 +1,17 @@
-import { CustomerJwtAuthGuard } from 'src/auth/guards/jwts/jwt-auth.guard';
-import { UpdateFavoriteRestaurantDto } from './dto/update-favorite-restaurant/update-favorite-restaurant.dto';
-import { UpdateFavoriteRestaurantParamsDto } from './dto/update-favorite-restaurant/update-favorite-restaurant-params.dto';
 import {
+  Body,
   Controller,
   Get,
-  Body,
-  Logger,
-  Post,
   HttpCode,
+  Logger,
   Param,
-  Request,
-  Query,
-  UseGuards,
+  Post,
   Put,
+  Query,
   Req,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
-import { RestaurantService } from './restaurant.service';
-import {
-  GetMenuInformationResponseDto,
-  GetRestaurantInformationResponseDto,
-  GetSomeRestaurantResponseDto,
-  GetMenuItemToppingInfoResponseDto,
-  GetMenuItemToppingDto,
-  GetSomeRestaurantDto,
-  GetToppingInfoOfAMenuResponseDto,
-  GetToppingInfoOfAMenuDto,
-  UpdateFavoriteRestaurantResponseDto,
-} from './dto/index';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -35,8 +20,23 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { InternalServerErrorResponseDto } from 'src/shared/dto/internal-server-error.dto';
+import { CustomerJwtAuthGuard } from 'src/auth/guards/jwts/jwt-auth.guard';
 import { OptionCustomerJwtAuthGuard } from 'src/auth/guards/jwts/optional-customer-jwt-auth.guard';
+import { InternalServerErrorResponseDto } from 'src/shared/dto/internal-server-error.dto';
+import {
+  GetMenuInformationResponseDto,
+  GetMenuItemToppingDto,
+  GetMenuItemToppingInfoResponseDto,
+  GetRestaurantInformationResponseDto,
+  GetSomeRestaurantDto,
+  GetSomeRestaurantResponseDto,
+  GetToppingInfoOfAMenuDto,
+  GetToppingInfoOfAMenuResponseDto,
+  UpdateFavoriteRestaurantResponseDto,
+} from './dto/index';
+import { UpdateFavoriteRestaurantParamsDto } from './dto/update-favorite-restaurant/update-favorite-restaurant-params.dto';
+import { UpdateFavoriteRestaurantDto } from './dto/update-favorite-restaurant/update-favorite-restaurant.dto';
+import { RestaurantService } from './restaurant.service';
 
 @ApiTags('restaurants')
 @ApiInternalServerErrorResponse({ type: InternalServerErrorResponseDto })
@@ -108,6 +108,25 @@ export class RestaurantController {
     return this.restaurantService.getToppingInfoOfAMenu(
       getAllRestaurantOrderDto,
       restaurantId,
+    );
+  }
+
+  @ApiOkResponse({ type: UpdateFavoriteRestaurantResponseDto })
+  @ApiBody({ type: UpdateFavoriteRestaurantDto })
+  @ApiBearerAuth()
+  @UseGuards(CustomerJwtAuthGuard)
+  @Put('/:restaurantId/favorite')
+  async updateFavoriteRestaurant(
+    @Req() req,
+    @Param() params: UpdateFavoriteRestaurantParamsDto,
+    @Body() updateFavoriteRestaurantDto: UpdateFavoriteRestaurantDto,
+  ): Promise<UpdateFavoriteRestaurantResponseDto> {
+    const { restaurantId } = params;
+    const customerId: string = req.user.userId;
+    return this.restaurantService.updateFavoriteRestaurant(
+      restaurantId,
+      customerId,
+      updateFavoriteRestaurantDto,
     );
   }
 }
