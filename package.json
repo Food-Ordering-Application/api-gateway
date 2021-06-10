@@ -41,6 +41,7 @@
         "csurf": "^1.11.0",
         "helmet": "^4.4.1",
         "joi": "^17.4.0",
+        "moment-timezone": "^0.5.33",
         "passport": "^0.4.1",
         "passport-anonymous": "^1.0.1",
         "passport-jwt": "^4.0.0",

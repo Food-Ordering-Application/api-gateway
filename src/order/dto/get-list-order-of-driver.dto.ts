@@ -26,18 +26,18 @@ export class GetListOrderOfDriverDto {
   size: string;
 
   @ApiProperty({
-    example: '2021-06-02T17:15:33.558Z',
+    example: '2013-11-18',
     description: 'ISO-8601 date string format',
   })
-  @IsDateString()
+  @IsString()
   @IsOptional()
-  from: Date;
+  from: string;
 
   @ApiProperty({
-    example: '2021-06-02T17:15:33.558Z',
+    example: '2013-11-19',
     description: 'ISO-8601 date string format',
   })
-  @IsDateString()
+  @IsString()
   @IsOptional()
-  to: Date;
+  to: string;
 }

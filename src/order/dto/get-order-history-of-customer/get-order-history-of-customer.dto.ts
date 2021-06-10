@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsEnum, IsDateString, IsNotEmpty } from 'class-validator';
+import {
+  IsOptional,
+  IsEnum,
+  IsDateString,
+  IsNotEmpty,
+  IsString,
+} from 'class-validator';
 import { OrderHistoryFilter } from 'src/order/enums';
 export class GetOrderHistoryOfCustomerDto {
   @ApiProperty({
@@ -14,18 +20,18 @@ export class GetOrderHistoryOfCustomerDto {
   filter: OrderHistoryFilter;
 
   @ApiProperty({
-    example: '2021-06-02T17:15:33.558Z',
+    example: '2013-11-18',
     description: 'ISO-8601 date string format',
     required: true,
   })
-  @IsDateString()
-  from: Date;
+  @IsString()
+  from: string;
 
   @ApiProperty({
-    example: '2021-06-02T17:15:33.558Z',
+    example: '2013-11-18',
     description: 'ISO-8601 date string format',
     required: true,
   })
-  @IsDateString()
-  to: Date;
+  @IsString()
+  to: string;
 }

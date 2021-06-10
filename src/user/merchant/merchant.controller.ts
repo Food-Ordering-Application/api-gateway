@@ -5,7 +5,9 @@ import {
   HttpCode,
   Logger,
   Param,
+  Patch,
   Post,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -14,15 +16,18 @@ import {
   ApiBody,
   ApiConflictResponse,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiParam,
+  ApiQuery,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { AuthService } from 'src/auth/auth.service';
 import { MerchantJwtRequest } from 'src/auth/strategies/jwt-strategies/merchant-jwt-request.interface';
 import { InternalServerErrorResponseDto } from '../../shared/dto/internal-server-error.dto';
+import { ForbiddenResponseDto } from '../customer/dto';
 import {
   CreateMerchantConflictResponseDto,
   CreateMerchantDto,
@@ -32,6 +37,8 @@ import {
   LoginMerchantDto,
   LoginMerchantResponseDto,
   LoginMerchantUnauthorizedResponseDto,
+  UpdateIsAutoConfirmOrderDto,
+  UpdateIsAutoConfirmOrderOkResponseDto,
 } from '../merchant/dto/index';
 import { MerchantJwtAuthGuard } from './../../auth/guards/jwts/merchant-jwt-auth.guard';
 import { MerchantLocalAuthGuard } from './../../auth/guards/locals/merchant-local-auth.guard';
@@ -95,5 +102,26 @@ export class MerchantController {
       };
     }
     return await this.merchantService.findMerchantById(merchantId);
+  }
+
+  //! Update thông tin isAutoConfirmOrder của merchant
+  @ApiOkResponse({ type: UpdateIsAutoConfirmOrderOkResponseDto })
+  @ApiQuery({ type: UpdateIsAutoConfirmOrderDto })
+  @ApiForbiddenResponse({ type: ForbiddenResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(MerchantJwtAuthGuard)
+  @Patch('/:merchantId/update-isautoconfirm')
+  async updateIsAutoConfirmOrder(
+    @Request() req,
+    @Param() params,
+    @Query()
+    updateIsAutoConfirmOrderDto: UpdateIsAutoConfirmOrderDto,
+  ): Promise<UpdateIsAutoConfirmOrderOkResponseDto> {
+    const { driverId } = params;
+    return this.merchantService.updateIsAutoConfirmOrder(
+      driverId,
+      req.user.merchantId,
+      updateIsAutoConfirmOrderDto,
+    );
   }
 }
