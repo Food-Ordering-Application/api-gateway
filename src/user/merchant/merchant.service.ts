@@ -5,8 +5,11 @@ import {
   CreateMerchantDto,
   CreateMerchantResponseDto,
   FindMerchantByIdResponseDto,
+  UpdateIsAutoConfirmOrderDto,
+  UpdateIsAutoConfirmOrderOkResponseDto,
 } from '../merchant/dto/index';
 import {
+  IIsAutoConfirmResponse,
   IMerchant,
   IUserServiceCreateMerchantResponse,
   IUserServiceFetchMerchantResponse,
@@ -21,10 +24,9 @@ export class MerchantService {
   async createMerchant(
     createMerchantDto: CreateMerchantDto,
   ): Promise<CreateMerchantResponseDto> {
-    const createMerchantResponse: IUserServiceCreateMerchantResponse =
-      await this.userServiceClient
-        .send('createMerchant', createMerchantDto)
-        .toPromise();
+    const createMerchantResponse: IUserServiceCreateMerchantResponse = await this.userServiceClient
+      .send('createMerchant', createMerchantDto)
+      .toPromise();
 
     const { status, message, user } = createMerchantResponse;
     if (status !== HttpStatus.CREATED) {
@@ -44,10 +46,9 @@ export class MerchantService {
     username: string,
     password: string,
   ): Promise<IMerchant> {
-    const authenticatedMerchantResponse: IUserServiceFetchMerchantResponse =
-      await this.userServiceClient
-        .send('getAuthenticatedMerchant', { username, password })
-        .toPromise();
+    const authenticatedMerchantResponse: IUserServiceFetchMerchantResponse = await this.userServiceClient
+      .send('getAuthenticatedMerchant', { username, password })
+      .toPromise();
     const { message, user, status } = authenticatedMerchantResponse;
     if (status !== HttpStatus.OK) {
       throw new HttpException(
@@ -63,10 +64,9 @@ export class MerchantService {
   async findMerchantById(
     merchantId: string,
   ): Promise<FindMerchantByIdResponseDto> {
-    const findMerchantById: IUserServiceFetchMerchantResponse =
-      await this.userServiceClient
-        .send('findMerchantById', merchantId)
-        .toPromise();
+    const findMerchantById: IUserServiceFetchMerchantResponse = await this.userServiceClient
+      .send('findMerchantById', merchantId)
+      .toPromise();
 
     const { status, message, user } = findMerchantById;
 
@@ -79,6 +79,41 @@ export class MerchantService {
       message,
       data: {
         user,
+      },
+    };
+  }
+
+  //! Update thông tin isAutoConfirm của merchant
+  async updateIsAutoConfirmOrder(
+    driverId: string,
+    callerId: string,
+    updateIsAutoConfirmOrderDto: UpdateIsAutoConfirmOrderDto,
+  ): Promise<UpdateIsAutoConfirmOrderOkResponseDto> {
+    //TODO:
+    const updateIsAutoConfirmOrderResponse: IIsAutoConfirmResponse = await this.userServiceClient
+      .send('updateIsAutoConfirmOrder', {
+        driverId,
+        callerId,
+        ...updateIsAutoConfirmOrderDto,
+      })
+      .toPromise();
+
+    const { message, status, isAutoConfirm } = updateIsAutoConfirmOrderResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+
+    return {
+      statusCode: status,
+      message,
+      data: {
+        isAutoConfirm: isAutoConfirm,
       },
     };
   }

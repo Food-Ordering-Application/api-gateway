@@ -40,10 +40,9 @@ export class PosService {
     verifyAppKeyDto: VerifyAppKeyDto,
   ): Promise<VerifyAppKeyResponseDto> {
     const { posAppKey, deviceId } = verifyAppKeyDto;
-    const verifyRestaurant: IUserServiceVerifyAppKeyResponse =
-      await this.userServiceClient
-        .send('verifyPosAppKey', { posAppKey, deviceId })
-        .toPromise();
+    const verifyRestaurant: IUserServiceVerifyAppKeyResponse = await this.userServiceClient
+      .send('verifyPosAppKey', { posAppKey, deviceId })
+      .toPromise();
     const { status, message, data } = verifyRestaurant;
 
     if (status !== HttpStatus.OK) {
@@ -62,10 +61,9 @@ export class PosService {
     password: string,
     restaurantId: string,
   ): Promise<IStaffLogin> {
-    const authenticatedStaffResponse: IUserServiceLoginPosResponse =
-      await this.userServiceClient
-        .send('getAuthenticatedStaff', { username, password, restaurantId })
-        .toPromise();
+    const authenticatedStaffResponse: IUserServiceLoginPosResponse = await this.userServiceClient
+      .send('getAuthenticatedStaff', { username, password, restaurantId })
+      .toPromise();
     const { message, user, status } = authenticatedStaffResponse;
     if (status !== HttpStatus.OK) {
       throw new HttpException(
@@ -78,14 +76,13 @@ export class PosService {
     return user;
   }
   async fetchMenuOfRestaurant(restaurantId: string) {
-    const fetchMenuOfRestaurantResponse: IRestaurantServiceFetchMenuOfRestaurantResponse =
-      await this.restaurantServiceClient
-        .send('fetchMenuOfRestaurant', {
-          restaurantId,
-          page: 0,
-          size: 1,
-        })
-        .toPromise();
+    const fetchMenuOfRestaurantResponse: IRestaurantServiceFetchMenuOfRestaurantResponse = await this.restaurantServiceClient
+      .send('fetchMenuOfRestaurant', {
+        restaurantId,
+        page: 0,
+        size: 1,
+      })
+      .toPromise();
 
     const { status, message, data } = fetchMenuOfRestaurantResponse;
     if (status !== HttpStatus.OK) {
@@ -105,17 +102,16 @@ export class PosService {
     menuId: string,
     fetchDto: FetchDto,
   ) {
-    const fetchMenuItemResponse: IRestaurantServiceFetchMenuItemByMenuResponse =
-      await this.restaurantServiceClient
-        .send('fetchMenuItemOfMenu', {
-          merchantId: null,
-          restaurantId,
-          menuId,
-          page: parseInt(fetchDto.page) || 0,
-          size: parseInt(fetchDto.size) || 50,
-          search: '',
-        })
-        .toPromise();
+    const fetchMenuItemResponse: IRestaurantServiceFetchMenuItemByMenuResponse = await this.restaurantServiceClient
+      .send('fetchMenuItemOfMenu', {
+        merchantId: null,
+        restaurantId,
+        menuId,
+        page: parseInt(fetchDto.page) || 0,
+        size: parseInt(fetchDto.size) || 50,
+        search: '',
+      })
+      .toPromise();
 
     const { status, message, data } = fetchMenuItemResponse;
     if (status !== HttpStatus.OK) {
@@ -138,17 +134,16 @@ export class PosService {
     menuId: string,
     fetchDto: FetchDto,
   ) {
-    const fetchMenuItemResponse: IRestaurantServiceFetchMenuItemByMenuResponse =
-      await this.restaurantServiceClient
-        .send('fetchMenuGroupOfMenu', {
-          merchantId: null,
-          restaurantId,
-          menuId,
-          page: parseInt(fetchDto.page) || 0,
-          size: parseInt(fetchDto.size) || 50,
-          search: '',
-        })
-        .toPromise();
+    const fetchMenuItemResponse: IRestaurantServiceFetchMenuItemByMenuResponse = await this.restaurantServiceClient
+      .send('fetchMenuGroupOfMenu', {
+        merchantId: null,
+        restaurantId,
+        menuId,
+        page: parseInt(fetchDto.page) || 0,
+        size: parseInt(fetchDto.size) || 50,
+        search: '',
+      })
+      .toPromise();
 
     const { status, message, data } = fetchMenuItemResponse;
     if (status !== HttpStatus.OK) {
@@ -171,17 +166,16 @@ export class PosService {
     menuId: string,
     fetchDto: FetchDto,
   ) {
-    const fetchMenuItemResponse: IRestaurantServiceFetchMenuItemByMenuResponse =
-      await this.restaurantServiceClient
-        .send('fetchToppingItemOfMenu', {
-          merchantId: null,
-          restaurantId,
-          menuId,
-          page: parseInt(fetchDto.page) || 0,
-          size: parseInt(fetchDto.size) || 50,
-          search: '',
-        })
-        .toPromise();
+    const fetchMenuItemResponse: IRestaurantServiceFetchMenuItemByMenuResponse = await this.restaurantServiceClient
+      .send('fetchToppingItemOfMenu', {
+        merchantId: null,
+        restaurantId,
+        menuId,
+        page: parseInt(fetchDto.page) || 0,
+        size: parseInt(fetchDto.size) || 50,
+        search: '',
+      })
+      .toPromise();
 
     const { status, message, data } = fetchMenuItemResponse;
     if (status !== HttpStatus.OK) {
@@ -204,17 +198,16 @@ export class PosService {
     menuId: string,
     fetchDto: FetchDto,
   ) {
-    const fetchMenuItemResponse: IRestaurantServiceFetchMenuItemByMenuResponse =
-      await this.restaurantServiceClient
-        .send('fetchToppingGroupOfMenu', {
-          merchantId: null,
-          restaurantId,
-          menuId,
-          page: parseInt(fetchDto.page) || 0,
-          size: parseInt(fetchDto.size) || 50,
-          search: '',
-        })
-        .toPromise();
+    const fetchMenuItemResponse: IRestaurantServiceFetchMenuItemByMenuResponse = await this.restaurantServiceClient
+      .send('fetchToppingGroupOfMenu', {
+        merchantId: null,
+        restaurantId,
+        menuId,
+        page: parseInt(fetchDto.page) || 0,
+        size: parseInt(fetchDto.size) || 50,
+        search: '',
+      })
+      .toPromise();
 
     const { status, message, data } = fetchMenuItemResponse;
     if (status !== HttpStatus.OK) {
@@ -237,16 +230,15 @@ export class PosService {
     menuId: string,
     fetchDto: FetchDto,
   ) {
-    const fetchMenuItemResponse: IRestaurantServiceFetchMenuItemByMenuResponse =
-      await this.restaurantServiceClient
-        .send('fetchMenuItemToppingOfMenu', {
-          merchantId: null,
-          restaurantId,
-          menuId,
-          page: parseInt(fetchDto.page) || 0,
-          size: parseInt(fetchDto.size) || 50,
-        })
-        .toPromise();
+    const fetchMenuItemResponse: IRestaurantServiceFetchMenuItemByMenuResponse = await this.restaurantServiceClient
+      .send('fetchMenuItemToppingOfMenu', {
+        merchantId: null,
+        restaurantId,
+        menuId,
+        page: parseInt(fetchDto.page) || 0,
+        size: parseInt(fetchDto.size) || 50,
+      })
+      .toPromise();
 
     const { status, message, data } = fetchMenuItemResponse;
     if (status !== HttpStatus.OK) {
@@ -268,8 +260,9 @@ export class PosService {
     savePosOrderDto: SavePosOrderDto,
   ): Promise<SavePosOrderResponseDto> {
     const { order } = savePosOrderDto;
-    const saveOrderResponse: IOrderServiceSavePosOrderResponse =
-      await this.orderServiceClient.send('savePosOrder', { order }).toPromise();
+    const saveOrderResponse: IOrderServiceSavePosOrderResponse = await this.orderServiceClient
+      .send('savePosOrder', { order })
+      .toPromise();
 
     const { status, message, data } = saveOrderResponse;
 
@@ -289,14 +282,13 @@ export class PosService {
     staffId: string,
     restaurantId: string,
   ): Promise<ConfirmOrderResponseDto> {
-    const restaurantConfirmOrderResponse: IOrderServiceSavePosOrderResponse =
-      await this.orderServiceClient
-        .send('restaurantConfirmOrder', {
-          orderId,
-          cashierId: staffId,
-          restaurantId,
-        })
-        .toPromise();
+    const restaurantConfirmOrderResponse: IOrderServiceSavePosOrderResponse = await this.orderServiceClient
+      .send('restaurantConfirmOrder', {
+        orderId,
+        cashierId: staffId,
+        restaurantId,
+      })
+      .toPromise();
 
     const { status, message } = restaurantConfirmOrderResponse;
 
@@ -317,16 +309,15 @@ export class PosService {
     voidOrderDto: VoidOrderDto,
   ): Promise<VoidOrderResponseDto> {
     const { cashierNote, orderItemIds } = voidOrderDto;
-    const restaurantVoidOrderResponse: IOrderServiceSavePosOrderResponse =
-      await this.orderServiceClient
-        .send('restaurantVoidOrder', {
-          orderId,
-          cashierId: staffId,
-          restaurantId,
-          orderItemIds,
-          cashierNote,
-        })
-        .toPromise();
+    const restaurantVoidOrderResponse: IOrderServiceSavePosOrderResponse = await this.orderServiceClient
+      .send('restaurantVoidOrder', {
+        orderId,
+        cashierId: staffId,
+        restaurantId,
+        orderItemIds,
+        cashierNote,
+      })
+      .toPromise();
 
     const { status, message } = restaurantVoidOrderResponse;
 
@@ -345,14 +336,13 @@ export class PosService {
     restaurantId: string,
     updateMenuItemDto: UpdateMenuItemDto,
   ): Promise<UpdateMenuItemResponseDto> {
-    const updateMenuItemResponse: ISimpleResponse =
-      await this.restaurantServiceClient
-        .send('updateMenuItem', {
-          menuItemId,
-          restaurantId,
-          data: updateMenuItemDto,
-        })
-        .toPromise();
+    const updateMenuItemResponse: ISimpleResponse = await this.restaurantServiceClient
+      .send('updateMenuItem', {
+        menuItemId,
+        restaurantId,
+        data: updateMenuItemDto,
+      })
+      .toPromise();
 
     const { status, message } = updateMenuItemResponse;
     if (status !== HttpStatus.OK) {
@@ -370,14 +360,13 @@ export class PosService {
     restaurantId: string,
     updateToppingItemDto: UpdateToppingItemDto,
   ): Promise<UpdateToppingItemResponseDto> {
-    const updateToppingItemResponse: ISimpleResponse =
-      await this.restaurantServiceClient
-        .send('updateToppingItem', {
-          toppingItemId,
-          restaurantId,
-          data: updateToppingItemDto,
-        })
-        .toPromise();
+    const updateToppingItemResponse: ISimpleResponse = await this.restaurantServiceClient
+      .send('updateToppingItem', {
+        toppingItemId,
+        restaurantId,
+        data: updateToppingItemDto,
+      })
+      .toPromise();
 
     const { status, message } = updateToppingItemResponse;
     if (status !== HttpStatus.OK) {
