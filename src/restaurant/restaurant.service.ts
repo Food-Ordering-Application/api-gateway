@@ -1,6 +1,8 @@
+import { IGetFavoriteRestaurantsResponse } from './interfaces/get-favorite-restaurants-response.interface';
 import { IUpdateFavoriteRestaurantResponse } from './interfaces/update-favorite-restaurant-response.interface';
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import {
+  GetFavoriteRestaurantsResponseDto,
   GetMenuInformationResponseDto,
   GetMenuItemToppingInfoResponseDto,
   GetRestaurantInformationResponseDto,
@@ -190,6 +192,36 @@ export class RestaurantService {
     return {
       statusCode: 200,
       message,
+    };
+  }
+
+  async getFavoriteRestaurants(
+    customerId: string,
+    { page, size }: { page: number; size: number },
+  ): Promise<GetFavoriteRestaurantsResponseDto> {
+    const getFavoriteRestaurantsResponse: IGetFavoriteRestaurantsResponse =
+      await this.restaurantServiceClient
+        .send('getFavoriteRestaurants', {
+          customerId,
+          page,
+          size,
+        })
+        .toPromise();
+
+    const { message, status, data } = getFavoriteRestaurantsResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message,
+        },
+        status,
+      );
+    }
+    return {
+      statusCode: 200,
+      message,
+      data,
     };
   }
 }

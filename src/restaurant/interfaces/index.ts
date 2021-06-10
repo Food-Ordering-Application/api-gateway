@@ -16,3 +16,4 @@ export { IMenuInformationResponse } from './get-menu-information-response.interf
 export { IOpenHour } from './open-hour.interface';
 export { IRestaurant } from './restaurant.interface';
 export { IUpdateFavoriteRestaurantResponse } from './update-favorite-restaurant-response.interface';
+export { IGetFavoriteRestaurantsResponse } from './get-favorite-restaurants-response.interface';

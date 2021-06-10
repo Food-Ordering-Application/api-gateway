@@ -1,3 +1,5 @@
+import { GetFavoriteRestaurantsResponseDto } from './dto/get-favorite-restaurants/get-favorite-restaurants-response.dto';
+import { GetFavoriteRestaurantsQueryParamsDto } from './dto/get-favorite-restaurants/get-favorite-restaurants-query-params.dto';
 import {
   Body,
   Controller,
@@ -128,5 +130,24 @@ export class RestaurantController {
       customerId,
       updateFavoriteRestaurantDto,
     );
+  }
+
+  @ApiOkResponse({ type: GetFavoriteRestaurantsResponseDto })
+  @ApiQuery({ type: GetFavoriteRestaurantsQueryParamsDto })
+  @ApiBearerAuth()
+  @UseGuards(CustomerJwtAuthGuard)
+  @Get('/get-favorite-infos')
+  async getFavoriteRestaurants(
+    @Req() req,
+    @Query() query: GetFavoriteRestaurantsQueryParamsDto,
+  ): Promise<GetFavoriteRestaurantsResponseDto> {
+    const { page: pageString, size: sizeString } = query;
+    const page = parseInt(pageString);
+    const size = parseInt(sizeString);
+    const customerId: string = req.user.userId;
+    return await this.restaurantService.getFavoriteRestaurants(customerId, {
+      page,
+      size,
+    });
   }
 }
