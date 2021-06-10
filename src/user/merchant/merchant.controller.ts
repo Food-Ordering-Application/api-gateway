@@ -117,9 +117,9 @@ export class MerchantController {
     @Query()
     updateIsAutoConfirmOrderDto: UpdateIsAutoConfirmOrderDto,
   ): Promise<UpdateIsAutoConfirmOrderOkResponseDto> {
-    const { driverId } = params;
+    const { merchantId } = params;
     return this.merchantService.updateIsAutoConfirmOrder(
-      driverId,
+      merchantId,
       req.user.merchantId,
       updateIsAutoConfirmOrderDto,
     );
