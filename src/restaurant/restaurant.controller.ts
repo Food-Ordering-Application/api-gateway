@@ -136,7 +136,7 @@ export class RestaurantController {
   @ApiQuery({ type: GetFavoriteRestaurantsQueryParamsDto })
   @ApiBearerAuth()
   @UseGuards(CustomerJwtAuthGuard)
-  @Get('/get-favorite-infos')
+  @Post('/get-favorite-infos')
   async getFavoriteRestaurants(
     @Req() req,
     @Query() query: GetFavoriteRestaurantsQueryParamsDto,
