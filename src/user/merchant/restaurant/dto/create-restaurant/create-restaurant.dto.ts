@@ -42,7 +42,7 @@ export class CreateRestaurantDto {
     required: true,
     description: 'Thành phố',
   })
-  @IsString()
+  @IsInt()
   cityId: number;
 
   @ApiProperty({ example: 143, required: true, description: 'Khu vực' })
