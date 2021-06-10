@@ -16,13 +16,16 @@ export class GetRestaurantInformationResponseDto {
         numRate: 0,
         rating: 0,
         address: '528 Nguyễn Trãi, P. 8, Quận 5, TP. HCM',
+        cityId: 5,
         city: 'Hồ Chí Minh',
-        area: 'TPHCM',
+        areaId: 143,
+        area: 'Quận 5',
         phone: '0949657934',
-        geo: {
+        position: {
           latitude: 3.253,
           longitude: -12.7589,
         },
+        isFavorite: false,
         openHours: [
           {
             id: '52563451-2b6d-4257-830a-f5171c5b1dd8',
@@ -81,7 +84,16 @@ export class GetRestaurantInformationResponseDto {
             toMinute: 0,
           },
         ],
-        categories: ['RESTAURANT'],
+        categories: [
+          {
+            id: 1,
+            name: 'Đồ ăn',
+            displayOrder: 1,
+            iconUrl:
+              'https://images.foody.vn/dcat/s270x270/image-dcat-b9833eb4-ea4f-4084-9bca-cbae5d703ce0.png',
+          },
+        ],
+        isOpening: true,
         merchantIdInPayPal: 'DD64LQSRDC2UN',
       },
     },
