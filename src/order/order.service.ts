@@ -34,6 +34,7 @@ import {
   GetOrderHistoryOfCustomerPayload,
   GetOrderHistoryOfCustomerResponseDto,
   EventPaypalOrderOccurDto,
+  GetLastDraftOrderOfCustomerDto,
 } from './dto';
 import {
   ICreateOrderResponse,
@@ -637,6 +638,35 @@ export class OrderService {
       .toPromise();
 
     const { message, status, orders } = getDraftOrdersOfCustomer;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+
+    return {
+      statusCode: status,
+      message,
+      data: {
+        orders: orders,
+      },
+    };
+  }
+
+  async getLastDraftOrderOfCustomer(
+    getLastDraftOrderOfCustomerDto: GetLastDraftOrderOfCustomerDto,
+  ): Promise<GetDraftOrdersOfCustomerResponseDto> {
+    const getLastDraftOrderOfCustomer: IOrdersResponse = await this.orderServiceClient
+      .send('getLastDraftOrderOfCustomer', {
+        ...getLastDraftOrderOfCustomerDto,
+      })
+      .toPromise();
+
+    const { message, status, orders } = getLastDraftOrderOfCustomer;
 
     if (status !== HttpStatus.OK) {
       throw new HttpException(

@@ -1,6 +1,3 @@
-import { format } from 'prettier';
-import { from } from 'rxjs';
-
 export { CreateOrderResponseDto } from './create-order-response.dto';
 export { GetOrderAssociatedWithCusAndResResponseDto } from './get-order-with-cus-res-response.dto';
 export { GetOrderAssociatedWithCusAndResDto } from './get-order-with-cus-res.dto';
@@ -39,3 +36,4 @@ export { GetOrderHistoryOfCustomerPayload } from './get-order-history-of-custome
 export { GetOrderHistoryOfCustomerDto } from './get-order-history-of-customer/get-order-history-of-customer.dto';
 export { PaypalResource } from './paypal-order-resource.dto';
 export { EventPaypalOrderOccurDto } from './event-paypal-order-occur.dto';
+export { GetLastDraftOrderOfCustomerDto } from './get-last-draft-order-of-customer/get-last-draft-order-of-customer.dto';

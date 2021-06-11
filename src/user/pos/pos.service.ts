@@ -7,6 +7,7 @@ import { IRestaurantServiceFetchMenuItemByMenuResponse } from '../merchant/resta
 import {
   ConfirmOrderResponseDto,
   FetchDto,
+  FinishOrderResponseDto,
   SavePosOrderDto,
   SavePosOrderResponseDto,
   UpdateMenuItemDto,
@@ -19,6 +20,7 @@ import {
   VoidOrderResponseDto,
 } from './dto';
 import {
+  IOrderServiceFinishOrderResponse,
   IOrderServiceSavePosOrderResponse,
   IStaffLogin,
   IUserServiceLoginPosResponse,
@@ -291,6 +293,29 @@ export class PosService {
       .toPromise();
 
     const { status, message } = restaurantConfirmOrderResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException({ message }, status);
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message,
+    };
+  }
+
+  async finishDeliveryOrder(
+    orderId: string,
+    restaurantId: string,
+  ): Promise<FinishOrderResponseDto> {
+    const restaurantFinishOrderResponse: IOrderServiceFinishOrderResponse = await this.orderServiceClient
+      .send('restaurantFinishOrder', {
+        orderId,
+        restaurantId,
+      })
+      .toPromise();
+
+    const { status, message } = restaurantFinishOrderResponse;
 
     if (status !== HttpStatus.OK) {
       throw new HttpException({ message }, status);

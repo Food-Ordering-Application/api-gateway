@@ -23,3 +23,4 @@ export { UpdateMenuItemResponseDto } from './update-menu-item/update-menu-item-r
 export { UpdateMenuItemDto } from './update-menu-item/update-menu-item.dto';
 export { UpdateToppingItemDto } from './update-topping-item/update-topping-item.dto';
 export { UpdateToppingItemResponseDto } from './update-topping-item/update-topping-item-response.dto';
+export { FinishOrderResponseDto } from './finish-order/finish-order-response.dto';
