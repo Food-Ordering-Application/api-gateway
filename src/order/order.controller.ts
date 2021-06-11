@@ -362,6 +362,20 @@ export class OrderController {
     });
   }
 
+  @ApiOkResponse({ type: GetDraftOrdersOfCustomerResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(CustomerJwtAuthGuard)
+  @Post('/get-last-draft-order')
+  async getLastDraftOrderOfCustomer(
+    @Request() req,
+  ): Promise<GetDraftOrdersOfCustomerResponseDto> {
+    const { user } = req;
+    const { userId } = user;
+    return this.orderService.getLastDraftOrderOfCustomer({
+      customerId: userId,
+    });
+  }
+
   @ApiOkResponse({ type: GetOrderHistoryOfCustomerResponseDto })
   @ApiQuery({ type: GetOrderHistoryOfCustomerParams })
   @ApiBearerAuth()
