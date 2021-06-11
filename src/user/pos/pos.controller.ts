@@ -33,6 +33,7 @@ import {
   FetchMenuResponseDto,
   FetchToppingGroupOfRestaurantResponseDto,
   FetchToppingItemOfRestaurantResponseDto,
+  FinishOrderResponseDto,
   LoginPosDto,
   LoginPosResponseDto,
   LoginPosUnauthorizedResponseDto,
@@ -251,6 +252,19 @@ export class PosController {
       staffId,
       restaurantId,
     );
+  }
+
+  @ApiOkResponse({ type: FinishOrderResponseDto })
+  @UseGuards(PosJwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @Post('/order/:orderId/finish')
+  async finishDeliveryOrder(
+    @Request() req: PosJwtRequest,
+    @Param('orderId') orderId: string,
+  ): Promise<FinishOrderResponseDto> {
+    const { user } = req;
+    const { restaurantId } = user;
+    return await this.posService.finishDeliveryOrder(orderId, restaurantId);
   }
 
   @ApiOkResponse({ type: VoidOrderResponseDto })

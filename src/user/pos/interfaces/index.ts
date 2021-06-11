@@ -6,3 +6,4 @@ export { IStaffLogin } from './staff-login.interface';
 export { ISavePosOrderData } from './save-pos-data.interface';
 export { IOrderServiceSavePosOrderResponse } from './order-service-save-pos-order-response.interface';
 export { IOrderServiceConfirmOrderResponse } from './order-service-confirm-order-response.interface';
+export { IOrderServiceFinishOrderResponse } from './order-service-finish-order-response.interface';
