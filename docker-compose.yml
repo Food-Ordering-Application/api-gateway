@@ -61,6 +61,28 @@ services:
       - ./development.env
     networks: 
       - my-network
+
+  delivery_redis:
+    image: 'redis:6.2.4-alpine'
+    #note the password
+    command: redis-server --requirepass password redis_password 
+    container_name: delivery_redis
+    restart: always
+    ports:
+      - 6379:6379
+    volumes:
+      - delivery_data:/data
+    networks: 
+      - my-network
+
+  redsmin_proxy:
+    image: redsmin/proxy
+    container_name: redsmin_proxy
+    restart: always
+    env_file:
+      - ./docker.env
+    networks: 
+      - my-network
 networks:
   my-network:
     driver: bridge
@@ -71,3 +93,4 @@ volumes:
   dataPgAdmin:
   dataRabbitMQ:
   logRabbitMQ:
+  delivery_data:
