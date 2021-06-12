@@ -5,11 +5,8 @@ import {
   CreateMerchantDto,
   CreateMerchantResponseDto,
   FindMerchantByIdResponseDto,
-  UpdateIsAutoConfirmOrderDto,
-  UpdateIsAutoConfirmOrderOkResponseDto,
 } from '../merchant/dto/index';
 import {
-  IIsAutoConfirmResponse,
   IMerchant,
   IUserServiceCreateMerchantResponse,
   IUserServiceFetchMerchantResponse,
@@ -79,39 +76,6 @@ export class MerchantService {
       message,
       data: {
         user,
-      },
-    };
-  }
-
-  //! Update thông tin isAutoConfirm của merchant
-  async updateIsAutoConfirmOrder(
-    tokenRestaurantId: string,
-    updateIsAutoConfirmOrderDto: UpdateIsAutoConfirmOrderDto,
-  ): Promise<UpdateIsAutoConfirmOrderOkResponseDto> {
-    //TODO:
-    const updateIsAutoConfirmOrderResponse: IIsAutoConfirmResponse = await this.userServiceClient
-      .send('updateIsAutoConfirmOrder', {
-        tokenRestaurantId,
-        ...updateIsAutoConfirmOrderDto,
-      })
-      .toPromise();
-
-    const { message, status, isAutoConfirm } = updateIsAutoConfirmOrderResponse;
-
-    if (status !== HttpStatus.OK) {
-      throw new HttpException(
-        {
-          message: message,
-        },
-        status,
-      );
-    }
-
-    return {
-      statusCode: status,
-      message,
-      data: {
-        isAutoConfirm: isAutoConfirm,
       },
     };
   }

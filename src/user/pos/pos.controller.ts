@@ -15,6 +15,7 @@ import {
 import {
   ApiBearerAuth,
   ApiBody,
+  ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiQuery,
@@ -40,6 +41,8 @@ import {
   SavePosOrderDto,
   SavePosOrderResponseDto,
   SavePosOrderUnauthorizedResponseDto,
+  UpdateIsAutoConfirmOrderDto,
+  UpdateIsAutoConfirmOrderOkResponseDto,
   UpdateMenuItemDto,
   UpdateMenuItemResponseDto,
   UpdateToppingItemDto,
@@ -53,6 +56,7 @@ import {
 import { PosService } from './pos.service';
 import { PosJwtAuthGuard } from 'src/auth/guards/jwts/pos-jwt-auth.guard';
 import { PosJwtRequest } from 'src/auth/strategies/jwt-strategies/pos-jwt-request.interface';
+import { ForbiddenResponseDto } from '../customer/dto';
 
 @ApiTags('pos')
 @ApiInternalServerErrorResponse({ type: InternalServerErrorResponseDto })
@@ -322,6 +326,24 @@ export class PosController {
       toppingItem,
       restaurantId,
       updateToppingItemDto,
+    );
+  }
+
+  //! Update thông tin isAutoConfirmOrder của merchant
+  @ApiOkResponse({ type: UpdateIsAutoConfirmOrderOkResponseDto })
+  @ApiQuery({ type: UpdateIsAutoConfirmOrderDto })
+  @ApiForbiddenResponse({ type: ForbiddenResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(PosJwtAuthGuard)
+  @Patch('/update-isautoconfirm')
+  async updateIsAutoConfirmOrder(
+    @Request() req,
+    @Query()
+    updateIsAutoConfirmOrderDto: UpdateIsAutoConfirmOrderDto,
+  ): Promise<UpdateIsAutoConfirmOrderOkResponseDto> {
+    return this.posService.updateIsAutoConfirmOrder(
+      req.user.restaurantId,
+      updateIsAutoConfirmOrderDto,
     );
   }
 }

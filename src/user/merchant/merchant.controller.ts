@@ -38,8 +38,6 @@ import {
   LoginMerchantDto,
   LoginMerchantResponseDto,
   LoginMerchantUnauthorizedResponseDto,
-  UpdateIsAutoConfirmOrderDto,
-  UpdateIsAutoConfirmOrderOkResponseDto,
 } from '../merchant/dto/index';
 import { MerchantJwtAuthGuard } from './../../auth/guards/jwts/merchant-jwt-auth.guard';
 import { MerchantLocalAuthGuard } from './../../auth/guards/locals/merchant-local-auth.guard';
@@ -103,23 +101,5 @@ export class MerchantController {
       };
     }
     return await this.merchantService.findMerchantById(merchantId);
-  }
-
-  //! Update thông tin isAutoConfirmOrder của merchant
-  @ApiOkResponse({ type: UpdateIsAutoConfirmOrderOkResponseDto })
-  @ApiQuery({ type: UpdateIsAutoConfirmOrderDto })
-  @ApiForbiddenResponse({ type: ForbiddenResponseDto })
-  @ApiBearerAuth()
-  @UseGuards(PosJwtAuthGuard)
-  @Patch('/update-isautoconfirm')
-  async updateIsAutoConfirmOrder(
-    @Request() req,
-    @Query()
-    updateIsAutoConfirmOrderDto: UpdateIsAutoConfirmOrderDto,
-  ): Promise<UpdateIsAutoConfirmOrderOkResponseDto> {
-    return this.merchantService.updateIsAutoConfirmOrder(
-      req.user.restaurantId,
-      updateIsAutoConfirmOrderDto,
-    );
   }
 }

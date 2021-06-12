@@ -7,3 +7,5 @@ export { ISavePosOrderData } from './save-pos-data.interface';
 export { IOrderServiceSavePosOrderResponse } from './order-service-save-pos-order-response.interface';
 export { IOrderServiceConfirmOrderResponse } from './order-service-confirm-order-response.interface';
 export { IOrderServiceFinishOrderResponse } from './order-service-finish-order-response.interface';
+export { IIsAutoConfirmData } from './isautoconfirm-data.interface';
+export { IIsAutoConfirmResponse } from './isautoconfirm-response.interface';
