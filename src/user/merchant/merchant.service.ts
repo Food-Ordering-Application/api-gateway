@@ -85,15 +85,13 @@ export class MerchantService {
 
   //! Update thông tin isAutoConfirm của merchant
   async updateIsAutoConfirmOrder(
-    merchantId: string,
-    callerId: string,
+    tokenRestaurantId: string,
     updateIsAutoConfirmOrderDto: UpdateIsAutoConfirmOrderDto,
   ): Promise<UpdateIsAutoConfirmOrderOkResponseDto> {
     //TODO:
     const updateIsAutoConfirmOrderResponse: IIsAutoConfirmResponse = await this.userServiceClient
       .send('updateIsAutoConfirmOrder', {
-        merchantId,
-        callerId,
+        tokenRestaurantId,
         ...updateIsAutoConfirmOrderDto,
       })
       .toPromise();

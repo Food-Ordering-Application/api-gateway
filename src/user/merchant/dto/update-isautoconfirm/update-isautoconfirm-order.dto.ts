@@ -15,5 +15,5 @@ export class UpdateIsAutoConfirmOrderDto {
     required: true,
   })
   @IsString()
-  restaurantProfileId: string;
+  restaurantId: string;
 }
