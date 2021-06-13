@@ -6,10 +6,13 @@ import {
   UseGuards,
   HttpCode,
   Param,
+  Header,
   Get,
+  Res,
   Query,
   Patch,
   Request,
+  Render,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import {
@@ -66,7 +69,7 @@ import { CheckPolicies } from 'src/casl/decorators/check-policy.decorator';
 import { AppAbility } from 'src/casl/casl-ability.factory';
 import { Action } from 'src/shared/enum/actions.enum';
 import { Customer } from 'src/shared/classes';
-
+const fs = require('fs');
 @ApiTags('orders')
 @ApiInternalServerErrorResponse({ type: InternalServerErrorResponseDto })
 @Controller('order')
@@ -200,6 +203,62 @@ export class OrderController {
     const { orderId } = params;
     return this.orderService.getOrderDetail(orderId);
   }
+  // Render view order invoice
+  @Get('/:orderId/invoice')
+  @Render('orders/index')
+  async getOrderInvoice(@Param() params: { orderId: string }) {
+    const { orderId } = params;
+    return this.orderService.getOrderDetail(orderId).then((result) => {
+      const { data } = result;
+      const order: any = data?.order;
+      console.log(order);
+      return {
+        invoice: order.id?.split('-')[0]?.toUpperCase(),
+        createdAt: order.createdAt,
+        company: {
+          name: 'Smart POS International',
+          address: 'Ho Chi Minh, Viet Name',
+        },
+        customer: {
+          phone: order.delivery.customerPhoneNumber ?? '_',
+          name: order.delivery.customerName ?? '_',
+          address: order.delivery.customerAddress ?? '_',
+        },
+        order: order,
+        orderItems: order?.orderItems,
+        delivery: order?.delivery,
+        discount: order?.delivery.discount ?? 0,
+        shippingFee: order?.delivery.shippingFee ?? 0,
+        grandTotal: order?.grandTotal ?? 0,
+      };
+    });
+  }
+  // @Get('/:orderId/invoice')
+  // @HttpCode(201)
+  // @Header('Content-Type', 'application/pdf')
+  // @Header('Content-Disposition', 'attachment; filename=invoice.pdf')
+  // async pdf() {
+  //   const buffer = await this.orderService.generatePDF();
+  //   fs.writeFile('invoice.pdf', buffer, function (err) {
+  //     if (err) throw err;
+  //     console.log('Saved!');
+  //   });
+  //   //   return buffer;
+  //   return fs.createReadStream('invoice.pdf');
+  // }
+  // async getOrderInvoice(@Param() params: { orderId: string }) {
+  //   // const { orderId } = params;
+  //   // return this.orderService.getOrderDetail(orderId).then((result) => {
+  //   //   const { data } = result;
+  //   //   const { order } = data;
+  //   //   return {
+  //   //     orderId: order.id,
+  //   //     order: order,
+  //   //   };
+  //   // });
+  //   const buffer = await this.orderService.generatePDF();
+  //   return buffer;
+  // }
 
   /* Update số lượng của 1 orderItem */
   @ApiOkResponse({ type: UpdateOrderItemQuantityResponseDto })
