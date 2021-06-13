@@ -24,3 +24,5 @@ export { UpdateMenuItemDto } from './update-menu-item/update-menu-item.dto';
 export { UpdateToppingItemDto } from './update-topping-item/update-topping-item.dto';
 export { UpdateToppingItemResponseDto } from './update-topping-item/update-topping-item-response.dto';
 export { FinishOrderResponseDto } from './finish-order/finish-order-response.dto';
+export { UpdateIsAutoConfirmOrderOkResponseDto } from './update-isautoconfirm/update-isautoconfirm-order-ok-response.dto';
+export { UpdateIsAutoConfirmOrderDto } from './update-isautoconfirm/update-isautoconfirm-order.dto';
