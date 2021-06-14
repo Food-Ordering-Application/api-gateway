@@ -26,3 +26,4 @@ export { UpdateToppingItemResponseDto } from './update-topping-item/update-toppi
 export { FinishOrderResponseDto } from './finish-order/finish-order-response.dto';
 export { UpdateIsAutoConfirmOrderOkResponseDto } from './update-isautoconfirm/update-isautoconfirm-order-ok-response.dto';
 export { UpdateIsAutoConfirmOrderDto } from './update-isautoconfirm/update-isautoconfirm-order.dto';
+export { GetIsAutoConfirmOrderOkResponseDto } from './get-isautoconfirm/get-isautoconfirm-order-ok-response.dto';

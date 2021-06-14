@@ -8,6 +8,7 @@ import {
   ConfirmOrderResponseDto,
   FetchDto,
   FinishOrderResponseDto,
+  GetIsAutoConfirmOrderOkResponseDto,
   SavePosOrderDto,
   SavePosOrderResponseDto,
   UpdateIsAutoConfirmOrderDto,
@@ -421,6 +422,37 @@ export class PosService {
       .toPromise();
 
     const { message, status, isAutoConfirm } = updateIsAutoConfirmOrderResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+
+    return {
+      statusCode: status,
+      message,
+      data: {
+        isAutoConfirm: isAutoConfirm,
+      },
+    };
+  }
+
+  //! Fetch thông tin isAutoConfirmOrder của merchant
+  async getIsAutoConfirmOrder(
+    tokenRestaurantId: string,
+  ): Promise<GetIsAutoConfirmOrderOkResponseDto> {
+    //TODO:
+    const getIsAutoConfirmOrderResponse: IIsAutoConfirmResponse = await this.userServiceClient
+      .send('getIsAutoConfirmOrder', {
+        restaurantId: tokenRestaurantId,
+      })
+      .toPromise();
+
+    const { message, status, isAutoConfirm } = getIsAutoConfirmOrderResponse;
 
     if (status !== HttpStatus.OK) {
       throw new HttpException(
