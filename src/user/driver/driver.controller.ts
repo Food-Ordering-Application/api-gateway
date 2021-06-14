@@ -264,4 +264,22 @@ export class DriverController {
       updateIsActiveOfDriverDto,
     );
   }
+
+  //! Test locking route 1
+  @UseGuards(DriverJwtAuthGuard)
+  @Get('/:driverId/test-update-accountwallet')
+  async testUpdateAccountWallet(@Request() req, @Param() params) {
+    const { driverId } = params;
+    return this.driverService.testUpdateAccountWallet(
+      driverId,
+      req.user.userId,
+    );
+  }
+  //! Test locking route 2
+  @UseGuards(DriverJwtAuthGuard)
+  @Get('/:driverId/test-get-accountwallet')
+  async testGetAccountWallet(@Request() req, @Param() params) {
+    const { driverId } = params;
+    return this.driverService.testGetAccountWallet(driverId, req.user.userId);
+  }
 }

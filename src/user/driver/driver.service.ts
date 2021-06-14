@@ -296,7 +296,7 @@ export class DriverService {
     };
   }
 
-  //! Lấy danh sách lịch sử giao dịch (nạp,rút) tiền của driver
+  //! Lấy thông tin balance của tài khoản chính
   async getMainAccountWalletBalance(
     driverId: string,
     callerId: string,
@@ -364,6 +364,69 @@ export class DriverService {
       message,
       data: {
         isActive: isActive,
+      },
+    };
+  }
+
+  //! Test locking route 1
+  async testUpdateAccountWallet(driverId: string, callerId: string) {
+    //TODO:
+    const getMainAccountWalletBalanceResponse: IAccountWalletResponse = await this.userServiceClient
+      .send('testUpdateAccountWallet', {
+        driverId,
+        callerId,
+      })
+      .toPromise();
+
+    const {
+      message,
+      status,
+      accountWallet,
+    } = getMainAccountWalletBalanceResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+
+    return {
+      statusCode: status,
+      message,
+      data: {
+        accountWallet: accountWallet,
+      },
+    };
+  }
+  //! Test locking route 2
+  async testGetAccountWallet(driverId: string, callerId: string) {
+    //TODO:
+    const testGetAccountWalletResponse: IAccountWalletResponse = await this.userServiceClient
+      .send('testGetAccountWallet', {
+        driverId,
+        callerId,
+      })
+      .toPromise();
+
+    const { message, status, accountWallet } = testGetAccountWalletResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+
+    return {
+      statusCode: status,
+      message,
+      data: {
+        accountWallet: accountWallet,
       },
     };
   }
