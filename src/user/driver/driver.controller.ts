@@ -35,6 +35,8 @@ import {
   ApproveDepositMoneyIntoMainAccountWalletOkResponseDto,
   DepositMoneyIntoMainAccountWalletDto,
   DepositMoneyIntoMainAccountWalletOkResponseDto,
+  GetDriverMonthlyStatisticOkResponseDto,
+  GetDriverWeeklyStatisticOkResponseDto,
   GetListDriverTransactionHistoryDto,
   GetMainAccountWalletBalanceOkResponseDto,
   LoginDriverDto,
@@ -262,6 +264,40 @@ export class DriverController {
       driverId,
       req.user.userId,
       updateIsActiveOfDriverDto,
+    );
+  }
+
+  //! Api thống kê theo tuần
+  @ApiOkResponse({ type: GetDriverWeeklyStatisticOkResponseDto })
+  @ApiForbiddenResponse({ type: ForbiddenResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(DriverJwtAuthGuard)
+  @Get('/:driverId/weekly-statistic')
+  async getDriverWeeklyStatistic(
+    @Request() req,
+    @Param() params,
+  ): Promise<GetDriverWeeklyStatisticOkResponseDto> {
+    const { driverId } = params;
+    return this.driverService.getDriverWeeklyStatistic(
+      driverId,
+      req.user.userId,
+    );
+  }
+
+  //! Api thống kê theo tháng
+  @ApiOkResponse({ type: GetDriverMonthlyStatisticOkResponseDto })
+  @ApiForbiddenResponse({ type: ForbiddenResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(DriverJwtAuthGuard)
+  @Get('/:driverId/monthly-statistic')
+  async getDriverMonthlyStatistic(
+    @Request() req,
+    @Param() params,
+  ): Promise<GetDriverMonthlyStatisticOkResponseDto> {
+    const { driverId } = params;
+    return this.driverService.getDriverMonthlyStatistic(
+      driverId,
+      req.user.userId,
     );
   }
 

@@ -19,3 +19,6 @@ export { IIsActiveData } from './isactive-data.interface';
 export { IIsActiveResponse } from './isActive-response.interface';
 export { IMainBalanceResponse } from './main-balance-response.interface';
 export { IMainBalanceData } from './main-balance-data.interface';
+export { IDriverStatisticData } from './get-driver-weekly-statistic-data.interface';
+export { IDayStatisticData } from './day-statistic-data.interface';
+export { IDriverStatisticResponse } from './driver-statistic-response.interface';

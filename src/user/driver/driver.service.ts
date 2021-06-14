@@ -8,6 +8,8 @@ import {
   ApproveDepositMoneyIntoMainAccountWalletOkResponseDto,
   DepositMoneyIntoMainAccountWalletDto,
   DepositMoneyIntoMainAccountWalletOkResponseDto,
+  GetDriverMonthlyStatisticOkResponseDto,
+  GetDriverWeeklyStatisticOkResponseDto,
   GetListDriverTransactionHistoryDto,
   GetListDriverTransactionHistoryOkResponseDto,
   GetMainAccountWalletBalanceOkResponseDto,
@@ -24,6 +26,7 @@ import {
   IDeliveryServiceAcceptOrderResponse,
   IDriver,
   IDriverResponse,
+  IDriverStatisticResponse,
   IDriverTransactionsResponse,
   IIsActiveResponse,
   IMainBalanceResponse,
@@ -364,6 +367,72 @@ export class DriverService {
       message,
       data: {
         isActive: isActive,
+      },
+    };
+  }
+
+  //! Api thống kê theo tuần
+  async getDriverWeeklyStatistic(
+    driverId: string,
+    callerId: string,
+  ): Promise<GetDriverWeeklyStatisticOkResponseDto> {
+    //TODO:
+    const getDriverWeeklyStatisticResponse: IDriverStatisticResponse = await this.userServiceClient
+      .send('getDriverWeeklyStatistic', {
+        driverId,
+        callerId,
+      })
+      .toPromise();
+
+    const { message, status, statistic } = getDriverWeeklyStatisticResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+
+    return {
+      statusCode: status,
+      message,
+      data: {
+        statistic: statistic,
+      },
+    };
+  }
+
+  //! Api thống kê theo tháng
+  async getDriverMonthlyStatistic(
+    driverId: string,
+    callerId: string,
+  ): Promise<GetDriverMonthlyStatisticOkResponseDto> {
+    //TODO:
+    const getDriverMonthlyStatisticResponse: IDriverStatisticResponse = await this.userServiceClient
+      .send('getDriverMonthlyStatistic', {
+        driverId,
+        callerId,
+      })
+      .toPromise();
+
+    const { message, status, statistic } = getDriverMonthlyStatisticResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+
+    return {
+      statusCode: status,
+      message,
+      data: {
+        statistic: statistic,
       },
     };
   }
