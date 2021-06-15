@@ -8,6 +8,7 @@ import {
   ApproveDepositMoneyIntoMainAccountWalletOkResponseDto,
   DepositMoneyIntoMainAccountWalletDto,
   DepositMoneyIntoMainAccountWalletOkResponseDto,
+  GetDriverDailyStatisticOkResponse,
   GetDriverMonthlyStatisticOkResponseDto,
   GetDriverWeeklyStatisticOkResponseDto,
   GetListDriverTransactionHistoryDto,
@@ -25,6 +26,7 @@ import {
   ICreateDepositMoneyIntoMainAccountWalletResponse,
   IDeliveryServiceAcceptOrderResponse,
   IDriver,
+  IDriverDailyStatisticResponse,
   IDriverResponse,
   IDriverStatisticResponse,
   IDriverTransactionsResponse,
@@ -367,6 +369,39 @@ export class DriverService {
       message,
       data: {
         isActive: isActive,
+      },
+    };
+  }
+
+  //! Api thống kê theo ngày
+  async getDriverDailyStatistic(
+    driverId: string,
+    callerId: string,
+  ): Promise<GetDriverDailyStatisticOkResponse> {
+    //TODO:
+    const getDriverDailyStatisticResponse: IDriverDailyStatisticResponse = await this.userServiceClient
+      .send('getDriverDailyStatistic', {
+        driverId,
+        callerId,
+      })
+      .toPromise();
+
+    const { message, status, statistic } = getDriverDailyStatisticResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+
+    return {
+      statusCode: status,
+      message,
+      data: {
+        statistic: statistic,
       },
     };
   }

@@ -35,6 +35,7 @@ import {
   ApproveDepositMoneyIntoMainAccountWalletOkResponseDto,
   DepositMoneyIntoMainAccountWalletDto,
   DepositMoneyIntoMainAccountWalletOkResponseDto,
+  GetDriverDailyStatisticOkResponse,
   GetDriverMonthlyStatisticOkResponseDto,
   GetDriverWeeklyStatisticOkResponseDto,
   GetListDriverTransactionHistoryDto,
@@ -264,6 +265,23 @@ export class DriverController {
       driverId,
       req.user.userId,
       updateIsActiveOfDriverDto,
+    );
+  }
+
+  //! Api thống kê theo ngày
+  @ApiOkResponse({ type: GetDriverDailyStatisticOkResponse })
+  @ApiForbiddenResponse({ type: ForbiddenResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(DriverJwtAuthGuard)
+  @Get('/:driverId/today-statistic')
+  async getDriverDailyStatistic(
+    @Request() req,
+    @Param() params,
+  ): Promise<GetDriverDailyStatisticOkResponse> {
+    const { driverId } = params;
+    return this.driverService.getDriverDailyStatistic(
+      driverId,
+      req.user.userId,
     );
   }
 
