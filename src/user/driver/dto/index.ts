@@ -19,3 +19,6 @@ export { GetListDriverTransactionHistoryDto } from './payin-withdraw/get-list-tr
 export { GetMainAccountWalletBalanceOkResponseDto } from './payin-withdraw/get-main-account-wallet-balance-ok-response.dto';
 export { UpdateIsActiveOfDriverOkResponseDto } from './update-isactive/update-isactive-of-driver-ok-response.dto';
 export { UpdateIsActiveOfDriverDto } from './update-isactive/update-isactive-of-driver.dto';
+export { GetDriverWeeklyStatisticOkResponseDto } from './statistic/get-driver-weekly-statistic-ok-response.dto';
+export { GetDriverMonthlyStatisticOkResponseDto } from './statistic/get-driver-monthly-statistic-ok-response.dto';
+export { GetDriverDailyStatisticOkResponse } from './statistic/get-driver-today-statistic-ok-response.dto';

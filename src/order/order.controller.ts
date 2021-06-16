@@ -69,7 +69,7 @@ import { CheckPolicies } from 'src/casl/decorators/check-policy.decorator';
 import { AppAbility } from 'src/casl/casl-ability.factory';
 import { Action } from 'src/shared/enum/actions.enum';
 import { Customer } from 'src/shared/classes';
-const fs = require('fs');
+// const fs = require('fs');
 @ApiTags('orders')
 @ApiInternalServerErrorResponse({ type: InternalServerErrorResponseDto })
 @Controller('order')

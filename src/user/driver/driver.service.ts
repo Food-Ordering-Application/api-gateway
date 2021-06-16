@@ -8,6 +8,9 @@ import {
   ApproveDepositMoneyIntoMainAccountWalletOkResponseDto,
   DepositMoneyIntoMainAccountWalletDto,
   DepositMoneyIntoMainAccountWalletOkResponseDto,
+  GetDriverDailyStatisticOkResponse,
+  GetDriverMonthlyStatisticOkResponseDto,
+  GetDriverWeeklyStatisticOkResponseDto,
   GetListDriverTransactionHistoryDto,
   GetListDriverTransactionHistoryOkResponseDto,
   GetMainAccountWalletBalanceOkResponseDto,
@@ -23,7 +26,9 @@ import {
   ICreateDepositMoneyIntoMainAccountWalletResponse,
   IDeliveryServiceAcceptOrderResponse,
   IDriver,
+  IDriverDailyStatisticResponse,
   IDriverResponse,
+  IDriverStatisticResponse,
   IDriverTransactionsResponse,
   IIsActiveResponse,
   IMainBalanceResponse,
@@ -296,7 +301,7 @@ export class DriverService {
     };
   }
 
-  //! Lấy danh sách lịch sử giao dịch (nạp,rút) tiền của driver
+  //! Lấy thông tin balance của tài khoản chính
   async getMainAccountWalletBalance(
     driverId: string,
     callerId: string,
@@ -364,6 +369,168 @@ export class DriverService {
       message,
       data: {
         isActive: isActive,
+      },
+    };
+  }
+
+  //! Api thống kê theo ngày
+  async getDriverDailyStatistic(
+    driverId: string,
+    callerId: string,
+  ): Promise<GetDriverDailyStatisticOkResponse> {
+    //TODO:
+    const getDriverDailyStatisticResponse: IDriverDailyStatisticResponse = await this.userServiceClient
+      .send('getDriverDailyStatistic', {
+        driverId,
+        callerId,
+      })
+      .toPromise();
+
+    const { message, status, statistic } = getDriverDailyStatisticResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+
+    return {
+      statusCode: status,
+      message,
+      data: {
+        statistic: statistic,
+      },
+    };
+  }
+
+  //! Api thống kê theo tuần
+  async getDriverWeeklyStatistic(
+    driverId: string,
+    callerId: string,
+  ): Promise<GetDriverWeeklyStatisticOkResponseDto> {
+    //TODO:
+    const getDriverWeeklyStatisticResponse: IDriverStatisticResponse = await this.userServiceClient
+      .send('getDriverWeeklyStatistic', {
+        driverId,
+        callerId,
+      })
+      .toPromise();
+
+    const { message, status, statistic } = getDriverWeeklyStatisticResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+
+    return {
+      statusCode: status,
+      message,
+      data: {
+        statistic: statistic,
+      },
+    };
+  }
+
+  //! Api thống kê theo tháng
+  async getDriverMonthlyStatistic(
+    driverId: string,
+    callerId: string,
+  ): Promise<GetDriverMonthlyStatisticOkResponseDto> {
+    //TODO:
+    const getDriverMonthlyStatisticResponse: IDriverStatisticResponse = await this.userServiceClient
+      .send('getDriverMonthlyStatistic', {
+        driverId,
+        callerId,
+      })
+      .toPromise();
+
+    const { message, status, statistic } = getDriverMonthlyStatisticResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+
+    return {
+      statusCode: status,
+      message,
+      data: {
+        statistic: statistic,
+      },
+    };
+  }
+
+  //! Test locking route 1
+  async testUpdateAccountWallet(driverId: string, callerId: string) {
+    //TODO:
+    const getMainAccountWalletBalanceResponse: IAccountWalletResponse = await this.userServiceClient
+      .send('testUpdateAccountWallet', {
+        driverId,
+        callerId,
+      })
+      .toPromise();
+
+    const {
+      message,
+      status,
+      accountWallet,
+    } = getMainAccountWalletBalanceResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+
+    return {
+      statusCode: status,
+      message,
+      data: {
+        accountWallet: accountWallet,
+      },
+    };
+  }
+  //! Test locking route 2
+  async testGetAccountWallet(driverId: string, callerId: string) {
+    //TODO:
+    const testGetAccountWalletResponse: IAccountWalletResponse = await this.userServiceClient
+      .send('testGetAccountWallet', {
+        driverId,
+        callerId,
+      })
+      .toPromise();
+
+    const { message, status, accountWallet } = testGetAccountWalletResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+
+    return {
+      statusCode: status,
+      message,
+      data: {
+        accountWallet: accountWallet,
       },
     };
   }

@@ -35,6 +35,7 @@ import {
   FetchToppingGroupOfRestaurantResponseDto,
   FetchToppingItemOfRestaurantResponseDto,
   FinishOrderResponseDto,
+  GetIsAutoConfirmOrderOkResponseDto,
   LoginPosDto,
   LoginPosResponseDto,
   LoginPosUnauthorizedResponseDto,
@@ -345,5 +346,17 @@ export class PosController {
       req.user.restaurantId,
       updateIsAutoConfirmOrderDto,
     );
+  }
+
+  //! Fetch thông tin isAutoConfirmOrder của merchant
+  @ApiOkResponse({ type: GetIsAutoConfirmOrderOkResponseDto })
+  @ApiForbiddenResponse({ type: ForbiddenResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(PosJwtAuthGuard)
+  @Get('/get-isautoconfirm')
+  async getIsAutoConfirmOrder(
+    @Request() req,
+  ): Promise<GetIsAutoConfirmOrderOkResponseDto> {
+    return this.posService.getIsAutoConfirmOrder(req.user.restaurantId);
   }
 }
