@@ -144,7 +144,6 @@ export class OrderService {
         customerGeom,
       };
     }
-
     const {
       data: {
         address: restaurantAddress,
