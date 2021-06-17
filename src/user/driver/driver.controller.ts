@@ -86,6 +86,14 @@ export class DriverController {
 
   @UseGuards(DriverJwtAuthGuard)
   @HttpCode(200)
+  @Post('/order/:orderId/decline')
+  async declineOrder(@Param('orderId') orderId: string, @Request() req) {
+    const driverId = req.user.userId;
+    return await this.driverService.declineOrder(driverId, orderId);
+  }
+
+  @UseGuards(DriverJwtAuthGuard)
+  @HttpCode(200)
   @Post('/order/:orderId/pickup')
   async pickUpOrder(@Param('orderId') orderId: string, @Request() req) {
     const driverId = req.user.userId;

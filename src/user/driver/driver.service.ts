@@ -24,6 +24,7 @@ import {
   IAccountWalletResponse,
   ICreateDepositMoneyIntoMainAccountWalletResponse,
   IDeliveryServiceAcceptOrderResponse,
+  IDeliveryServiceDeclineOrderResponse,
   IDriver,
   IDriverResponse,
   IDriverTransactionsResponse,
@@ -51,6 +52,26 @@ export class DriverService {
       .toPromise();
 
     const { status, message } = driverAcceptOrderResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException({ message }, status);
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message,
+    };
+  }
+
+  async declineOrder(driverId: string, orderId: string) {
+    const driverDeclineOrderResponse: IDeliveryServiceDeclineOrderResponse = await this.deliveryServiceClient
+      .send('driverDeclineOrder', {
+        orderId,
+        driverId,
+      })
+      .toPromise();
+
+    const { status, message } = driverDeclineOrderResponse;
 
     if (status !== HttpStatus.OK) {
       throw new HttpException({ message }, status);
