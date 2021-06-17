@@ -336,19 +336,17 @@ export class DriverService {
   //! Update thông tin isActive của driver
   async updateIsActiveOfDriver(
     driverId: string,
-    callerId: string,
     updateIsActiveOfDriverDto: UpdateIsActiveOfDriverDto,
   ): Promise<UpdateIsActiveOfDriverOkResponseDto> {
     //TODO:
     const updateIsActiveOfDriverResponse: IIsActiveResponse = await this.userServiceClient
-      .send('updateIsActiveOfDriver', {
+      .send('updateDriverActiveStatus', {
         driverId,
-        callerId,
         ...updateIsActiveOfDriverDto,
       })
       .toPromise();
 
-    const { message, status, isActive } = updateIsActiveOfDriverResponse;
+    const { message, status } = updateIsActiveOfDriverResponse;
 
     if (status !== HttpStatus.OK) {
       throw new HttpException(
@@ -362,9 +360,6 @@ export class DriverService {
     return {
       statusCode: status,
       message,
-      data: {
-        isActive: isActive,
-      },
     };
   }
 }

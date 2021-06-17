@@ -1,13 +1,29 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
-import { EIsActive } from '../../enums';
+import { IsBoolean, IsNumber, IsOptional, Max, Min } from 'class-validator';
 
 export class UpdateIsActiveOfDriverDto {
   @ApiProperty({
-    example: EIsActive.TRUE,
-    enum: EIsActive,
+    example: true,
     required: true,
   })
-  @IsString()
-  isActive: string;
+  @IsBoolean()
+  activeStatus: boolean;
+
+  @ApiProperty({
+    example: 10.762921400332274,
+  })
+  @Max(90)
+  @Min(-90)
+  @IsNumber()
+  @IsOptional()
+  latitude: number;
+
+  @ApiProperty({
+    example: 106.6819735315213,
+  })
+  @Max(180)
+  @Min(-180)
+  @IsNumber()
+  @IsOptional()
+  longitude: number;
 }

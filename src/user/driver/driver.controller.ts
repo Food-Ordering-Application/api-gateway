@@ -246,20 +246,17 @@ export class DriverController {
 
   //! Update thông tin isActive của driver
   @ApiOkResponse({ type: UpdateIsActiveOfDriverOkResponseDto })
-  @ApiQuery({ type: UpdateIsActiveOfDriverDto })
+  @ApiBody({ type: UpdateIsActiveOfDriverDto })
   @ApiForbiddenResponse({ type: ForbiddenResponseDto })
   @ApiBearerAuth()
   @UseGuards(DriverJwtAuthGuard)
-  @Patch('/:driverId/update-isactive')
+  @Patch('/:driverId/active')
   async updateIsActiveOfDriver(
     @Request() req,
-    @Param() params,
-    @Query()
+    @Body()
     updateIsActiveOfDriverDto: UpdateIsActiveOfDriverDto,
   ): Promise<UpdateIsActiveOfDriverOkResponseDto> {
-    const { driverId } = params;
     return this.driverService.updateIsActiveOfDriver(
-      driverId,
       req.user.userId,
       updateIsActiveOfDriverDto,
     );
