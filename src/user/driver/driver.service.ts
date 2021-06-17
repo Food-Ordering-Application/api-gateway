@@ -9,6 +9,7 @@ import {
   DepositMoneyIntoMainAccountWalletDto,
   DepositMoneyIntoMainAccountWalletOkResponseDto,
   GetDriverActiveStatusResponseDto,
+  GetLatestDriverLocationResponseDto,
   GetListDriverTransactionHistoryDto,
   GetListDriverTransactionHistoryOkResponseDto,
   GetMainAccountWalletBalanceOkResponseDto,
@@ -29,6 +30,7 @@ import {
   IDriverResponse,
   IDriverTransactionsResponse,
   IGetDriverActiveStatusResponse,
+  IGetLatestDriverLocationResponse,
   IIsActiveResponse,
   IMainBalanceResponse,
   IOrderServiceCompleteOrderResponse,
@@ -422,6 +424,32 @@ export class DriverService {
     return {
       statusCode: 200,
       message: 'Update location successfully',
+    };
+  }
+
+  async getLatestLocationOfDriver(
+    driverId: string,
+  ): Promise<GetLatestDriverLocationResponseDto> {
+    const getLatestDriverLocationResponse: IGetLatestDriverLocationResponse = await this.deliveryServiceClient
+      .send('getLatestDriverLocation', {
+        driverId,
+      })
+      .toPromise();
+    const { message, status, data } = getLatestDriverLocationResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+
+    return {
+      statusCode: status,
+      message,
+      data,
     };
   }
 }

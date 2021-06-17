@@ -24,6 +24,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { AnyJwtAuthGuard } from 'src/auth/guards/jwts/any-jwt-auth.guard';
 import { InternalServerErrorResponseDto } from 'src/shared/dto/internal-server-error.dto';
 import { AuthService } from '../../auth/auth.service';
 import { DriverJwtAuthGuard } from '../../auth/guards/jwts/driver-jwt-auth.guard';
@@ -37,6 +38,7 @@ import {
   DepositMoneyIntoMainAccountWalletDto,
   DepositMoneyIntoMainAccountWalletOkResponseDto,
   GetDriverActiveStatusResponseDto,
+  GetLatestDriverLocationResponseDto,
   GetListDriverTransactionHistoryDto,
   GetMainAccountWalletBalanceOkResponseDto,
   LoginDriverDto,
@@ -296,5 +298,17 @@ export class DriverController {
       req.user.userId,
       updateLocationDto,
     );
+  }
+
+  @ApiOkResponse({ type: GetLatestDriverLocationResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(AnyJwtAuthGuard)
+  @Get('/:driverId/location')
+  async getLatestLocationOfDriver(
+    @Request() req,
+    @Param() params,
+  ): Promise<GetLatestDriverLocationResponseDto> {
+    const { driverId } = params;
+    return this.driverService.getLatestLocationOfDriver(driverId);
   }
 }

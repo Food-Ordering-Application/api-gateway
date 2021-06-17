@@ -21,3 +21,4 @@ export { UpdateIsActiveOfDriverOkResponseDto } from './update-isactive/update-is
 export { UpdateIsActiveOfDriverDto } from './update-isactive/update-isactive-of-driver.dto';
 export { GetDriverActiveStatusResponseDto } from './get-active-status/get-active-status-response.dto';
 export { UpdateLocationDto } from './update-location/update-location.dto';
+export { GetLatestDriverLocationResponseDto } from './get-latest-location/get-latest-driver-location-response.dto';

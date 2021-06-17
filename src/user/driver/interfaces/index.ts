@@ -21,3 +21,5 @@ export { IMainBalanceResponse } from './main-balance-response.interface';
 export { IMainBalanceData } from './main-balance-data.interface';
 export { IGetDriverActiveStatusResponse } from './get-driver-active-status-response.interface';
 export { IDeliveryServiceDeclineOrderResponse } from './delivery-service-decline-order-response.interface';
+export { IGetLatestDriverLocationResponse } from './get-latest-driver-location-response.interface';
+export { ILocationData } from './location.interface';
