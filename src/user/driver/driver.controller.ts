@@ -253,7 +253,7 @@ export class DriverController {
   @ApiForbiddenResponse({ type: ForbiddenResponseDto })
   @ApiBearerAuth()
   @UseGuards(DriverJwtAuthGuard)
-  @Put('/:driverId/active')
+  @Put('active')
   async updateIsActiveOfDriver(
     @Request() req,
     @Body()
@@ -268,7 +268,7 @@ export class DriverController {
   @ApiOkResponse({ type: GetDriverActiveStatusResponseDto })
   @ApiBearerAuth()
   @UseGuards(DriverJwtAuthGuard)
-  @Get('/:driverId/active')
+  @Get('active')
   async getDriverActiveStatus(
     @Request() req,
   ): Promise<GetDriverActiveStatusResponseDto> {
@@ -278,7 +278,7 @@ export class DriverController {
   @ApiBody({ type: UpdateLocationDto })
   @ApiBearerAuth()
   @UseGuards(DriverJwtAuthGuard)
-  @Put('/:driverId/location')
+  @Put('location')
   async updateDriverLocation(
     @Request() req,
     @Body()

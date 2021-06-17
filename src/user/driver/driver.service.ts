@@ -336,7 +336,7 @@ export class DriverService {
     driverId: string,
     updateIsActiveOfDriverDto: UpdateIsActiveOfDriverDto,
   ): Promise<UpdateIsActiveOfDriverOkResponseDto> {
-    const updateIsActiveOfDriverResponse: IIsActiveResponse = await this.userServiceClient
+    const updateIsActiveOfDriverResponse: IIsActiveResponse = await this.deliveryServiceClient
       .send('updateDriverActiveStatus', {
         driverId,
         ...updateIsActiveOfDriverDto,
@@ -363,7 +363,7 @@ export class DriverService {
   async getDriverActiveStatus(
     driverId: string,
   ): Promise<GetDriverActiveStatusResponseDto> {
-    const getDriverActiveStatusResponse: IGetDriverActiveStatusResponse = await this.userServiceClient
+    const getDriverActiveStatusResponse: IGetDriverActiveStatusResponse = await this.deliveryServiceClient
       .send('getDriverActiveStatus', {
         driverId,
       })
@@ -391,7 +391,7 @@ export class DriverService {
     driverId: string,
     updateDriverLocationDto: UpdateLocationDto,
   ): Promise<GetDriverActiveStatusResponseDto> {
-    await this.userServiceClient
+    await this.deliveryServiceClient
       .emit('updateDriverLocation', {
         driverId,
         ...updateDriverLocationDto,
