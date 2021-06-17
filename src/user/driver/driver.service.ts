@@ -16,6 +16,7 @@ import {
   RegisterDriverDto,
   UpdateIsActiveOfDriverDto,
   UpdateIsActiveOfDriverOkResponseDto,
+  UpdateLocationDto,
   WithdrawMoneyToPaypalAccountDto,
   WithdrawMoneyToPaypalAccountOkResponseDto,
 } from './dto';
@@ -186,7 +187,6 @@ export class DriverService {
     driverId: string,
     callerId: string,
   ): Promise<ApproveDepositMoneyIntoMainAccountWalletOkResponseDto> {
-    //TODO:
     const approveDepositMoneyIntoMainAccountWalletResponse: IMainBalanceResponse = await this.userServiceClient
       .send('approveDepositMoneyIntoMainAccountWallet', {
         ...approveDepositMoneyIntoMainAccountWalletDto,
@@ -225,7 +225,6 @@ export class DriverService {
     driverId: string,
     callerId: string,
   ): Promise<WithdrawMoneyToPaypalAccountOkResponseDto> {
-    //TODO:
     const withdrawMoneyToPaypalAccountResponse: ISimpleResponse = await this.userServiceClient
       .send('withdrawMoneyToPaypalAccount', {
         ...withdrawMoneyToPaypalAccountDto,
@@ -265,7 +264,6 @@ export class DriverService {
     callerId: string,
     getListDriverTransactionHistoryDto: GetListDriverTransactionHistoryDto,
   ): Promise<GetListDriverTransactionHistoryOkResponseDto> {
-    //TODO:
     const getListDriverTransactionHistoryResponse: IDriverTransactionsResponse = await this.userServiceClient
       .send('getListDriverTransactionHistory', {
         ...getListDriverTransactionHistoryDto,
@@ -303,7 +301,6 @@ export class DriverService {
     driverId: string,
     callerId: string,
   ): Promise<GetMainAccountWalletBalanceOkResponseDto> {
-    //TODO:
     const getMainAccountWalletBalanceResponse: IAccountWalletResponse = await this.userServiceClient
       .send('getMainAccountWalletBalance', {
         driverId,
@@ -335,12 +332,10 @@ export class DriverService {
     };
   }
 
-  //! Update thông tin isActive của driver
   async updateIsActiveOfDriver(
     driverId: string,
     updateIsActiveOfDriverDto: UpdateIsActiveOfDriverDto,
   ): Promise<UpdateIsActiveOfDriverOkResponseDto> {
-    //TODO:
     const updateIsActiveOfDriverResponse: IIsActiveResponse = await this.userServiceClient
       .send('updateDriverActiveStatus', {
         driverId,
@@ -368,7 +363,6 @@ export class DriverService {
   async getDriverActiveStatus(
     driverId: string,
   ): Promise<GetDriverActiveStatusResponseDto> {
-    //TODO:
     const getDriverActiveStatusResponse: IGetDriverActiveStatusResponse = await this.userServiceClient
       .send('getDriverActiveStatus', {
         driverId,
@@ -390,6 +384,23 @@ export class DriverService {
       statusCode: status,
       message,
       data,
+    };
+  }
+
+  async updateDriverLocation(
+    driverId: string,
+    updateDriverLocationDto: UpdateLocationDto,
+  ): Promise<GetDriverActiveStatusResponseDto> {
+    await this.userServiceClient
+      .emit('updateDriverLocation', {
+        driverId,
+        ...updateDriverLocationDto,
+      })
+      .toPromise();
+
+    return {
+      statusCode: 200,
+      message: 'Update location successfully',
     };
   }
 }

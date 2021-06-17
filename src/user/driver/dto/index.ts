@@ -20,3 +20,4 @@ export { GetMainAccountWalletBalanceOkResponseDto } from './payin-withdraw/get-m
 export { UpdateIsActiveOfDriverOkResponseDto } from './update-isactive/update-isactive-of-driver-ok-response.dto';
 export { UpdateIsActiveOfDriverDto } from './update-isactive/update-isactive-of-driver.dto';
 export { GetDriverActiveStatusResponseDto } from './get-active-status/get-active-status-response.dto';
+export { UpdateLocationDto } from './update-location/update-location.dto';

@@ -47,6 +47,7 @@ import {
   RegisterDriverDto,
   UpdateIsActiveOfDriverDto,
   UpdateIsActiveOfDriverOkResponseDto,
+  UpdateLocationDto,
   WithdrawMoneyToPaypalAccountDto,
   WithdrawMoneyToPaypalAccountForbiddenResponse1Dto,
   WithdrawMoneyToPaypalAccountForbiddenResponse2Dto,
@@ -272,5 +273,20 @@ export class DriverController {
     @Request() req,
   ): Promise<GetDriverActiveStatusResponseDto> {
     return this.driverService.getDriverActiveStatus(req.user.userId);
+  }
+
+  @ApiBody({ type: UpdateLocationDto })
+  @ApiBearerAuth()
+  @UseGuards(DriverJwtAuthGuard)
+  @Put('/:driverId/location')
+  async updateDriverLocation(
+    @Request() req,
+    @Body()
+    updateLocationDto: UpdateLocationDto,
+  ) {
+    return this.driverService.updateDriverLocation(
+      req.user.userId,
+      updateLocationDto,
+    );
   }
 }
