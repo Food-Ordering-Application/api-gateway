@@ -8,6 +8,7 @@ import {
   ApproveDepositMoneyIntoMainAccountWalletOkResponseDto,
   DepositMoneyIntoMainAccountWalletDto,
   DepositMoneyIntoMainAccountWalletOkResponseDto,
+  GetDriverActiveStatusResponseDto,
   GetListDriverTransactionHistoryDto,
   GetListDriverTransactionHistoryOkResponseDto,
   GetMainAccountWalletBalanceOkResponseDto,
@@ -25,6 +26,7 @@ import {
   IDriver,
   IDriverResponse,
   IDriverTransactionsResponse,
+  IGetDriverActiveStatusResponse,
   IIsActiveResponse,
   IMainBalanceResponse,
   IOrderServiceCompleteOrderResponse,
@@ -360,6 +362,34 @@ export class DriverService {
     return {
       statusCode: status,
       message,
+    };
+  }
+
+  async getDriverActiveStatus(
+    driverId: string,
+  ): Promise<GetDriverActiveStatusResponseDto> {
+    //TODO:
+    const getDriverActiveStatusResponse: IGetDriverActiveStatusResponse = await this.userServiceClient
+      .send('getDriverActiveStatus', {
+        driverId,
+      })
+      .toPromise();
+
+    const { message, status, data } = getDriverActiveStatusResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+
+    return {
+      statusCode: status,
+      message,
+      data,
     };
   }
 }

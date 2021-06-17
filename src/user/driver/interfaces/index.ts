@@ -19,3 +19,4 @@ export { IIsActiveData } from './isactive-data.interface';
 export { IIsActiveResponse } from './isActive-response.interface';
 export { IMainBalanceResponse } from './main-balance-response.interface';
 export { IMainBalanceData } from './main-balance-data.interface';
+export { IGetDriverActiveStatusResponse } from './get-driver-active-status-response.interface';

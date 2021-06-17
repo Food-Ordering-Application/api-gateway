@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
   Request,
   UseGuards,
@@ -35,6 +36,7 @@ import {
   ApproveDepositMoneyIntoMainAccountWalletOkResponseDto,
   DepositMoneyIntoMainAccountWalletDto,
   DepositMoneyIntoMainAccountWalletOkResponseDto,
+  GetDriverActiveStatusResponseDto,
   GetListDriverTransactionHistoryDto,
   GetMainAccountWalletBalanceOkResponseDto,
   LoginDriverDto,
@@ -250,7 +252,7 @@ export class DriverController {
   @ApiForbiddenResponse({ type: ForbiddenResponseDto })
   @ApiBearerAuth()
   @UseGuards(DriverJwtAuthGuard)
-  @Patch('/:driverId/active')
+  @Put('/:driverId/active')
   async updateIsActiveOfDriver(
     @Request() req,
     @Body()
@@ -260,5 +262,15 @@ export class DriverController {
       req.user.userId,
       updateIsActiveOfDriverDto,
     );
+  }
+
+  @ApiOkResponse({ type: GetDriverActiveStatusResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(DriverJwtAuthGuard)
+  @Get('/:driverId/active')
+  async getDriverActiveStatus(
+    @Request() req,
+  ): Promise<GetDriverActiveStatusResponseDto> {
+    return this.driverService.getDriverActiveStatus(req.user.userId);
   }
 }

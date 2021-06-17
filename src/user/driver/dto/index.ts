@@ -19,3 +19,4 @@ export { GetListDriverTransactionHistoryDto } from './payin-withdraw/get-list-tr
 export { GetMainAccountWalletBalanceOkResponseDto } from './payin-withdraw/get-main-account-wallet-balance-ok-response.dto';
 export { UpdateIsActiveOfDriverOkResponseDto } from './update-isactive/update-isactive-of-driver-ok-response.dto';
 export { UpdateIsActiveOfDriverDto } from './update-isactive/update-isactive-of-driver.dto';
+export { GetDriverActiveStatusResponseDto } from './get-active-status/get-active-status-response.dto';
