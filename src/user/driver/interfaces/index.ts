@@ -20,3 +20,8 @@ export { IIsActiveResponse } from './isActive-response.interface';
 export { IMainBalanceResponse } from './main-balance-response.interface';
 export { IMainBalanceData } from './main-balance-data.interface';
 export { IGetDriverActiveStatusResponse } from './get-driver-active-status-response.interface';
+export { IDriverStatisticData } from './get-driver-weekly-statistic-data.interface';
+export { IDayStatisticData } from './day-statistic-data.interface';
+export { IDriverStatisticResponse } from './driver-statistic-response.interface';
+export { IDriverDailyStatisticData } from './get-driver-daily-statistic-data.interface';
+export { IDriverDailyStatisticResponse } from './driver-daily-statistic-response.interface';

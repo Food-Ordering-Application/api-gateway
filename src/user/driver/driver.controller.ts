@@ -37,6 +37,9 @@ import {
   DepositMoneyIntoMainAccountWalletDto,
   DepositMoneyIntoMainAccountWalletOkResponseDto,
   GetDriverActiveStatusResponseDto,
+  GetDriverDailyStatisticOkResponse,
+  GetDriverMonthlyStatisticOkResponseDto,
+  GetDriverWeeklyStatisticOkResponseDto,
   GetListDriverTransactionHistoryDto,
   GetMainAccountWalletBalanceOkResponseDto,
   LoginDriverDto,
@@ -288,5 +291,73 @@ export class DriverController {
       req.user.userId,
       updateLocationDto,
     );
+  }
+  //! Api thống kê theo ngày
+  @ApiOkResponse({ type: GetDriverDailyStatisticOkResponse })
+  @ApiForbiddenResponse({ type: ForbiddenResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(DriverJwtAuthGuard)
+  @Get('/:driverId/today-statistic')
+  async getDriverDailyStatistic(
+    @Request() req,
+    @Param() params,
+  ): Promise<GetDriverDailyStatisticOkResponse> {
+    const { driverId } = params;
+    return this.driverService.getDriverDailyStatistic(
+      driverId,
+      req.user.userId,
+    );
+  }
+
+  //! Api thống kê theo tuần
+  @ApiOkResponse({ type: GetDriverWeeklyStatisticOkResponseDto })
+  @ApiForbiddenResponse({ type: ForbiddenResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(DriverJwtAuthGuard)
+  @Get('/:driverId/weekly-statistic')
+  async getDriverWeeklyStatistic(
+    @Request() req,
+    @Param() params,
+  ): Promise<GetDriverWeeklyStatisticOkResponseDto> {
+    const { driverId } = params;
+    return this.driverService.getDriverWeeklyStatistic(
+      driverId,
+      req.user.userId,
+    );
+  }
+
+  //! Api thống kê theo tháng
+  @ApiOkResponse({ type: GetDriverMonthlyStatisticOkResponseDto })
+  @ApiForbiddenResponse({ type: ForbiddenResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(DriverJwtAuthGuard)
+  @Get('/:driverId/monthly-statistic')
+  async getDriverMonthlyStatistic(
+    @Request() req,
+    @Param() params,
+  ): Promise<GetDriverMonthlyStatisticOkResponseDto> {
+    const { driverId } = params;
+    return this.driverService.getDriverMonthlyStatistic(
+      driverId,
+      req.user.userId,
+    );
+  }
+
+  //! Test locking route 1
+  @UseGuards(DriverJwtAuthGuard)
+  @Get('/:driverId/test-update-accountwallet')
+  async testUpdateAccountWallet(@Request() req, @Param() params) {
+    const { driverId } = params;
+    return this.driverService.testUpdateAccountWallet(
+      driverId,
+      req.user.userId,
+    );
+  }
+  //! Test locking route 2
+  @UseGuards(DriverJwtAuthGuard)
+  @Get('/:driverId/test-get-accountwallet')
+  async testGetAccountWallet(@Request() req, @Param() params) {
+    const { driverId } = params;
+    return this.driverService.testGetAccountWallet(driverId, req.user.userId);
   }
 }

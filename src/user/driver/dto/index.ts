@@ -21,3 +21,6 @@ export { UpdateIsActiveOfDriverOkResponseDto } from './update-isactive/update-is
 export { UpdateIsActiveOfDriverDto } from './update-isactive/update-isactive-of-driver.dto';
 export { GetDriverActiveStatusResponseDto } from './get-active-status/get-active-status-response.dto';
 export { UpdateLocationDto } from './update-location/update-location.dto';
+export { GetDriverWeeklyStatisticOkResponseDto } from './statistic/get-driver-weekly-statistic-ok-response.dto';
+export { GetDriverMonthlyStatisticOkResponseDto } from './statistic/get-driver-monthly-statistic-ok-response.dto';
+export { GetDriverDailyStatisticOkResponse } from './statistic/get-driver-today-statistic-ok-response.dto';
