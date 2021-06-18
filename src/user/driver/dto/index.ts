@@ -24,3 +24,4 @@ export { UpdateLocationDto } from './update-location/update-location.dto';
 export { GetDriverWeeklyStatisticOkResponseDto } from './statistic/get-driver-weekly-statistic-ok-response.dto';
 export { GetDriverMonthlyStatisticOkResponseDto } from './statistic/get-driver-monthly-statistic-ok-response.dto';
 export { GetDriverDailyStatisticOkResponse } from './statistic/get-driver-today-statistic-ok-response.dto';
+export { GetLatestDriverLocationResponseDto } from './get-latest-location/get-latest-driver-location-response.dto';

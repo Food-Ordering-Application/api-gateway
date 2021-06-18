@@ -25,3 +25,6 @@ export { IDayStatisticData } from './day-statistic-data.interface';
 export { IDriverStatisticResponse } from './driver-statistic-response.interface';
 export { IDriverDailyStatisticData } from './get-driver-daily-statistic-data.interface';
 export { IDriverDailyStatisticResponse } from './driver-daily-statistic-response.interface';
+export { IDeliveryServiceDeclineOrderResponse } from './delivery-service-decline-order-response.interface';
+export { IGetLatestDriverLocationResponse } from './get-latest-driver-location-response.interface';
+export { ILocationData } from './location.interface';

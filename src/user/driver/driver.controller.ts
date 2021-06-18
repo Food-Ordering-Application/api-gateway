@@ -24,6 +24,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { AnyJwtAuthGuard } from 'src/auth/guards/jwts/any-jwt-auth.guard';
 import { InternalServerErrorResponseDto } from 'src/shared/dto/internal-server-error.dto';
 import { AuthService } from '../../auth/auth.service';
 import { DriverJwtAuthGuard } from '../../auth/guards/jwts/driver-jwt-auth.guard';
@@ -40,6 +41,7 @@ import {
   GetDriverDailyStatisticOkResponse,
   GetDriverMonthlyStatisticOkResponseDto,
   GetDriverWeeklyStatisticOkResponseDto,
+  GetLatestDriverLocationResponseDto,
   GetListDriverTransactionHistoryDto,
   GetMainAccountWalletBalanceOkResponseDto,
   LoginDriverDto,
@@ -85,6 +87,14 @@ export class DriverController {
   async acceptOrder(@Param('orderId') orderId: string, @Request() req) {
     const driverId = req.user.userId;
     return await this.driverService.acceptOrder(driverId, orderId);
+  }
+
+  @UseGuards(DriverJwtAuthGuard)
+  @HttpCode(200)
+  @Post('/order/:orderId/decline')
+  async declineOrder(@Param('orderId') orderId: string, @Request() req) {
+    const driverId = req.user.userId;
+    return await this.driverService.declineOrder(driverId, orderId);
   }
 
   @UseGuards(DriverJwtAuthGuard)
@@ -256,7 +266,7 @@ export class DriverController {
   @ApiForbiddenResponse({ type: ForbiddenResponseDto })
   @ApiBearerAuth()
   @UseGuards(DriverJwtAuthGuard)
-  @Put('/:driverId/active')
+  @Put('active')
   async updateIsActiveOfDriver(
     @Request() req,
     @Body()
@@ -271,7 +281,7 @@ export class DriverController {
   @ApiOkResponse({ type: GetDriverActiveStatusResponseDto })
   @ApiBearerAuth()
   @UseGuards(DriverJwtAuthGuard)
-  @Get('/:driverId/active')
+  @Get('active')
   async getDriverActiveStatus(
     @Request() req,
   ): Promise<GetDriverActiveStatusResponseDto> {
@@ -281,7 +291,7 @@ export class DriverController {
   @ApiBody({ type: UpdateLocationDto })
   @ApiBearerAuth()
   @UseGuards(DriverJwtAuthGuard)
-  @Put('/:driverId/location')
+  @Put('location')
   async updateDriverLocation(
     @Request() req,
     @Body()
@@ -359,5 +369,17 @@ export class DriverController {
   async testGetAccountWallet(@Request() req, @Param() params) {
     const { driverId } = params;
     return this.driverService.testGetAccountWallet(driverId, req.user.userId);
+  }
+
+  @ApiOkResponse({ type: GetLatestDriverLocationResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(AnyJwtAuthGuard)
+  @Get('/:driverId/location')
+  async getLatestLocationOfDriver(
+    @Request() req,
+    @Param() params,
+  ): Promise<GetLatestDriverLocationResponseDto> {
+    const { driverId } = params;
+    return this.driverService.getLatestLocationOfDriver(driverId);
   }
 }
