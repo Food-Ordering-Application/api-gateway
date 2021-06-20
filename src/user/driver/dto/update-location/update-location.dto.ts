@@ -1,16 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsNumber, IsOptional, Max, Min } from 'class-validator';
+import { Max, Min, IsNumber, IsOptional } from 'class-validator';
 
-export class UpdateIsActiveOfDriverDto {
-  @ApiProperty({
-    example: true,
-    required: true,
-  })
-  @IsBoolean()
-  activeStatus: boolean;
-
+export class UpdateLocationDto {
   @ApiProperty({
     example: 10.762921400332274,
+    description: 'Only for testing',
   })
   @Max(90)
   @Min(-90)
@@ -20,6 +14,7 @@ export class UpdateIsActiveOfDriverDto {
 
   @ApiProperty({
     example: 106.6819735315213,
+    description: 'Only for testing',
   })
   @Max(180)
   @Min(-180)

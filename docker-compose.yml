@@ -65,9 +65,8 @@ services:
   delivery_redis:
     image: 'redis:6.2.4-alpine'
     #note the password
-    command: redis-server --requirepass password redis_password 
+    command: redis-server --requirepass redis_password #password = redis_password
     container_name: delivery_redis
-    restart: always
     ports:
       - 6379:6379
     volumes:
@@ -81,6 +80,8 @@ services:
     restart: always
     env_file:
       - ./docker.env
+    depends_on: 
+      - delivery_redis
     networks: 
       - my-network
 networks:

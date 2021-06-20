@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
   Request,
   UseGuards,
@@ -23,6 +24,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { AnyJwtAuthGuard } from 'src/auth/guards/jwts/any-jwt-auth.guard';
 import { InternalServerErrorResponseDto } from 'src/shared/dto/internal-server-error.dto';
 import { AuthService } from '../../auth/auth.service';
 import { DriverJwtAuthGuard } from '../../auth/guards/jwts/driver-jwt-auth.guard';
@@ -35,9 +37,11 @@ import {
   ApproveDepositMoneyIntoMainAccountWalletOkResponseDto,
   DepositMoneyIntoMainAccountWalletDto,
   DepositMoneyIntoMainAccountWalletOkResponseDto,
+  GetDriverActiveStatusResponseDto,
   GetDriverDailyStatisticOkResponse,
   GetDriverMonthlyStatisticOkResponseDto,
   GetDriverWeeklyStatisticOkResponseDto,
+  GetLatestDriverLocationResponseDto,
   GetListDriverTransactionHistoryDto,
   GetMainAccountWalletBalanceOkResponseDto,
   LoginDriverDto,
@@ -48,6 +52,7 @@ import {
   RegisterDriverDto,
   UpdateIsActiveOfDriverDto,
   UpdateIsActiveOfDriverOkResponseDto,
+  UpdateLocationDto,
   WithdrawMoneyToPaypalAccountDto,
   WithdrawMoneyToPaypalAccountForbiddenResponse1Dto,
   WithdrawMoneyToPaypalAccountForbiddenResponse2Dto,
@@ -82,6 +87,14 @@ export class DriverController {
   async acceptOrder(@Param('orderId') orderId: string, @Request() req) {
     const driverId = req.user.userId;
     return await this.driverService.acceptOrder(driverId, orderId);
+  }
+
+  @UseGuards(DriverJwtAuthGuard)
+  @HttpCode(200)
+  @Post('/order/:orderId/decline')
+  async declineOrder(@Param('orderId') orderId: string, @Request() req) {
+    const driverId = req.user.userId;
+    return await this.driverService.declineOrder(driverId, orderId);
   }
 
   @UseGuards(DriverJwtAuthGuard)
@@ -249,25 +262,46 @@ export class DriverController {
 
   //! Update thông tin isActive của driver
   @ApiOkResponse({ type: UpdateIsActiveOfDriverOkResponseDto })
-  @ApiQuery({ type: UpdateIsActiveOfDriverDto })
+  @ApiBody({ type: UpdateIsActiveOfDriverDto })
   @ApiForbiddenResponse({ type: ForbiddenResponseDto })
   @ApiBearerAuth()
   @UseGuards(DriverJwtAuthGuard)
-  @Patch('/:driverId/update-isactive')
+  @Put('active')
   async updateIsActiveOfDriver(
     @Request() req,
-    @Param() params,
-    @Query()
+    @Body()
     updateIsActiveOfDriverDto: UpdateIsActiveOfDriverDto,
   ): Promise<UpdateIsActiveOfDriverOkResponseDto> {
-    const { driverId } = params;
     return this.driverService.updateIsActiveOfDriver(
-      driverId,
       req.user.userId,
       updateIsActiveOfDriverDto,
     );
   }
 
+  @ApiOkResponse({ type: GetDriverActiveStatusResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(DriverJwtAuthGuard)
+  @Get('active')
+  async getDriverActiveStatus(
+    @Request() req,
+  ): Promise<GetDriverActiveStatusResponseDto> {
+    return this.driverService.getDriverActiveStatus(req.user.userId);
+  }
+
+  @ApiBody({ type: UpdateLocationDto })
+  @ApiBearerAuth()
+  @UseGuards(DriverJwtAuthGuard)
+  @Put('location')
+  async updateDriverLocation(
+    @Request() req,
+    @Body()
+    updateLocationDto: UpdateLocationDto,
+  ) {
+    return this.driverService.updateDriverLocation(
+      req.user.userId,
+      updateLocationDto,
+    );
+  }
   //! Api thống kê theo ngày
   @ApiOkResponse({ type: GetDriverDailyStatisticOkResponse })
   @ApiForbiddenResponse({ type: ForbiddenResponseDto })
@@ -335,5 +369,17 @@ export class DriverController {
   async testGetAccountWallet(@Request() req, @Param() params) {
     const { driverId } = params;
     return this.driverService.testGetAccountWallet(driverId, req.user.userId);
+  }
+
+  @ApiOkResponse({ type: GetLatestDriverLocationResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(AnyJwtAuthGuard)
+  @Get('/:driverId/location')
+  async getLatestLocationOfDriver(
+    @Request() req,
+    @Param() params,
+  ): Promise<GetLatestDriverLocationResponseDto> {
+    const { driverId } = params;
+    return this.driverService.getLatestLocationOfDriver(driverId);
   }
 }

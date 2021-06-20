@@ -8,9 +8,11 @@ import {
   ApproveDepositMoneyIntoMainAccountWalletOkResponseDto,
   DepositMoneyIntoMainAccountWalletDto,
   DepositMoneyIntoMainAccountWalletOkResponseDto,
+  GetDriverActiveStatusResponseDto,
   GetDriverDailyStatisticOkResponse,
   GetDriverMonthlyStatisticOkResponseDto,
   GetDriverWeeklyStatisticOkResponseDto,
+  GetLatestDriverLocationResponseDto,
   GetListDriverTransactionHistoryDto,
   GetListDriverTransactionHistoryOkResponseDto,
   GetMainAccountWalletBalanceOkResponseDto,
@@ -18,6 +20,7 @@ import {
   RegisterDriverDto,
   UpdateIsActiveOfDriverDto,
   UpdateIsActiveOfDriverOkResponseDto,
+  UpdateLocationDto,
   WithdrawMoneyToPaypalAccountDto,
   WithdrawMoneyToPaypalAccountOkResponseDto,
 } from './dto';
@@ -25,11 +28,14 @@ import {
   IAccountWalletResponse,
   ICreateDepositMoneyIntoMainAccountWalletResponse,
   IDeliveryServiceAcceptOrderResponse,
+  IDeliveryServiceDeclineOrderResponse,
   IDriver,
   IDriverDailyStatisticResponse,
   IDriverResponse,
   IDriverStatisticResponse,
   IDriverTransactionsResponse,
+  IGetDriverActiveStatusResponse,
+  IGetLatestDriverLocationResponse,
   IIsActiveResponse,
   IMainBalanceResponse,
   IOrderServiceCompleteOrderResponse,
@@ -53,6 +59,26 @@ export class DriverService {
       .toPromise();
 
     const { status, message } = driverAcceptOrderResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException({ message }, status);
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message,
+    };
+  }
+
+  async declineOrder(driverId: string, orderId: string) {
+    const driverDeclineOrderResponse: IDeliveryServiceDeclineOrderResponse = await this.deliveryServiceClient
+      .send('driverDeclineOrder', {
+        orderId,
+        driverId,
+      })
+      .toPromise();
+
+    const { status, message } = driverDeclineOrderResponse;
 
     if (status !== HttpStatus.OK) {
       throw new HttpException({ message }, status);
@@ -189,7 +215,6 @@ export class DriverService {
     driverId: string,
     callerId: string,
   ): Promise<ApproveDepositMoneyIntoMainAccountWalletOkResponseDto> {
-    //TODO:
     const approveDepositMoneyIntoMainAccountWalletResponse: IMainBalanceResponse = await this.userServiceClient
       .send('approveDepositMoneyIntoMainAccountWallet', {
         ...approveDepositMoneyIntoMainAccountWalletDto,
@@ -228,7 +253,6 @@ export class DriverService {
     driverId: string,
     callerId: string,
   ): Promise<WithdrawMoneyToPaypalAccountOkResponseDto> {
-    //TODO:
     const withdrawMoneyToPaypalAccountResponse: ISimpleResponse = await this.userServiceClient
       .send('withdrawMoneyToPaypalAccount', {
         ...withdrawMoneyToPaypalAccountDto,
@@ -268,7 +292,6 @@ export class DriverService {
     callerId: string,
     getListDriverTransactionHistoryDto: GetListDriverTransactionHistoryDto,
   ): Promise<GetListDriverTransactionHistoryOkResponseDto> {
-    //TODO:
     const getListDriverTransactionHistoryResponse: IDriverTransactionsResponse = await this.userServiceClient
       .send('getListDriverTransactionHistory', {
         ...getListDriverTransactionHistoryDto,
@@ -306,7 +329,6 @@ export class DriverService {
     driverId: string,
     callerId: string,
   ): Promise<GetMainAccountWalletBalanceOkResponseDto> {
-    //TODO:
     const getMainAccountWalletBalanceResponse: IAccountWalletResponse = await this.userServiceClient
       .send('getMainAccountWalletBalance', {
         driverId,
@@ -338,22 +360,18 @@ export class DriverService {
     };
   }
 
-  //! Update thông tin isActive của driver
   async updateIsActiveOfDriver(
     driverId: string,
-    callerId: string,
     updateIsActiveOfDriverDto: UpdateIsActiveOfDriverDto,
   ): Promise<UpdateIsActiveOfDriverOkResponseDto> {
-    //TODO:
-    const updateIsActiveOfDriverResponse: IIsActiveResponse = await this.userServiceClient
-      .send('updateIsActiveOfDriver', {
+    const updateIsActiveOfDriverResponse: IIsActiveResponse = await this.deliveryServiceClient
+      .send('updateDriverActiveStatus', {
         driverId,
-        callerId,
         ...updateIsActiveOfDriverDto,
       })
       .toPromise();
 
-    const { message, status, isActive } = updateIsActiveOfDriverResponse;
+    const { message, status } = updateIsActiveOfDriverResponse;
 
     if (status !== HttpStatus.OK) {
       throw new HttpException(
@@ -367,9 +385,50 @@ export class DriverService {
     return {
       statusCode: status,
       message,
-      data: {
-        isActive: isActive,
-      },
+    };
+  }
+
+  async getDriverActiveStatus(
+    driverId: string,
+  ): Promise<GetDriverActiveStatusResponseDto> {
+    const getDriverActiveStatusResponse: IGetDriverActiveStatusResponse = await this.deliveryServiceClient
+      .send('getDriverActiveStatus', {
+        driverId,
+      })
+      .toPromise();
+
+    const { message, status, data } = getDriverActiveStatusResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+
+    return {
+      statusCode: status,
+      message,
+      data,
+    };
+  }
+
+  async updateDriverLocation(
+    driverId: string,
+    updateDriverLocationDto: UpdateLocationDto,
+  ): Promise<GetDriverActiveStatusResponseDto> {
+    await this.deliveryServiceClient
+      .emit('updateDriverLocation', {
+        driverId,
+        ...updateDriverLocationDto,
+      })
+      .toPromise();
+
+    return {
+      statusCode: 200,
+      message: 'Update location successfully',
     };
   }
 
@@ -532,6 +591,32 @@ export class DriverService {
       data: {
         accountWallet: accountWallet,
       },
+    };
+  }
+
+  async getLatestLocationOfDriver(
+    driverId: string,
+  ): Promise<GetLatestDriverLocationResponseDto> {
+    const getLatestDriverLocationResponse: IGetLatestDriverLocationResponse = await this.deliveryServiceClient
+      .send('getLatestDriverLocation', {
+        driverId,
+      })
+      .toPromise();
+    const { message, status, data } = getLatestDriverLocationResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+
+    return {
+      statusCode: status,
+      message,
+      data,
     };
   }
 }
