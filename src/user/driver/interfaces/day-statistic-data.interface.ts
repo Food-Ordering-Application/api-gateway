@@ -1,5 +1,6 @@
+import { IDate } from './date.interface';
 export interface IDayStatisticData {
-  date: string;
+  date: IDate;
   income: number;
   commission: number;
   numOrderFinished: number;

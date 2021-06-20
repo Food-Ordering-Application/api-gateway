@@ -12,7 +12,11 @@ export class GetDriverDailyStatisticOkResponse {
   @ApiProperty({
     example: {
       statistic: {
-        date: '2021-06-20T09:02:23Z',
+        date: {
+          day: '5',
+          month: '12',
+          year: '2021',
+        },
         income: 1234,
         numOrderFinished: 5,
         commission: 123,
