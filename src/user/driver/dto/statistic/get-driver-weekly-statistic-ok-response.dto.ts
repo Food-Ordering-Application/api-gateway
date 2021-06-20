@@ -12,9 +12,24 @@ export class GetDriverWeeklyStatisticOkResponseDto {
   @ApiProperty({
     example: {
       statistic: [
-        { income: 1234, numOrderFinished: 5, commission: 123 },
-        { income: 1234, numOrderFinished: 5, commission: 123 },
-        { income: 1234, numOrderFinished: 5, commission: 123 },
+        {
+          date: '2021-06-20T09:02:23Z',
+          income: 1234,
+          numOrderFinished: 5,
+          commission: 123,
+        },
+        {
+          date: '2021-06-20T09:02:23Z',
+          income: 1234,
+          numOrderFinished: 5,
+          commission: 123,
+        },
+        {
+          date: '2021-06-20T09:02:23Z',
+          income: 1234,
+          numOrderFinished: 5,
+          commission: 123,
+        },
       ],
     },
     type: 'string',
