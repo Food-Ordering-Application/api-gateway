@@ -32,7 +32,9 @@ import {
   FetchRestaurantDetailOfMerchantResponseDto,
   FetchRestaurantDto,
   GetOrderStatisticsOfRestaurantDto,
+  GetOrderStatisticsOfRestaurantResponseDto,
   GetRevenueInsightOfRestaurantDto,
+  GetRevenueInsightOfRestaurantResponseDto,
 } from './dto';
 import { CreateRestaurantDto } from './dto/create-restaurant/create-restaurant.dto';
 import { FetchRestaurantsOfMerchantResponseDto } from './dto/fetch-restaurant/fetch-restaurant-response.dto';
@@ -127,7 +129,7 @@ export class RestaurantController {
     );
   }
 
-  @ApiOkResponse({ type: FetchRestaurantDetailOfMerchantResponseDto })
+  @ApiOkResponse({ type: GetOrderStatisticsOfRestaurantResponseDto })
   @ApiBody({ type: GetOrderStatisticsOfRestaurantDto })
   @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)
@@ -156,6 +158,7 @@ export class RestaurantController {
     );
   }
 
+  @ApiOkResponse({ type: GetRevenueInsightOfRestaurantResponseDto })
   @ApiBody({ type: GetRevenueInsightOfRestaurantDto })
   @ApiBearerAuth()
   @UseGuards(MerchantJwtAuthGuard)

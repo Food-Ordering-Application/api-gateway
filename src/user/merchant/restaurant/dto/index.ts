@@ -10,3 +10,5 @@ export { FetchRestaurantDetailOfMerchantResponseDto } from './fetch-restaurant-d
 export { FetchRestaurantDetailOfMerchantUnauthorizedResponseDto } from './fetch-restaurant-detail/fetch-restaurant-detail-unauthorized-response.dto';
 export { GetOrderStatisticsOfRestaurantDto } from './get-order-statistics/get-order-statistics-of-restaurant.dto';
 export { GetRevenueInsightOfRestaurantDto } from './get-revenue-insight/get-revenue-insight-of-restaurant.dto';
+export { GetOrderStatisticsOfRestaurantResponseDto } from './get-order-statistics/get-order-statistics-response.dto';
+export { GetRevenueInsightOfRestaurantResponseDto } from './get-revenue-insight/get-revenue-insight-of-restaurant-response.dto';
