@@ -35,6 +35,7 @@ import {
   GetOrderStatisticsOfRestaurantResponseDto,
   GetRevenueInsightOfRestaurantDto,
   GetRevenueInsightOfRestaurantResponseDto,
+  GetRestaurantStatisticResponseDto,
 } from './dto';
 import { CreateRestaurantDto } from './dto/create-restaurant/create-restaurant.dto';
 import { FetchRestaurantsOfMerchantResponseDto } from './dto/fetch-restaurant/fetch-restaurant-response.dto';
@@ -126,6 +127,30 @@ export class RestaurantController {
     return await this.restaurantService.fetchRestaurantDetailOfMerchant(
       restaurant,
       merchantId,
+    );
+  }
+
+  @ApiOkResponse({ type: GetRestaurantStatisticResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(MerchantJwtAuthGuard)
+  @Get(':restaurantId/statistic')
+  async GetRestaurantStatistic(
+    @Request() req: MerchantJwtRequest,
+    @Param('merchantId') merchant,
+    @Param('restaurantId') restaurant,
+  ): Promise<GetRestaurantStatisticResponseDto> {
+    const { user } = req;
+    const { merchantId } = user;
+    if (merchantId !== merchant) {
+      return {
+        statusCode: 403,
+        message: 'Unauthorized',
+        data: null,
+      };
+    }
+    return await this.restaurantService.getRestaurantStatistic(
+      merchant,
+      restaurant,
     );
   }
 

@@ -5,11 +5,15 @@ import {
   FetchRestaurantDetailOfMerchantResponseDto,
   GetOrderStatisticsOfRestaurantDto,
   GetRevenueInsightOfRestaurantDto,
+  GetRestaurantStatisticResponseDto,
 } from './dto';
 import { CreateRestaurantDto } from './dto/create-restaurant/create-restaurant.dto';
 import { FetchRestaurantsOfMerchantResponseDto } from './dto/fetch-restaurant/fetch-restaurant-response.dto';
 import { FetchRestaurantDto } from './dto/fetch-restaurant/fetch-restaurant.dto';
-import { IRestaurantServiceFetchRestaurantDetailOfMerchantResponse } from './interfaces';
+import {
+  IRestaurantServiceFetchRestaurantDetailOfMerchantResponse,
+  IRestaurantStatisticResponse,
+} from './interfaces';
 import { IRestaurantServiceFetchRestaurantsOfMerchantResponse } from './interfaces/restaurant-service-fetch-restaurants-of-merchant-response.interface';
 
 @Injectable()
@@ -159,6 +163,31 @@ export class RestaurantService {
       statusCode: HttpStatus.OK,
       message,
       data,
+    };
+  }
+
+  async getRestaurantStatistic(
+    merchantId: string,
+    restaurantId: string,
+  ): Promise<GetRestaurantStatisticResponseDto> {
+    const getRestaurantStatisticResponse: IRestaurantStatisticResponse = await this.orderServiceClient
+      .send('getRestaurantStatistic', {
+        merchantId,
+        restaurantId,
+      })
+      .toPromise();
+
+    const { status, message, statistic } = getRestaurantStatisticResponse;
+    if (status !== HttpStatus.OK) {
+      throw new HttpException({ message }, status);
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message,
+      data: {
+        statistic,
+      },
     };
   }
 }

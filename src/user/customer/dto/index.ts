@@ -20,10 +20,11 @@ export { CreateCustomerAddressDto } from './customer-address/create/create-custo
 
 export { UpdateCustomerAddressResponseDto } from './customer-address/update/update-customer-address-response.dto';
 export { UpdateCustomerAddressDto } from './customer-address/update/update-customer-address.dto';
+export { UpdateDefaultCustomerAddressOkResponseDto } from './customer-address/update/update-default-customer-address-response.dto';
 
 export { DeleteCustomerAddressResponseDto } from './customer-address/delete/delete-customer-address-response.dto';
 
-export { GetListCustomerAddressResponseDto } from './customer-address/get-list/get-list-customer-address-response.dto';
+export { GetListCustomerAddressResponseDto } from './customer-address/get/get-list-customer-address-response.dto';
 
 export { ForbiddenResponseDto } from './forbidden-response.dto';
 
@@ -37,3 +38,4 @@ export { UpdateCustomerInfoResponseDto } from './customer-info/update-customer-i
 export { UpdateCustomerInfoDto } from './customer-info/update-customer-info.dto';
 
 export { VerifyCustomerEmailResponseDto } from './verify-customer-email/verify-customer-email-response.dto';
+export { GetDefaultCustomerAddressOkResponseDto } from './customer-address/get/get-default-customer-address-response.dto';

@@ -12,3 +12,4 @@ export { GetOrderStatisticsOfRestaurantDto } from './get-order-statistics/get-or
 export { GetRevenueInsightOfRestaurantDto } from './get-revenue-insight/get-revenue-insight-of-restaurant.dto';
 export { GetOrderStatisticsOfRestaurantResponseDto } from './get-order-statistics/get-order-statistics-response.dto';
 export { GetRevenueInsightOfRestaurantResponseDto } from './get-revenue-insight/get-revenue-insight-of-restaurant-response.dto';
+export { GetRestaurantStatisticResponseDto } from './get-statistic/get-statistic-response.dto';
