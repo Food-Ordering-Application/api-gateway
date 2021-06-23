@@ -29,15 +29,14 @@ export class MenuItemService {
     menuId: string,
     createMenuItemDto: CreateMenuItemDto,
   ): Promise<CreateMenuItemResponseDto> {
-    const createMenuItemResponse: IRestaurantServiceCreateMenuItemResponse =
-      await this.menuItemServiceClient
-        .send('createMenuItem', {
-          merchantId,
-          restaurantId,
-          menuId,
-          data: createMenuItemDto,
-        })
-        .toPromise();
+    const createMenuItemResponse: IRestaurantServiceCreateMenuItemResponse = await this.menuItemServiceClient
+      .send('createMenuItem', {
+        merchantId,
+        restaurantId,
+        menuId,
+        data: createMenuItemDto,
+      })
+      .toPromise();
 
     const { status, message, data } = createMenuItemResponse;
     if (status !== HttpStatus.CREATED) {
@@ -60,16 +59,15 @@ export class MenuItemService {
     menuId: string,
     updateMenuItemDto: UpdateMenuItemDto,
   ): Promise<UpdateMenuItemResponseDto> {
-    const updateMenuItemResponse: ISimpleResponse =
-      await this.menuItemServiceClient
-        .send('updateMenuItem', {
-          menuItemId,
-          merchantId,
-          restaurantId,
-          menuId,
-          data: updateMenuItemDto,
-        })
-        .toPromise();
+    const updateMenuItemResponse: ISimpleResponse = await this.menuItemServiceClient
+      .send('updateMenuItem', {
+        menuItemId,
+        merchantId,
+        restaurantId,
+        menuId,
+        data: updateMenuItemDto,
+      })
+      .toPromise();
 
     const { status, message } = updateMenuItemResponse;
     if (status !== HttpStatus.OK) {
@@ -88,15 +86,14 @@ export class MenuItemService {
     restaurantId: string,
     menuId: string,
   ): Promise<DeleteMenuItemResponseDto> {
-    const deleteMenuItemResponse: ISimpleResponse =
-      await this.menuItemServiceClient
-        .send('deleteMenuItem', {
-          menuItemId,
-          merchantId,
-          restaurantId,
-          menuId,
-        })
-        .toPromise();
+    const deleteMenuItemResponse: ISimpleResponse = await this.menuItemServiceClient
+      .send('deleteMenuItem', {
+        menuItemId,
+        merchantId,
+        restaurantId,
+        menuId,
+      })
+      .toPromise();
 
     const { status, message } = deleteMenuItemResponse;
     if (status !== HttpStatus.OK) {
@@ -115,17 +112,16 @@ export class MenuItemService {
     menuId: string,
     fetchMenuItemByMenuQuery: FetchMenuItemQuery,
   ): Promise<FetchMenuItemByMenuResponseDto> {
-    const fetchMenuItemResponse: IRestaurantServiceFetchMenuItemByMenuResponse =
-      await this.menuItemServiceClient
-        .send('fetchMenuItemOfMenu', {
-          merchantId,
-          restaurantId,
-          menuId,
-          page: parseInt(fetchMenuItemByMenuQuery.page) || 0,
-          size: parseInt(fetchMenuItemByMenuQuery.size) || 10,
-          search: fetchMenuItemByMenuQuery.q,
-        })
-        .toPromise();
+    const fetchMenuItemResponse: IRestaurantServiceFetchMenuItemByMenuResponse = await this.menuItemServiceClient
+      .send('fetchMenuItemOfMenu', {
+        merchantId,
+        restaurantId,
+        menuId,
+        page: parseInt(fetchMenuItemByMenuQuery.page) || 0,
+        size: parseInt(fetchMenuItemByMenuQuery.size) || 10,
+        search: fetchMenuItemByMenuQuery.q,
+      })
+      .toPromise();
 
     const { status, message, data } = fetchMenuItemResponse;
     if (status !== HttpStatus.OK) {

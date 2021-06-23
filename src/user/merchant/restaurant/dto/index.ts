@@ -13,3 +13,6 @@ export { GetRevenueInsightOfRestaurantDto } from './get-revenue-insight/get-reve
 export { GetOrderStatisticsOfRestaurantResponseDto } from './get-order-statistics/get-order-statistics-response.dto';
 export { GetRevenueInsightOfRestaurantResponseDto } from './get-revenue-insight/get-revenue-insight-of-restaurant-response.dto';
 export { GetRestaurantStatisticResponseDto } from './get-statistic/get-statistic-response.dto';
+export { UpdateRestaurantNotFoundResponseDto } from './update-restaurant/update-restaurant-not-found-response.dto';
+export { UpdateRestaurantResponseDto } from './update-restaurant/update-restaurant-response.dto';
+export { UpdateRestaurantDto } from './update-restaurant/update-restaurant.dto';

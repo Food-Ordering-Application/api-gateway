@@ -1,11 +1,13 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { ISimpleResponse } from 'src/shared/interfaces/simple-response.interface';
 import * as constants from '../../../constants';
 import {
   FetchRestaurantDetailOfMerchantResponseDto,
   GetOrderStatisticsOfRestaurantDto,
   GetRevenueInsightOfRestaurantDto,
   GetRestaurantStatisticResponseDto,
+  UpdateRestaurantDto,
 } from './dto';
 import { CreateRestaurantDto } from './dto/create-restaurant/create-restaurant.dto';
 import { FetchRestaurantsOfMerchantResponseDto } from './dto/fetch-restaurant/fetch-restaurant-response.dto';
@@ -188,6 +190,30 @@ export class RestaurantService {
       data: {
         statistic,
       },
+    };
+  }
+
+  async updateRestaurant(
+    merchantId: string,
+    restaurantId: string,
+    updateRestaurantDto: UpdateRestaurantDto,
+  ) {
+    const updateRestaurantResponse: ISimpleResponse = await this.restaurantServiceClient
+      .send('updateRestaurant', {
+        restaurantId,
+        merchantId,
+        data: updateRestaurantDto,
+      })
+      .toPromise();
+
+    const { status, message } = updateRestaurantResponse;
+    if (status !== HttpStatus.OK) {
+      throw new HttpException({ message }, status);
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message,
     };
   }
 }

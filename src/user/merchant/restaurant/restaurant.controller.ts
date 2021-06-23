@@ -5,6 +5,7 @@ import {
   HttpCode,
   Logger,
   Param,
+  Patch,
   Post,
   Query,
   Req,
@@ -36,6 +37,9 @@ import {
   GetRevenueInsightOfRestaurantDto,
   GetRevenueInsightOfRestaurantResponseDto,
   GetRestaurantStatisticResponseDto,
+  UpdateRestaurantDto,
+  UpdateRestaurantNotFoundResponseDto,
+  UpdateRestaurantResponseDto,
 } from './dto';
 import { CreateRestaurantDto } from './dto/create-restaurant/create-restaurant.dto';
 import { FetchRestaurantsOfMerchantResponseDto } from './dto/fetch-restaurant/fetch-restaurant-response.dto';
@@ -208,6 +212,33 @@ export class RestaurantController {
       restaurant,
       merchantId,
       getRevenueInsightOfRestaurantDto,
+    );
+  }
+
+  @ApiOkResponse({ type: UpdateRestaurantResponseDto })
+  @ApiNotFoundResponse({ type: UpdateRestaurantNotFoundResponseDto })
+  @ApiBody({ type: UpdateRestaurantDto })
+  @ApiBearerAuth()
+  @UseGuards(MerchantJwtAuthGuard)
+  @Patch(':restaurantId')
+  async updateRestaurant(
+    @Request() req: MerchantJwtRequest,
+    @Param('merchantId') merchant,
+    @Param('restaurantId') restaurant,
+    @Body() updateRestaurantDto: UpdateRestaurantDto,
+  ): Promise<UpdateRestaurantResponseDto> {
+    const { user } = req;
+    const { merchantId } = user;
+    if (merchantId !== merchant) {
+      return {
+        statusCode: 403,
+        message: 'Unauthorized',
+      };
+    }
+    return await this.restaurantService.updateRestaurant(
+      merchantId,
+      restaurant,
+      updateRestaurantDto,
     );
   }
 }
