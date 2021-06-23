@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   Logger,
   Param,
   Post,
@@ -30,6 +31,8 @@ import {
   CreateRestaurantResponseDto,
   FetchRestaurantDetailOfMerchantResponseDto,
   FetchRestaurantDto,
+  GetOrderStatisticsOfRestaurantDto,
+  GetRevenueInsightOfRestaurantDto,
 } from './dto';
 import { CreateRestaurantDto } from './dto/create-restaurant/create-restaurant.dto';
 import { FetchRestaurantsOfMerchantResponseDto } from './dto/fetch-restaurant/fetch-restaurant-response.dto';
@@ -121,6 +124,62 @@ export class RestaurantController {
     return await this.restaurantService.fetchRestaurantDetailOfMerchant(
       restaurant,
       merchantId,
+    );
+  }
+
+  @ApiOkResponse({ type: FetchRestaurantDetailOfMerchantResponseDto })
+  @ApiBody({ type: GetOrderStatisticsOfRestaurantDto })
+  @ApiBearerAuth()
+  @UseGuards(MerchantJwtAuthGuard)
+  @Post(':restaurantId/order-statistics')
+  @HttpCode(200)
+  async getOrderStatisticsOfRestaurant(
+    @Request() req: MerchantJwtRequest,
+    @Param('merchantId') merchant,
+    @Param('restaurantId') restaurant,
+    @Body()
+    getOrderStatisticsOfRestaurantDto: GetOrderStatisticsOfRestaurantDto,
+  ) {
+    const { user } = req;
+    const { merchantId } = user;
+    if (merchantId !== merchant) {
+      return {
+        statusCode: 403,
+        message: 'Unauthorized',
+        data: null,
+      };
+    }
+    return await this.restaurantService.getOrderStatisticsOfRestaurant(
+      restaurant,
+      merchantId,
+      getOrderStatisticsOfRestaurantDto,
+    );
+  }
+
+  @ApiBody({ type: GetRevenueInsightOfRestaurantDto })
+  @ApiBearerAuth()
+  @UseGuards(MerchantJwtAuthGuard)
+  @Post(':restaurantId/revenue-insight')
+  @HttpCode(200)
+  async getRevenueInsightOfRestaurant(
+    @Request() req: MerchantJwtRequest,
+    @Param('merchantId') merchant,
+    @Param('restaurantId') restaurant,
+    @Body() getRevenueInsightOfRestaurantDto: GetRevenueInsightOfRestaurantDto,
+  ) {
+    const { user } = req;
+    const { merchantId } = user;
+    if (merchantId !== merchant) {
+      return {
+        statusCode: 403,
+        message: 'Unauthorized',
+        data: null,
+      };
+    }
+    return await this.restaurantService.getRevenueInsightOfRestaurant(
+      restaurant,
+      merchantId,
+      getRevenueInsightOfRestaurantDto,
     );
   }
 }

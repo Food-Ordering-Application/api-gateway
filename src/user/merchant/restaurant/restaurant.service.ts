@@ -1,7 +1,11 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import * as constants from '../../../constants';
-import { FetchRestaurantDetailOfMerchantResponseDto } from './dto';
+import {
+  FetchRestaurantDetailOfMerchantResponseDto,
+  GetOrderStatisticsOfRestaurantDto,
+  GetRevenueInsightOfRestaurantDto,
+} from './dto';
 import { CreateRestaurantDto } from './dto/create-restaurant/create-restaurant.dto';
 import { FetchRestaurantsOfMerchantResponseDto } from './dto/fetch-restaurant/fetch-restaurant-response.dto';
 import { FetchRestaurantDto } from './dto/fetch-restaurant/fetch-restaurant.dto';
@@ -14,6 +18,9 @@ export class RestaurantService {
     @Inject(constants.USER_SERVICE) private userServiceClient: ClientProxy,
     @Inject(constants.RESTAURANT_SERVICE)
     private restaurantServiceClient: ClientProxy,
+
+    @Inject(constants.ORDER_SERVICE)
+    private orderServiceClient: ClientProxy,
   ) {}
 
   async createRestaurant(
@@ -58,14 +65,13 @@ export class RestaurantService {
       };
     }
 
-    const fetchRestaurantsOfMerchantResponse: IRestaurantServiceFetchRestaurantsOfMerchantResponse =
-      await this.restaurantServiceClient
-        .send('fetchRestaurantsOfMerchant', {
-          merchantId,
-          page: parseInt(fetchRestaurantsOfMerchantDto.page) || 0,
-          size: parseInt(fetchRestaurantsOfMerchantDto.size) || 10,
-        })
-        .toPromise();
+    const fetchRestaurantsOfMerchantResponse: IRestaurantServiceFetchRestaurantsOfMerchantResponse = await this.restaurantServiceClient
+      .send('fetchRestaurantsOfMerchant', {
+        merchantId,
+        page: parseInt(fetchRestaurantsOfMerchantDto.page) || 0,
+        size: parseInt(fetchRestaurantsOfMerchantDto.size) || 10,
+      })
+      .toPromise();
 
     const { status, message, data } = fetchRestaurantsOfMerchantResponse;
     if (status !== HttpStatus.OK) {
@@ -82,17 +88,67 @@ export class RestaurantService {
       },
     };
   }
+
   async fetchRestaurantDetailOfMerchant(
     restaurantId: string,
     merchantId: string,
   ): Promise<FetchRestaurantDetailOfMerchantResponseDto> {
-    const fetchRestaurantDetailResponse: IRestaurantServiceFetchRestaurantDetailOfMerchantResponse =
-      await this.restaurantServiceClient
-        .send('fetchRestaurantDetailOfMerchant', {
-          merchantId,
-          restaurantId,
-        })
-        .toPromise();
+    const fetchRestaurantDetailResponse: IRestaurantServiceFetchRestaurantDetailOfMerchantResponse = await this.restaurantServiceClient
+      .send('fetchRestaurantDetailOfMerchant', {
+        merchantId,
+        restaurantId,
+      })
+      .toPromise();
+
+    const { status, message, data } = fetchRestaurantDetailResponse;
+    if (status !== HttpStatus.OK) {
+      throw new HttpException({ message }, status);
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message,
+      data,
+    };
+  }
+
+  async getOrderStatisticsOfRestaurant(
+    restaurantId: string,
+    merchantId: string,
+    getOrderStatisticsOfRestaurantDto: GetOrderStatisticsOfRestaurantDto,
+  ): Promise<FetchRestaurantDetailOfMerchantResponseDto> {
+    const fetchRestaurantDetailResponse: IRestaurantServiceFetchRestaurantDetailOfMerchantResponse = await this.orderServiceClient
+      .send('getOrderStatisticsOfRestaurant', {
+        merchantId,
+        restaurantId,
+        ...getOrderStatisticsOfRestaurantDto,
+      })
+      .toPromise();
+
+    const { status, message, data } = fetchRestaurantDetailResponse;
+    if (status !== HttpStatus.OK) {
+      throw new HttpException({ message }, status);
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message,
+      data,
+    };
+  }
+
+  async getRevenueInsightOfRestaurant(
+    restaurantId: string,
+    merchantId: string,
+    getRevenueInsightOfRestaurantDto: GetRevenueInsightOfRestaurantDto,
+  ): Promise<FetchRestaurantDetailOfMerchantResponseDto> {
+    const fetchRestaurantDetailResponse: IRestaurantServiceFetchRestaurantDetailOfMerchantResponse = await this.orderServiceClient
+      .send('getRevenueInsightOfRestaurant', {
+        merchantId,
+        restaurantId,
+        ...getRevenueInsightOfRestaurantDto,
+      })
+      .toPromise();
 
     const { status, message, data } = fetchRestaurantDetailResponse;
     if (status !== HttpStatus.OK) {

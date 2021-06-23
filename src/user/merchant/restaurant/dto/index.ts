@@ -8,3 +8,5 @@ export { OpenHoursDataExample } from './create-restaurant/open-hours-data-exampl
 export { OpenHourDto } from './create-restaurant/open-hours-data.dto';
 export { FetchRestaurantDetailOfMerchantResponseDto } from './fetch-restaurant-detail/fetch-restaurant-detail-response.dto';
 export { FetchRestaurantDetailOfMerchantUnauthorizedResponseDto } from './fetch-restaurant-detail/fetch-restaurant-detail-unauthorized-response.dto';
+export { GetOrderStatisticsOfRestaurantDto } from './get-order-statistics/get-order-statistics-of-restaurant.dto';
+export { GetRevenueInsightOfRestaurantDto } from './get-revenue-insight/get-revenue-insight-of-restaurant.dto';
