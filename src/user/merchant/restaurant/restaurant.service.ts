@@ -1,11 +1,17 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import * as constants from '../../../constants';
-import { FetchRestaurantDetailOfMerchantResponseDto } from './dto';
+import {
+  FetchRestaurantDetailOfMerchantResponseDto,
+  GetRestaurantStatisticResponseDto,
+} from './dto';
 import { CreateRestaurantDto } from './dto/create-restaurant/create-restaurant.dto';
 import { FetchRestaurantsOfMerchantResponseDto } from './dto/fetch-restaurant/fetch-restaurant-response.dto';
 import { FetchRestaurantDto } from './dto/fetch-restaurant/fetch-restaurant.dto';
-import { IRestaurantServiceFetchRestaurantDetailOfMerchantResponse } from './interfaces';
+import {
+  IRestaurantServiceFetchRestaurantDetailOfMerchantResponse,
+  IRestaurantStatisticResponse,
+} from './interfaces';
 import { IRestaurantServiceFetchRestaurantsOfMerchantResponse } from './interfaces/restaurant-service-fetch-restaurants-of-merchant-response.interface';
 
 @Injectable()
@@ -14,6 +20,8 @@ export class RestaurantService {
     @Inject(constants.USER_SERVICE) private userServiceClient: ClientProxy,
     @Inject(constants.RESTAURANT_SERVICE)
     private restaurantServiceClient: ClientProxy,
+    @Inject(constants.ORDER_SERVICE)
+    private orderServiceClient: ClientProxy,
   ) {}
 
   async createRestaurant(
@@ -58,14 +66,13 @@ export class RestaurantService {
       };
     }
 
-    const fetchRestaurantsOfMerchantResponse: IRestaurantServiceFetchRestaurantsOfMerchantResponse =
-      await this.restaurantServiceClient
-        .send('fetchRestaurantsOfMerchant', {
-          merchantId,
-          page: parseInt(fetchRestaurantsOfMerchantDto.page) || 0,
-          size: parseInt(fetchRestaurantsOfMerchantDto.size) || 10,
-        })
-        .toPromise();
+    const fetchRestaurantsOfMerchantResponse: IRestaurantServiceFetchRestaurantsOfMerchantResponse = await this.restaurantServiceClient
+      .send('fetchRestaurantsOfMerchant', {
+        merchantId,
+        page: parseInt(fetchRestaurantsOfMerchantDto.page) || 0,
+        size: parseInt(fetchRestaurantsOfMerchantDto.size) || 10,
+      })
+      .toPromise();
 
     const { status, message, data } = fetchRestaurantsOfMerchantResponse;
     if (status !== HttpStatus.OK) {
@@ -86,13 +93,12 @@ export class RestaurantService {
     restaurantId: string,
     merchantId: string,
   ): Promise<FetchRestaurantDetailOfMerchantResponseDto> {
-    const fetchRestaurantDetailResponse: IRestaurantServiceFetchRestaurantDetailOfMerchantResponse =
-      await this.restaurantServiceClient
-        .send('fetchRestaurantDetailOfMerchant', {
-          merchantId,
-          restaurantId,
-        })
-        .toPromise();
+    const fetchRestaurantDetailResponse: IRestaurantServiceFetchRestaurantDetailOfMerchantResponse = await this.restaurantServiceClient
+      .send('fetchRestaurantDetailOfMerchant', {
+        merchantId,
+        restaurantId,
+      })
+      .toPromise();
 
     const { status, message, data } = fetchRestaurantDetailResponse;
     if (status !== HttpStatus.OK) {
@@ -103,6 +109,31 @@ export class RestaurantService {
       statusCode: HttpStatus.OK,
       message,
       data,
+    };
+  }
+
+  async getRestaurantStatistic(
+    merchantId: string,
+    restaurantId: string,
+  ): Promise<GetRestaurantStatisticResponseDto> {
+    const getRestaurantStatisticResponse: IRestaurantStatisticResponse = await this.orderServiceClient
+      .send('getRestaurantStatistic', {
+        merchantId,
+        restaurantId,
+      })
+      .toPromise();
+
+    const { status, message, statistic } = getRestaurantStatisticResponse;
+    if (status !== HttpStatus.OK) {
+      throw new HttpException({ message }, status);
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message,
+      data: {
+        statistic,
+      },
     };
   }
 }
