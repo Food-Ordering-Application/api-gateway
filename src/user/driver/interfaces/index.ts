@@ -28,3 +28,6 @@ export { IDriverDailyStatisticResponse } from './driver-daily-statistic-response
 export { IDeliveryServiceDeclineOrderResponse } from './delivery-service-decline-order-response.interface';
 export { IGetLatestDriverLocationResponse } from './get-latest-driver-location-response.interface';
 export { ILocationData } from './location.interface';
+export { IDriverInformationData } from './driver-information-data.interface';
+export { IDriverInformation } from './driver-information.interface';
+export { IGetDriverInformationResponse } from './driver-information-response.interface';

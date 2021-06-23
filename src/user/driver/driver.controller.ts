@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpCode,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -60,6 +61,7 @@ import {
   WithdrawMoneyToPaypalAccountInternalResponse2Dto,
   WithdrawMoneyToPaypalAccountOkResponseDto,
 } from './dto';
+import { GetDriverInformationOkResponseDto } from './dto/get-driver-information/get-driver-information-ok-response.dto';
 import { GetListDriverTransactionHistoryOkResponseDto } from './dto/payin-withdraw/get-list-transaction-history-ok-response.dto';
 
 @ApiTags('driver')
@@ -381,5 +383,27 @@ export class DriverController {
   ): Promise<GetLatestDriverLocationResponseDto> {
     const { driverId } = params;
     return this.driverService.getLatestLocationOfDriver(driverId);
+  }
+
+  //! Lấy sđt, tên, ảnh khuôn mặt, biển số của driver
+  @ApiOkResponse({ type: GetDriverInformationOkResponseDto })
+  @ApiForbiddenResponse({ type: ForbiddenResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(DriverJwtAuthGuard)
+  @Get('/:driverId/driver-info')
+  async getDriverInformation(
+    @Request() req,
+    @Param() params,
+  ): Promise<GetDriverInformationOkResponseDto> {
+    const { driverId } = params;
+    if (driverId.toString() !== req.user.userId) {
+      return {
+        statusCode: HttpStatus.FORBIDDEN,
+        message: 'Forbidden',
+        data: null,
+      };
+    }
+
+    return this.driverService.getDriverInformation(driverId);
   }
 }

@@ -24,6 +24,7 @@ import {
   WithdrawMoneyToPaypalAccountDto,
   WithdrawMoneyToPaypalAccountOkResponseDto,
 } from './dto';
+import { GetDriverInformationOkResponseDto } from './dto/get-driver-information/get-driver-information-ok-response.dto';
 import {
   IAccountWalletResponse,
   ICreateDepositMoneyIntoMainAccountWalletResponse,
@@ -35,6 +36,7 @@ import {
   IDriverStatisticResponse,
   IDriverTransactionsResponse,
   IGetDriverActiveStatusResponse,
+  IGetDriverInformationResponse,
   IGetLatestDriverLocationResponse,
   IIsActiveResponse,
   IMainBalanceResponse,
@@ -617,6 +619,33 @@ export class DriverService {
       statusCode: status,
       message,
       data,
+    };
+  }
+
+  async getDriverInformation(
+    driverId: string,
+  ): Promise<GetDriverInformationOkResponseDto> {
+    const getDriverInformationResponse: IGetDriverInformationResponse = await this.userServiceClient
+      .send('getDriverInformation', {
+        driverId,
+      })
+      .toPromise();
+
+    const { message, status, driver } = getDriverInformationResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+
+    return {
+      statusCode: status,
+      message,
+      data: { driverInfo: driver },
     };
   }
 }
