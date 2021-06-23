@@ -43,6 +43,8 @@ import {
   GetDriverMonthlyStatisticOkResponseDto,
   GetDriverWeeklyStatisticOkResponseDto,
   GetLatestDriverLocationResponseDto,
+  GetListAccountTransactionDriverDto,
+  GetListAccountTransactionDriverOkResponseDto,
   GetListDriverTransactionHistoryDto,
   GetMainAccountWalletBalanceOkResponseDto,
   LoginDriverDto,
@@ -242,6 +244,27 @@ export class DriverController {
       driverId,
       req.user.userId,
       getListDriverTransactionHistoryDto,
+    );
+  }
+
+  //! Lấy danh sách lịch sử giao dịch trừ cộng tiền hệ thống của driver
+  @ApiOkResponse({ type: GetListAccountTransactionDriverOkResponseDto })
+  @ApiForbiddenResponse({ type: ForbiddenResponseDto })
+  @ApiQuery({ type: GetListAccountTransactionDriverDto })
+  @ApiBearerAuth()
+  @UseGuards(DriverJwtAuthGuard)
+  @Get('/:driverId/account-transactions')
+  async getListAccountTransactionDriver(
+    @Request() req,
+    @Param() params,
+    @Query()
+    getListAccountTransactionDriverDto: GetListAccountTransactionDriverDto,
+  ): Promise<GetListAccountTransactionDriverOkResponseDto> {
+    const { driverId } = params;
+    return this.driverService.getListAccountTransactionDriver(
+      driverId,
+      req.user.userId,
+      getListAccountTransactionDriverDto,
     );
   }
 

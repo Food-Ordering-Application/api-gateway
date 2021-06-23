@@ -31,3 +31,6 @@ export { ILocationData } from './location.interface';
 export { IDriverInformationData } from './driver-information-data.interface';
 export { IDriverInformation } from './driver-information.interface';
 export { IGetDriverInformationResponse } from './driver-information-response.interface';
+export { IAccountTransaction } from './account-transaction.interface';
+export { IAccountTransactions } from './account-transactions.interface';
+export { IAccountTransactionsReponse } from './account-transactions-response.interface';

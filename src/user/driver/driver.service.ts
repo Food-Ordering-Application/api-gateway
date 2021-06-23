@@ -13,6 +13,8 @@ import {
   GetDriverMonthlyStatisticOkResponseDto,
   GetDriverWeeklyStatisticOkResponseDto,
   GetLatestDriverLocationResponseDto,
+  GetListAccountTransactionDriverDto,
+  GetListAccountTransactionDriverOkResponseDto,
   GetListDriverTransactionHistoryDto,
   GetListDriverTransactionHistoryOkResponseDto,
   GetMainAccountWalletBalanceOkResponseDto,
@@ -26,6 +28,7 @@ import {
 } from './dto';
 import { GetDriverInformationOkResponseDto } from './dto/get-driver-information/get-driver-information-ok-response.dto';
 import {
+  IAccountTransactionsReponse,
   IAccountWalletResponse,
   ICreateDepositMoneyIntoMainAccountWalletResponse,
   IDeliveryServiceAcceptOrderResponse,
@@ -322,6 +325,44 @@ export class DriverService {
       message,
       data: {
         driverTransactions: driverTransactions,
+      },
+    };
+  }
+
+  //! Lấy danh sách lịch sử giao dịch trừ cộng tiền hệ thống của driver
+  async getListAccountTransactionDriver(
+    driverId: string,
+    callerId: string,
+    getListAccountTransactionDriverDto: GetListAccountTransactionDriverDto,
+  ): Promise<GetListAccountTransactionDriverOkResponseDto> {
+    const getListAccountTransactionDriverResponse: IAccountTransactionsReponse = await this.userServiceClient
+      .send('getListAccountTransactionDriver', {
+        ...getListAccountTransactionDriverDto,
+        driverId,
+        callerId,
+      })
+      .toPromise();
+
+    const {
+      message,
+      status,
+      accountTransactions,
+    } = getListAccountTransactionDriverResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+
+    return {
+      statusCode: status,
+      message,
+      data: {
+        accountTransactions: accountTransactions,
       },
     };
   }
