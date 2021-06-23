@@ -20,6 +20,8 @@ import {
   UpdateCustomerInfoDto,
   SendPhoneNumberOtpVerifyDto,
   VerifyCustomerEmailResponseDto,
+  UpdateDefaultCustomerAddressOkResponseDto,
+  GetDefaultCustomerAddressOkResponseDto,
 } from './dto/index';
 import * as constants from '../../constants';
 import {
@@ -378,6 +380,65 @@ export class CustomerService {
         email: email || null,
         gender: gender || null,
         name: name || null,
+      },
+    };
+  }
+
+  async updateDefaultCustomerAddress(
+    customerId,
+    customerAddressId,
+  ): Promise<UpdateDefaultCustomerAddressOkResponseDto> {
+    const updateDefaultCustomerAddressResponse: ICustomerAddressResponse = await this.userServiceClient
+      .send('updateDefaultCustomerAddress', {
+        customerId,
+        customerAddressId,
+      })
+      .toPromise();
+
+    const { message, status, address } = updateDefaultCustomerAddressResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+    return {
+      statusCode: 200,
+      message: message,
+      data: {
+        customerAddress: address,
+      },
+    };
+  }
+
+  //! Lấy thông tin của địa chỉ mặc định
+  async getDefaultCustomerAddress(
+    customerId,
+  ): Promise<GetDefaultCustomerAddressOkResponseDto> {
+    const getDefaultCustomerAddressResponse: ICustomerAddressResponse = await this.userServiceClient
+      .send('getDefaultCustomerAddressInfo', {
+        customerId,
+      })
+      .toPromise();
+
+    const { message, status, address } = getDefaultCustomerAddressResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+    return {
+      statusCode: 200,
+      message: message,
+      data: {
+        customerAddress: address,
       },
     };
   }

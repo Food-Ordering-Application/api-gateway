@@ -478,7 +478,6 @@ export class OrderService {
         customerAddressId,
       })
       .toPromise();
-
     const { address } = updateDefaultCustomerAddressResponse;
 
     if (updateDefaultCustomerAddressResponse.status !== HttpStatus.OK) {

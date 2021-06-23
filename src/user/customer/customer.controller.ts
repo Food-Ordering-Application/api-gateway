@@ -51,6 +51,8 @@ import {
   UpdateCustomerInfoDto,
   SendPhoneNumberOtpVerifyDto,
   VerifyCustomerEmailResponseDto,
+  UpdateDefaultCustomerAddressOkResponseDto,
+  GetDefaultCustomerAddressOkResponseDto,
 } from './dto/index';
 import { CustomerService } from './customer.service';
 import { LocalAuthGuard } from '../../auth/guards/locals/local-auth.guard';
@@ -348,6 +350,57 @@ export class CustomerController {
       updateCustomerInfoDto,
       customerId,
     );
+  }
+
+  //! Update địa chỉ mặc định của customer
+  @ApiOkResponse({ type: UpdateDefaultCustomerAddressOkResponseDto })
+  @ApiForbiddenResponse({
+    type: ForbiddenResponseDto,
+  })
+  @ApiBearerAuth()
+  @UseGuards(CustomerJwtAuthGuard)
+  @Patch('/:customerId/address/:customerAddressId/update-default-address')
+  async updateDefaultCustomerAddress(
+    @Request() req,
+    @Param() params,
+  ): Promise<UpdateDefaultCustomerAddressOkResponseDto> {
+    const { customerId, customerAddressId } = params;
+    // Nếu không phải chính user đó
+    if (req.user.userId !== customerId) {
+      return {
+        statusCode: 403,
+        message: 'Forbidden',
+        data: null,
+      };
+    }
+    return this.customerService.updateDefaultCustomerAddress(
+      customerId,
+      customerAddressId,
+    );
+  }
+
+  //! Lấy thông tin của địa chỉ mặc định
+  @ApiOkResponse({ type: GetDefaultCustomerAddressOkResponseDto })
+  @ApiForbiddenResponse({
+    type: ForbiddenResponseDto,
+  })
+  @ApiBearerAuth()
+  @UseGuards(CustomerJwtAuthGuard)
+  @Get('/:customerId/address/default')
+  async getDefaultCustomerAddress(
+    @Request() req,
+    @Param() params,
+  ): Promise<GetDefaultCustomerAddressOkResponseDto> {
+    const { customerId } = params;
+    // Nếu không phải chính user đó
+    if (req.user.userId !== customerId) {
+      return {
+        statusCode: 403,
+        message: 'Forbidden',
+        data: null,
+      };
+    }
+    return this.customerService.getDefaultCustomerAddress(customerId);
   }
 
   //! Lấy thông tin customer dựa trên resetPasswordToken
