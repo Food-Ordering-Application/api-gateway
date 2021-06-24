@@ -11,3 +11,4 @@ export { UpdateFavoriteRestaurantResponseDto } from './update-favorite-restauran
 export { UpdateFavoriteRestaurantParamsDto } from './update-favorite-restaurant/update-favorite-restaurant-params.dto';
 export { GetFavoriteRestaurantsResponseDto } from './get-favorite-restaurants/get-favorite-restaurants-response.dto';
 export { GetFavoriteRestaurantsQueryParamsDto } from './get-favorite-restaurants/get-favorite-restaurants-query-params.dto';
+export { GetTopOrderMenuItemsResponseDto } from './get-top-order-menu-items/get-top-order-menu-items-response.dto';

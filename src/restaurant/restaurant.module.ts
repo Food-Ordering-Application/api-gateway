@@ -23,6 +23,21 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
           },
         }),
       },
+      {
+        name: constants.ORDER_SERVICE,
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.RMQ,
+          options: {
+            urls: [configService.get('AMQP_URL') as string],
+            queue: configService.get('ORDER_AMQP_QUEUE'),
+            queueOptions: {
+              durable: false,
+            },
+          },
+        }),
+      },
     ]),
   ],
   controllers: [RestaurantController],

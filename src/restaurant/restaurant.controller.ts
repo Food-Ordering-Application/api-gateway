@@ -32,6 +32,7 @@ import {
   GetRestaurantInformationResponseDto,
   GetSomeRestaurantDto,
   GetSomeRestaurantResponseDto,
+  GetTopOrderMenuItemsResponseDto,
   GetToppingInfoOfAMenuDto,
   GetToppingInfoOfAMenuResponseDto,
   UpdateFavoriteRestaurantResponseDto,
@@ -95,6 +96,15 @@ export class RestaurantController {
     return this.restaurantService.getMenuItemToppingInfo(
       getMenuItemToppingDto.menuItemId,
     );
+  }
+
+  @ApiOkResponse({ type: GetTopOrderMenuItemsResponseDto })
+  @Get('/:restaurantId/top-order-items')
+  getTopOrderMenuItems(
+    @Param() params,
+  ): Promise<GetTopOrderMenuItemsResponseDto> {
+    const { restaurantId } = params;
+    return this.restaurantService.getTopOrderMenuItems(restaurantId);
   }
 
   // Lấy thông tin về Menu, MenuGroup, MenuItems của nhà hàng
