@@ -56,12 +56,13 @@ export class DriverService {
   ) {}
 
   async acceptOrder(driverId: string, orderId: string) {
-    const driverAcceptOrderResponse: IDeliveryServiceAcceptOrderResponse = await this.deliveryServiceClient
-      .send('driverAcceptOrder', {
-        orderId,
-        driverId,
-      })
-      .toPromise();
+    const driverAcceptOrderResponse: IDeliveryServiceAcceptOrderResponse =
+      await this.deliveryServiceClient
+        .send('driverAcceptOrder', {
+          orderId,
+          driverId,
+        })
+        .toPromise();
 
     const { status, message } = driverAcceptOrderResponse;
 
@@ -76,12 +77,13 @@ export class DriverService {
   }
 
   async declineOrder(driverId: string, orderId: string) {
-    const driverDeclineOrderResponse: IDeliveryServiceDeclineOrderResponse = await this.deliveryServiceClient
-      .send('driverDeclineOrder', {
-        orderId,
-        driverId,
-      })
-      .toPromise();
+    const driverDeclineOrderResponse: IDeliveryServiceDeclineOrderResponse =
+      await this.deliveryServiceClient
+        .send('driverDeclineOrder', {
+          orderId,
+          driverId,
+        })
+        .toPromise();
 
     const { status, message } = driverDeclineOrderResponse;
 
@@ -96,12 +98,13 @@ export class DriverService {
   }
 
   async pickUpOrder(driverId: string, orderId: string) {
-    const driverPickUpOrderResponse: IOrderServicePickUpOrderResponse = await this.orderServiceClient
-      .send('driverPickedUpOrder', {
-        orderId,
-        driverId,
-      })
-      .toPromise();
+    const driverPickUpOrderResponse: IOrderServicePickUpOrderResponse =
+      await this.orderServiceClient
+        .send('driverPickedUpOrder', {
+          orderId,
+          driverId,
+        })
+        .toPromise();
 
     const { status, message } = driverPickUpOrderResponse;
 
@@ -116,12 +119,13 @@ export class DriverService {
   }
 
   async completeOrder(driverId: string, orderId: string) {
-    const driverCompleteOrderResponse: IOrderServiceCompleteOrderResponse = await this.orderServiceClient
-      .send('driverCompleteOrder', {
-        orderId,
-        driverId,
-      })
-      .toPromise();
+    const driverCompleteOrderResponse: IOrderServiceCompleteOrderResponse =
+      await this.orderServiceClient
+        .send('driverCompleteOrder', {
+          orderId,
+          driverId,
+        })
+        .toPromise();
 
     const { status, message } = driverCompleteOrderResponse;
 
@@ -136,9 +140,10 @@ export class DriverService {
   }
 
   async findDriverByPhonenumber(phoneNumber: string): Promise<IDriver> {
-    const findDriverByPhonenumberResponse: IDriverResponse = await this.userServiceClient
-      .send('findDriverByPhonenumber', phoneNumber)
-      .toPromise();
+    const findDriverByPhonenumberResponse: IDriverResponse =
+      await this.userServiceClient
+        .send('findDriverByPhonenumber', phoneNumber)
+        .toPromise();
     const { message, status, driver } = findDriverByPhonenumberResponse;
     if (status !== HttpStatus.OK) {
       throw new HttpException(
@@ -183,19 +188,17 @@ export class DriverService {
     callerId: string,
     depositMoneyIntoMainAccountWalletDto: DepositMoneyIntoMainAccountWalletDto,
   ): Promise<DepositMoneyIntoMainAccountWalletOkResponseDto> {
-    const depositMoneyIntoMainAccountWalletResponse: ICreateDepositMoneyIntoMainAccountWalletResponse = await this.userServiceClient
-      .send('depositMoneyIntoMainAccountWallet', {
-        ...depositMoneyIntoMainAccountWalletDto,
-        callerId,
-        driverId,
-      })
-      .toPromise();
+    const depositMoneyIntoMainAccountWalletResponse: ICreateDepositMoneyIntoMainAccountWalletResponse =
+      await this.userServiceClient
+        .send('depositMoneyIntoMainAccountWallet', {
+          ...depositMoneyIntoMainAccountWalletDto,
+          callerId,
+          driverId,
+        })
+        .toPromise();
 
-    const {
-      message,
-      status,
-      paypalOrderId,
-    } = depositMoneyIntoMainAccountWalletResponse;
+    const { message, status, paypalOrderId } =
+      depositMoneyIntoMainAccountWalletResponse;
 
     if (status !== HttpStatus.OK) {
       throw new HttpException(
@@ -220,19 +223,17 @@ export class DriverService {
     driverId: string,
     callerId: string,
   ): Promise<ApproveDepositMoneyIntoMainAccountWalletOkResponseDto> {
-    const approveDepositMoneyIntoMainAccountWalletResponse: IMainBalanceResponse = await this.userServiceClient
-      .send('approveDepositMoneyIntoMainAccountWallet', {
-        ...approveDepositMoneyIntoMainAccountWalletDto,
-        driverId,
-        callerId,
-      })
-      .toPromise();
+    const approveDepositMoneyIntoMainAccountWalletResponse: IMainBalanceResponse =
+      await this.userServiceClient
+        .send('approveDepositMoneyIntoMainAccountWallet', {
+          ...approveDepositMoneyIntoMainAccountWalletDto,
+          driverId,
+          callerId,
+        })
+        .toPromise();
 
-    const {
-      message,
-      status,
-      mainBalance,
-    } = approveDepositMoneyIntoMainAccountWalletResponse;
+    const { message, status, mainBalance } =
+      approveDepositMoneyIntoMainAccountWalletResponse;
 
     if (status !== HttpStatus.OK) {
       throw new HttpException(
@@ -258,13 +259,14 @@ export class DriverService {
     driverId: string,
     callerId: string,
   ): Promise<WithdrawMoneyToPaypalAccountOkResponseDto> {
-    const withdrawMoneyToPaypalAccountResponse: ISimpleResponse = await this.userServiceClient
-      .send('withdrawMoneyToPaypalAccount', {
-        ...withdrawMoneyToPaypalAccountDto,
-        driverId,
-        callerId,
-      })
-      .toPromise();
+    const withdrawMoneyToPaypalAccountResponse: ISimpleResponse =
+      await this.userServiceClient
+        .send('withdrawMoneyToPaypalAccount', {
+          ...withdrawMoneyToPaypalAccountDto,
+          driverId,
+          callerId,
+        })
+        .toPromise();
 
     const { message, status } = withdrawMoneyToPaypalAccountResponse;
 
@@ -297,19 +299,17 @@ export class DriverService {
     callerId: string,
     getListDriverTransactionHistoryDto: GetListDriverTransactionHistoryDto,
   ): Promise<GetListDriverTransactionHistoryOkResponseDto> {
-    const getListDriverTransactionHistoryResponse: IDriverTransactionsResponse = await this.userServiceClient
-      .send('getListDriverTransactionHistory', {
-        ...getListDriverTransactionHistoryDto,
-        driverId,
-        callerId,
-      })
-      .toPromise();
+    const getListDriverTransactionHistoryResponse: IDriverTransactionsResponse =
+      await this.userServiceClient
+        .send('getListDriverTransactionHistory', {
+          ...getListDriverTransactionHistoryDto,
+          driverId,
+          callerId,
+        })
+        .toPromise();
 
-    const {
-      message,
-      status,
-      driverTransactions,
-    } = getListDriverTransactionHistoryResponse;
+    const { message, status, driverTransactions } =
+      getListDriverTransactionHistoryResponse;
 
     if (status !== HttpStatus.OK) {
       throw new HttpException(
@@ -335,19 +335,17 @@ export class DriverService {
     callerId: string,
     getListAccountTransactionDriverDto: GetListAccountTransactionDriverDto,
   ): Promise<GetListAccountTransactionDriverOkResponseDto> {
-    const getListAccountTransactionDriverResponse: IAccountTransactionsReponse = await this.userServiceClient
-      .send('getListAccountTransactionDriver', {
-        ...getListAccountTransactionDriverDto,
-        driverId,
-        callerId,
-      })
-      .toPromise();
+    const getListAccountTransactionDriverResponse: IAccountTransactionsReponse =
+      await this.userServiceClient
+        .send('getListAccountTransactionDriver', {
+          ...getListAccountTransactionDriverDto,
+          driverId,
+          callerId,
+        })
+        .toPromise();
 
-    const {
-      message,
-      status,
-      accountTransactions,
-    } = getListAccountTransactionDriverResponse;
+    const { message, status, accountTransactions } =
+      getListAccountTransactionDriverResponse;
 
     if (status !== HttpStatus.OK) {
       throw new HttpException(
@@ -372,18 +370,16 @@ export class DriverService {
     driverId: string,
     callerId: string,
   ): Promise<GetMainAccountWalletBalanceOkResponseDto> {
-    const getMainAccountWalletBalanceResponse: IAccountWalletResponse = await this.userServiceClient
-      .send('getMainAccountWalletBalance', {
-        driverId,
-        callerId,
-      })
-      .toPromise();
+    const getMainAccountWalletBalanceResponse: IAccountWalletResponse =
+      await this.userServiceClient
+        .send('getMainAccountWalletBalance', {
+          driverId,
+          callerId,
+        })
+        .toPromise();
 
-    const {
-      message,
-      status,
-      accountWallet,
-    } = getMainAccountWalletBalanceResponse;
+    const { message, status, accountWallet } =
+      getMainAccountWalletBalanceResponse;
 
     if (status !== HttpStatus.OK) {
       throw new HttpException(
@@ -407,12 +403,13 @@ export class DriverService {
     driverId: string,
     updateIsActiveOfDriverDto: UpdateIsActiveOfDriverDto,
   ): Promise<UpdateIsActiveOfDriverOkResponseDto> {
-    const updateIsActiveOfDriverResponse: IIsActiveResponse = await this.deliveryServiceClient
-      .send('updateDriverActiveStatus', {
-        driverId,
-        ...updateIsActiveOfDriverDto,
-      })
-      .toPromise();
+    const updateIsActiveOfDriverResponse: IIsActiveResponse =
+      await this.deliveryServiceClient
+        .send('updateDriverActiveStatus', {
+          driverId,
+          ...updateIsActiveOfDriverDto,
+        })
+        .toPromise();
 
     const { message, status } = updateIsActiveOfDriverResponse;
 
@@ -434,11 +431,12 @@ export class DriverService {
   async getDriverActiveStatus(
     driverId: string,
   ): Promise<GetDriverActiveStatusResponseDto> {
-    const getDriverActiveStatusResponse: IGetDriverActiveStatusResponse = await this.deliveryServiceClient
-      .send('getDriverActiveStatus', {
-        driverId,
-      })
-      .toPromise();
+    const getDriverActiveStatusResponse: IGetDriverActiveStatusResponse =
+      await this.deliveryServiceClient
+        .send('getDriverActiveStatus', {
+          driverId,
+        })
+        .toPromise();
 
     const { message, status, data } = getDriverActiveStatusResponse;
 
@@ -481,12 +479,13 @@ export class DriverService {
     callerId: string,
   ): Promise<GetDriverDailyStatisticOkResponse> {
     //TODO:
-    const getDriverDailyStatisticResponse: IDriverDailyStatisticResponse = await this.userServiceClient
-      .send('getDriverDailyStatistic', {
-        driverId,
-        callerId,
-      })
-      .toPromise();
+    const getDriverDailyStatisticResponse: IDriverDailyStatisticResponse =
+      await this.userServiceClient
+        .send('getDriverDailyStatistic', {
+          driverId,
+          callerId,
+        })
+        .toPromise();
 
     const { message, status, statistic } = getDriverDailyStatisticResponse;
 
@@ -514,12 +513,13 @@ export class DriverService {
     callerId: string,
   ): Promise<GetDriverWeeklyStatisticOkResponseDto> {
     //TODO:
-    const getDriverWeeklyStatisticResponse: IDriverStatisticResponse = await this.userServiceClient
-      .send('getDriverWeeklyStatistic', {
-        driverId,
-        callerId,
-      })
-      .toPromise();
+    const getDriverWeeklyStatisticResponse: IDriverStatisticResponse =
+      await this.userServiceClient
+        .send('getDriverWeeklyStatistic', {
+          driverId,
+          callerId,
+        })
+        .toPromise();
 
     const { message, status, statistic } = getDriverWeeklyStatisticResponse;
 
@@ -547,12 +547,13 @@ export class DriverService {
     callerId: string,
   ): Promise<GetDriverMonthlyStatisticOkResponseDto> {
     //TODO:
-    const getDriverMonthlyStatisticResponse: IDriverStatisticResponse = await this.userServiceClient
-      .send('getDriverMonthlyStatistic', {
-        driverId,
-        callerId,
-      })
-      .toPromise();
+    const getDriverMonthlyStatisticResponse: IDriverStatisticResponse =
+      await this.userServiceClient
+        .send('getDriverMonthlyStatistic', {
+          driverId,
+          callerId,
+        })
+        .toPromise();
 
     const { message, status, statistic } = getDriverMonthlyStatisticResponse;
 
@@ -577,18 +578,16 @@ export class DriverService {
   //! Test locking route 1
   async testUpdateAccountWallet(driverId: string, callerId: string) {
     //TODO:
-    const getMainAccountWalletBalanceResponse: IAccountWalletResponse = await this.userServiceClient
-      .send('testUpdateAccountWallet', {
-        driverId,
-        callerId,
-      })
-      .toPromise();
+    const getMainAccountWalletBalanceResponse: IAccountWalletResponse =
+      await this.userServiceClient
+        .send('testUpdateAccountWallet', {
+          driverId,
+          callerId,
+        })
+        .toPromise();
 
-    const {
-      message,
-      status,
-      accountWallet,
-    } = getMainAccountWalletBalanceResponse;
+    const { message, status, accountWallet } =
+      getMainAccountWalletBalanceResponse;
 
     if (status !== HttpStatus.OK) {
       throw new HttpException(
@@ -610,12 +609,13 @@ export class DriverService {
   //! Test locking route 2
   async testGetAccountWallet(driverId: string, callerId: string) {
     //TODO:
-    const testGetAccountWalletResponse: IAccountWalletResponse = await this.userServiceClient
-      .send('testGetAccountWallet', {
-        driverId,
-        callerId,
-      })
-      .toPromise();
+    const testGetAccountWalletResponse: IAccountWalletResponse =
+      await this.userServiceClient
+        .send('testGetAccountWallet', {
+          driverId,
+          callerId,
+        })
+        .toPromise();
 
     const { message, status, accountWallet } = testGetAccountWalletResponse;
 
@@ -640,11 +640,12 @@ export class DriverService {
   async getLatestLocationOfDriver(
     driverId: string,
   ): Promise<GetLatestDriverLocationResponseDto> {
-    const getLatestDriverLocationResponse: IGetLatestDriverLocationResponse = await this.deliveryServiceClient
-      .send('getLatestDriverLocation', {
-        driverId,
-      })
-      .toPromise();
+    const getLatestDriverLocationResponse: IGetLatestDriverLocationResponse =
+      await this.deliveryServiceClient
+        .send('getLatestDriverLocation', {
+          driverId,
+        })
+        .toPromise();
     const { message, status, data } = getLatestDriverLocationResponse;
 
     if (status !== HttpStatus.OK) {
@@ -666,11 +667,12 @@ export class DriverService {
   async getDriverInformation(
     driverId: string,
   ): Promise<GetDriverInformationOkResponseDto> {
-    const getDriverInformationResponse: IGetDriverInformationResponse = await this.userServiceClient
-      .send('getDriverInformation', {
-        driverId,
-      })
-      .toPromise();
+    const getDriverInformationResponse: IGetDriverInformationResponse =
+      await this.userServiceClient
+        .send('getDriverInformation', {
+          driverId,
+        })
+        .toPromise();
 
     const { message, status, driver } = getDriverInformationResponse;
 

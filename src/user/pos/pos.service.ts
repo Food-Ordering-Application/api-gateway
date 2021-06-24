@@ -447,7 +447,7 @@ export class PosService {
   ): Promise<GetIsAutoConfirmOrderOkResponseDto> {
     //TODO:
     const getIsAutoConfirmOrderResponse: IIsAutoConfirmResponse = await this.userServiceClient
-      .send('getIsAutoConfirmOrder', {
+      .send('getIsAutoConfirm', {
         restaurantId: tokenRestaurantId,
       })
       .toPromise();
