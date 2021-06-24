@@ -40,6 +40,8 @@ import {
   UpdateRestaurantDto,
   UpdateRestaurantNotFoundResponseDto,
   UpdateRestaurantResponseDto,
+  GetMenuInsightOfRestaurantResponseDto,
+  GetMenuInsightOfRestaurantDto,
 } from './dto';
 import { CreateRestaurantDto } from './dto/create-restaurant/create-restaurant.dto';
 import { FetchRestaurantsOfMerchantResponseDto } from './dto/fetch-restaurant/fetch-restaurant-response.dto';
@@ -212,6 +214,34 @@ export class RestaurantController {
       restaurant,
       merchantId,
       getRevenueInsightOfRestaurantDto,
+    );
+  }
+
+  @ApiOkResponse({ type: GetMenuInsightOfRestaurantResponseDto })
+  @ApiBody({ type: GetMenuInsightOfRestaurantDto })
+  @ApiBearerAuth()
+  @UseGuards(MerchantJwtAuthGuard)
+  @Post(':restaurantId/menu-insight')
+  @HttpCode(200)
+  async getMenuInsightOfRestaurant(
+    @Request() req: MerchantJwtRequest,
+    @Param('merchantId') merchant,
+    @Param('restaurantId') restaurant,
+    @Body() getMenuInsightOfRestaurantDto: GetMenuInsightOfRestaurantDto,
+  ) {
+    const { user } = req;
+    const { merchantId } = user;
+    if (merchantId !== merchant) {
+      return {
+        statusCode: 403,
+        message: 'Unauthorized',
+        data: null,
+      };
+    }
+    return await this.restaurantService.getMenuInsightOfRestaurant(
+      restaurant,
+      merchantId,
+      getMenuInsightOfRestaurantDto,
     );
   }
 

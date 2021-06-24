@@ -8,6 +8,7 @@ import {
   GetRevenueInsightOfRestaurantDto,
   GetRestaurantStatisticResponseDto,
   UpdateRestaurantDto,
+  GetMenuInsightOfRestaurantDto,
 } from './dto';
 import { CreateRestaurantDto } from './dto/create-restaurant/create-restaurant.dto';
 import { FetchRestaurantsOfMerchantResponseDto } from './dto/fetch-restaurant/fetch-restaurant-response.dto';
@@ -153,6 +154,31 @@ export class RestaurantService {
         merchantId,
         restaurantId,
         ...getRevenueInsightOfRestaurantDto,
+      })
+      .toPromise();
+
+    const { status, message, data } = fetchRestaurantDetailResponse;
+    if (status !== HttpStatus.OK) {
+      throw new HttpException({ message }, status);
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message,
+      data,
+    };
+  }
+
+  async getMenuInsightOfRestaurant(
+    restaurantId: string,
+    merchantId: string,
+    getMenuInsightOfRestaurantDto: GetMenuInsightOfRestaurantDto,
+  ): Promise<FetchRestaurantDetailOfMerchantResponseDto> {
+    const fetchRestaurantDetailResponse: IRestaurantServiceFetchRestaurantDetailOfMerchantResponse = await this.orderServiceClient
+      .send('getMenuInsightOfRestaurant', {
+        merchantId,
+        restaurantId,
+        ...getMenuInsightOfRestaurantDto,
       })
       .toPromise();
 

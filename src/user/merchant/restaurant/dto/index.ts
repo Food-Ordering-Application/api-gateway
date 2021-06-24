@@ -16,3 +16,5 @@ export { GetRestaurantStatisticResponseDto } from './get-statistic/get-statistic
 export { UpdateRestaurantNotFoundResponseDto } from './update-restaurant/update-restaurant-not-found-response.dto';
 export { UpdateRestaurantResponseDto } from './update-restaurant/update-restaurant-response.dto';
 export { UpdateRestaurantDto } from './update-restaurant/update-restaurant.dto';
+export { GetMenuInsightOfRestaurantResponseDto } from './get-menu-insight/get-menu-insight-of-restaurant-response.dto';
+export { GetMenuInsightOfRestaurantDto } from './get-menu-insight/get-menu-insight-of-restaurant.dto';
