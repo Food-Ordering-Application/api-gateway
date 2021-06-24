@@ -460,12 +460,10 @@ export class DriverService {
     driverId: string,
     updateDriverLocationDto: UpdateLocationDto,
   ): Promise<GetDriverActiveStatusResponseDto> {
-    await this.deliveryServiceClient
-      .emit('updateDriverLocation', {
-        driverId,
-        ...updateDriverLocationDto,
-      })
-      .toPromise();
+    this.deliveryServiceClient.emit('updateDriverLocation', {
+      driverId,
+      ...updateDriverLocationDto,
+    });
 
     return {
       statusCode: 200,
