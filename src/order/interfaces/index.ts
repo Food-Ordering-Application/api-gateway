@@ -17,3 +17,4 @@ export { IConfirmOrderCheckoutResponse } from './confirm-order-checkout-response
 export { CreateOrderPayload } from './create-order-payload.interface';
 export { IGetOrderActorInfoResponse } from './get-order-actor-information-response.interface';
 export { IActorInformationForOrderData } from './actor-information-for-order-data.interface';
+export { IRatingResponse } from './rating-response.interface';

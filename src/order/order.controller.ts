@@ -62,6 +62,8 @@ import {
   GetOrderHistoryOfCustomerPayload,
   GetOrderHistoryOfCustomerDto,
   EventPaypalOrderOccurDto,
+  RateRestaurantDto,
+  RateRestaurantResponseDto,
 } from './dto';
 import { ForbiddenResponseDto } from 'src/user/customer/dto';
 import { PoliciesGuard } from 'src/casl/guards/policy.guard';
@@ -358,6 +360,26 @@ export class OrderController {
       approvePaypalOrderDto,
       orderId,
       req.user.userId,
+    );
+  }
+
+  //! Approve Paypal Order
+  @ApiOkResponse({ type: RateRestaurantResponseDto })
+  @ApiBody({ type: RateRestaurantDto })
+  @ApiBearerAuth()
+  @UseGuards(CustomerJwtAuthGuard)
+  @Post('/:orderId/rate-restaurant')
+  async rateRestaurant(
+    @Request() req,
+    @Param() params,
+    @Body()
+    rateRestaurantDto: RateRestaurantDto,
+  ) {
+    const { orderId } = params;
+    return this.orderService.rateRestaurant(
+      req.user.userId,
+      orderId,
+      rateRestaurantDto,
     );
   }
 

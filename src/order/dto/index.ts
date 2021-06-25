@@ -37,3 +37,5 @@ export { GetOrderHistoryOfCustomerDto } from './get-order-history-of-customer/ge
 export { PaypalResource } from './paypal-order-resource.dto';
 export { EventPaypalOrderOccurDto } from './event-paypal-order-occur.dto';
 export { GetLastDraftOrderOfCustomerDto } from './get-last-draft-order-of-customer/get-last-draft-order-of-customer.dto';
+export { RateRestaurantDto } from './rate-restaurant/rate-restaurant.dto';
+export { RateRestaurantResponseDto } from './rate-restaurant/rate-restaurant-response.dto';

@@ -314,8 +314,8 @@ export class CustomerController {
     @Body()
     updateCustomerPasswordDto: UpdateCustomerPasswordDto,
   ): Promise<UpdateCustomerPasswordResponseDto> {
-    console.log('Hello there');
-    console.log(updateCustomerPasswordDto);
+    // console.log('Hello there');
+    // console.log(updateCustomerPasswordDto);
     return this.customerService.updateCustomerPassword(
       updateCustomerPasswordDto,
     );
