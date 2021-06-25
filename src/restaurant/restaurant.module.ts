@@ -1,45 +1,9 @@
 import { Module } from '@nestjs/common';
-import { RestaurantService } from './restaurant.service';
 import { RestaurantController } from './restaurant.controller';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import * as constants from '../constants';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { RestaurantService } from './restaurant.service';
 
 @Module({
-  imports: [
-    ClientsModule.registerAsync([
-      {
-        name: constants.RESTAURANT_SERVICE,
-        imports: [ConfigModule],
-        inject: [ConfigService],
-        useFactory: (configService: ConfigService) => ({
-          transport: Transport.RMQ,
-          options: {
-            urls: [configService.get('AMQP_URL') as string],
-            queue: configService.get('RESTAURANT_AMQP_QUEUE'),
-            queueOptions: {
-              durable: false,
-            },
-          },
-        }),
-      },
-      {
-        name: constants.ORDER_SERVICE,
-        imports: [ConfigModule],
-        inject: [ConfigService],
-        useFactory: (configService: ConfigService) => ({
-          transport: Transport.RMQ,
-          options: {
-            urls: [configService.get('AMQP_URL') as string],
-            queue: configService.get('ORDER_AMQP_QUEUE'),
-            queueOptions: {
-              durable: false,
-            },
-          },
-        }),
-      },
-    ]),
-  ],
+  imports: [],
   controllers: [RestaurantController],
   providers: [RestaurantService],
 })

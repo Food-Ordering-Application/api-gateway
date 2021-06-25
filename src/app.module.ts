@@ -10,9 +10,11 @@ import { RestaurantModule } from './restaurant/restaurant.module';
 import { OrderModule } from './order/order.module';
 import * as Joi from 'joi';
 import { GeoModule } from './geo/geo.module';
+import { MicroserviceModule } from './microservice/microservice.module';
 
 @Module({
   imports: [
+    MicroserviceModule,
     MetaModule,
     GeoModule,
     RestaurantModule,
