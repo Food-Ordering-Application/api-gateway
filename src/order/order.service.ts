@@ -278,6 +278,7 @@ export class OrderService {
     getOrderAssociatedWithCusAndResDto: GetOrderAssociatedWithCusAndResDto,
   ): Promise<GetOrderAssociatedWithCusAndResResponseDto> {
     try {
+      console.log({ a: this.orderServiceClient });
       const getOrderAssociatedWithCusAndResResponse: ICreateOrderResponse = await this.orderServiceClient
         .send(
           'getOrderAssociatedWithCusAndRes',
