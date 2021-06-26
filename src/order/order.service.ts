@@ -266,11 +266,12 @@ export class OrderService {
         },
       };
     } catch (e) {
-      return {
-        statusCode: 500,
-        message: e.message,
-        data: null,
-      };
+      throw new HttpException(
+        {
+          message: e.message,
+        },
+        500,
+      );
     }
   }
 
@@ -321,11 +322,12 @@ export class OrderService {
         },
       };
     } catch (e) {
-      return {
-        statusCode: 500,
-        message: e.message,
-        data: null,
-      };
+      throw new HttpException(
+        {
+          message: e.message,
+        },
+        500,
+      );
     }
   }
 
@@ -410,11 +412,12 @@ export class OrderService {
         },
       };
     } catch (e) {
-      return {
-        statusCode: 500,
-        message: e.message,
-        data: null,
-      };
+      throw new HttpException(
+        {
+          message: e.message,
+        },
+        500,
+      );
     }
   }
 
@@ -459,11 +462,12 @@ export class OrderService {
         },
       };
     } catch (e) {
-      return {
-        statusCode: 500,
-        message: e.message,
-        data: null,
-      };
+      throw new HttpException(
+        {
+          message: e.message,
+        },
+        500,
+      );
     }
   }
 
@@ -508,11 +512,12 @@ export class OrderService {
         },
       };
     } catch (e) {
-      return {
-        statusCode: 500,
-        message: e.message,
-        data: null,
-      };
+      throw new HttpException(
+        {
+          message: e.message,
+        },
+        500,
+      );
     }
   }
 
@@ -556,11 +561,12 @@ export class OrderService {
         },
       };
     } catch (e) {
-      return {
-        statusCode: 500,
-        message: e.message,
-        data: null,
-      };
+      throw new HttpException(
+        {
+          message: e.message,
+        },
+        500,
+      );
     }
   }
 
@@ -603,11 +609,12 @@ export class OrderService {
         },
       };
     } catch (e) {
-      return {
-        statusCode: 500,
-        message: e.message,
-        data: null,
-      };
+      throw new HttpException(
+        {
+          message: e.message,
+        },
+        500,
+      );
     }
   }
 
@@ -648,11 +655,12 @@ export class OrderService {
         },
       };
     } catch (e) {
-      return {
-        statusCode: 500,
-        message: e.message,
-        data: null,
-      };
+      throw new HttpException(
+        {
+          message: e.message,
+        },
+        500,
+      );
     }
   }
 
@@ -719,11 +727,12 @@ export class OrderService {
         },
       };
     } catch (e) {
-      return {
-        statusCode: 500,
-        message: e.message,
-        data: null,
-      };
+      throw new HttpException(
+        {
+          message: e.message,
+        },
+        500,
+      );
     }
   }
 
@@ -805,11 +814,12 @@ export class OrderService {
         },
       };
     } catch (e) {
-      return {
-        statusCode: 500,
-        message: e.message,
-        data: null,
-      };
+      throw new HttpException(
+        {
+          message: e.message,
+        },
+        500,
+      );
     }
   }
 
@@ -860,11 +870,12 @@ export class OrderService {
         },
       };
     } catch (e) {
-      return {
-        statusCode: 500,
-        message: e.message,
-        data: null,
-      };
+      throw new HttpException(
+        {
+          message: e.message,
+        },
+        500,
+      );
     }
   }
 
@@ -915,11 +926,12 @@ export class OrderService {
         },
       };
     } catch (e) {
-      return {
-        statusCode: 500,
-        message: e.message,
-        data: null,
-      };
+      throw new HttpException(
+        {
+          message: e.message,
+        },
+        500,
+      );
     }
   }
 
@@ -969,11 +981,12 @@ export class OrderService {
         },
       };
     } catch (e) {
-      return {
-        statusCode: 500,
-        message: e.message,
-        data: null,
-      };
+      throw new HttpException(
+        {
+          message: e.message,
+        },
+        500,
+      );
     }
   }
 
@@ -1019,11 +1032,12 @@ export class OrderService {
         },
       };
     } catch (e) {
-      return {
-        statusCode: 500,
-        message: e.message,
-        data: null,
-      };
+      throw new HttpException(
+        {
+          message: e.message,
+        },
+        500,
+      );
     }
   }
 
@@ -1069,11 +1083,12 @@ export class OrderService {
         },
       };
     } catch (e) {
-      return {
-        statusCode: 500,
-        message: e.message,
-        data: null,
-      };
+      throw new HttpException(
+        {
+          message: e.message,
+        },
+        500,
+      );
     }
   }
 
@@ -1119,11 +1134,12 @@ export class OrderService {
         },
       };
     } catch (e) {
-      return {
-        statusCode: 500,
-        message: e.message,
-        data: null,
-      };
+      throw new HttpException(
+        {
+          message: e.message,
+        },
+        500,
+      );
     }
   }
 
@@ -1169,11 +1185,12 @@ export class OrderService {
         },
       };
     } catch (e) {
-      return {
-        statusCode: 500,
-        message: e.message,
-        data: null,
-      };
+      throw new HttpException(
+        {
+          message: e.message,
+        },
+        500,
+      );
     }
   }
 
@@ -1228,11 +1245,12 @@ export class OrderService {
         message,
       };
     } catch (e) {
-      return {
-        statusCode: 500,
-        message: e.message,
-        data: null,
-      };
+      throw new HttpException(
+        {
+          message: e.message,
+        },
+        500,
+      );
     }
   }
 }
