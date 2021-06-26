@@ -1,6 +1,12 @@
 import { RateRestaurantDto } from './dto/rate-restaurant/rate-restaurant.dto';
 import { CreateOrderPayload } from './interfaces/create-order-payload.interface';
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  RequestTimeoutException,
+} from '@nestjs/common';
 import * as constants from '../constants';
 import { ClientProxy } from '@nestjs/microservices';
 import {
@@ -50,6 +56,8 @@ import { ICustomerAddressResponse } from '../user/customer/interfaces';
 import { transformOrderItem } from './helpers/helpers';
 import { ISimpleResponse } from '../shared/interfaces/simple-response.interface';
 import * as PDFDocument from 'pdfkit';
+import { catchError, timeout } from 'rxjs/operators';
+import { throwError, TimeoutError } from 'rxjs';
 @Injectable()
 export class OrderService {
   constructor(
@@ -73,349 +81,578 @@ export class OrderService {
     const { restaurantId, customerId, orderItem, cashierId } = createOrderDto;
     const isSaleChannelOrder = !!customerId;
 
-    const [
-      getCustomerInfoResponse,
-      getRestaurantInfoResponse,
-      getMenuItemInfoResponse,
-    ]: [
-      IGetOrderActorInfoResponse,
-      IGetOrderActorInfoResponse,
-      IGetMenuItemInfoResponse,
-    ] = await Promise.all([
-      isSaleChannelOrder
-        ? this.userServiceClient
-            .send('getCustomerInformationToCreateDelivery', { customerId })
-            .toPromise()
-        : null,
-      this.restaurantServiceClient
-        .send('getRestaurantInformationToCreateDelivery', {
-          restaurantId,
-        })
-        .toPromise(),
-      this.restaurantServiceClient
-        .send('getMenuItemInfo', {
-          orderItem,
-        })
-        .toPromise(),
-    ]);
+    console.log({
+      user: this.userServiceClient,
+      order: this.orderServiceClient,
+      restaurant: this.restaurantServiceClient,
+    });
+    try {
+      const [
+        getCustomerInfoResponse,
+        getRestaurantInfoResponse,
+        getMenuItemInfoResponse,
+      ]: [
+        IGetOrderActorInfoResponse,
+        IGetOrderActorInfoResponse,
+        IGetMenuItemInfoResponse,
+      ] = await Promise.all([
+        isSaleChannelOrder
+          ? this.userServiceClient
+              .send('getCustomerInformationToCreateDelivery', { customerId })
+              .pipe(
+                timeout(5000),
+                catchError((err) => {
+                  if (err instanceof TimeoutError) {
+                    return throwError(
+                      new RequestTimeoutException(
+                        'Timeout. User server has problem!',
+                      ),
+                    );
+                  }
+                  return throwError({ message: err });
+                }),
+              )
+              .toPromise()
+          : null,
+        this.restaurantServiceClient
+          .send('getRestaurantInformationToCreateDelivery', {
+            restaurantId,
+          })
+          .pipe(
+            timeout(5000),
+            catchError((err) => {
+              if (err instanceof TimeoutError) {
+                return throwError(
+                  new RequestTimeoutException(
+                    'Timeout. Restaurant server has problem!',
+                  ),
+                );
+              }
+              return throwError({ message: err });
+            }),
+          )
+          .toPromise(),
+        this.restaurantServiceClient
+          .send('getMenuItemInfo', {
+            orderItem,
+          })
+          .pipe(
+            timeout(5000),
+            catchError((err) => {
+              if (err instanceof TimeoutError) {
+                return throwError(
+                  new RequestTimeoutException(
+                    'Timeout. Restaurant server has problem!',
+                  ),
+                );
+              }
+              return throwError({ message: err });
+            }),
+          )
+          .toPromise(),
+      ]);
 
-    // catch error response
-    const responses: (
-      | (IGetOrderActorInfoResponse & { label: string })
-      | (IGetMenuItemInfoResponse & { label: string })
-    )[] = [
-      { ...getMenuItemInfoResponse, label: 'getMenuItemInfo' },
-      { ...getRestaurantInfoResponse, label: 'getRestaurantInfo' },
-      { ...getCustomerInfoResponse, label: 'getCustomerInfo' },
-    ];
-    const firstErrorResponse = responses
-      .filter(
-        (response) =>
-          response != null &&
-          response?.status &&
-          response?.status !== HttpStatus.OK,
-      )
-      .find(({ status = HttpStatus.OK }) => status !== HttpStatus.OK);
+      // catch error response
+      const responses: (
+        | (IGetOrderActorInfoResponse & { label: string })
+        | (IGetMenuItemInfoResponse & { label: string })
+      )[] = [
+        { ...getMenuItemInfoResponse, label: 'getMenuItemInfo' },
+        { ...getRestaurantInfoResponse, label: 'getRestaurantInfo' },
+        { ...getCustomerInfoResponse, label: 'getCustomerInfo' },
+      ];
+      const firstErrorResponse = responses
+        .filter(
+          (response) =>
+            response != null &&
+            response?.status &&
+            response?.status !== HttpStatus.OK,
+        )
+        .find(({ status = HttpStatus.OK }) => status !== HttpStatus.OK);
 
-    if (firstErrorResponse) {
-      console.log(firstErrorResponse.label + ' fail');
-      throw new HttpException(
-        {
-          message: firstErrorResponse.message,
-        },
-        firstErrorResponse.status,
-      );
-    }
+      if (firstErrorResponse) {
+        console.log(firstErrorResponse.label + ' fail');
+        throw new HttpException(
+          {
+            message: firstErrorResponse.message,
+          },
+          firstErrorResponse.status,
+        );
+      }
 
-    // create payload to create order
-    let customerPayload = null;
-    if (isSaleChannelOrder) {
+      // create payload to create order
+      let customerPayload = null;
+      if (isSaleChannelOrder) {
+        const {
+          data: {
+            address: customerAddress,
+            geom: customerGeom,
+            name: customerName,
+            phoneNumber: customerPhoneNumber,
+          },
+        } = getCustomerInfoResponse;
+        customerPayload = {
+          customerId,
+          customerName,
+          customerPhoneNumber,
+          customerAddress,
+          customerGeom,
+        };
+      }
       const {
         data: {
-          address: customerAddress,
-          geom: customerGeom,
-          name: customerName,
-          phoneNumber: customerPhoneNumber,
+          address: restaurantAddress,
+          geom: restaurantGeom,
+          name: restaurantName,
+          phoneNumber: restaurantPhoneNumber,
         },
-      } = getCustomerInfoResponse;
-      customerPayload = {
-        customerId,
-        customerName,
-        customerPhoneNumber,
-        customerAddress,
-        customerGeom,
+      } = getRestaurantInfoResponse;
+      const restaurantPayload = {
+        restaurantId,
+        restaurantName,
+        restaurantPhoneNumber,
+        restaurantAddress,
+        restaurantGeom,
+      };
+
+      const {
+        data: { menuItemToppings, menuItem },
+      } = getMenuItemInfoResponse;
+
+      const tfOrderItem = transformOrderItem(
+        menuItemToppings,
+        menuItem,
+        orderItem,
+      );
+
+      const createOrderPayload: CreateOrderPayload = {
+        orderItem: tfOrderItem,
+        customer: customerPayload,
+        restaurant: restaurantPayload,
+        cashierId,
+      };
+      // create order
+      const createOrderAndFirstOrderItemResponse: ICreateOrderResponse = await this.orderServiceClient
+        .send('createOrderAndFirstOrderItem', createOrderPayload)
+        .pipe(
+          timeout(5000),
+          catchError((err) => {
+            if (err instanceof TimeoutError) {
+              return throwError(
+                new RequestTimeoutException(
+                  'Timeout. Order server has problem!',
+                ),
+              );
+            }
+            return throwError({ message: err });
+          }),
+        )
+        .toPromise();
+      const { message, order, status } = createOrderAndFirstOrderItemResponse;
+
+      if (status !== HttpStatus.CREATED) {
+        throw new HttpException(
+          {
+            message,
+          },
+          status,
+        );
+      }
+      return {
+        statusCode: status,
+        message,
+        data: {
+          order,
+        },
+      };
+    } catch (e) {
+      return {
+        statusCode: 500,
+        message: e.message,
+        data: null,
       };
     }
-    const {
-      data: {
-        address: restaurantAddress,
-        geom: restaurantGeom,
-        name: restaurantName,
-        phoneNumber: restaurantPhoneNumber,
-      },
-    } = getRestaurantInfoResponse;
-    const restaurantPayload = {
-      restaurantId,
-      restaurantName,
-      restaurantPhoneNumber,
-      restaurantAddress,
-      restaurantGeom,
-    };
-
-    const {
-      data: { menuItemToppings, menuItem },
-    } = getMenuItemInfoResponse;
-
-    const tfOrderItem = transformOrderItem(
-      menuItemToppings,
-      menuItem,
-      orderItem,
-    );
-
-    const createOrderPayload: CreateOrderPayload = {
-      orderItem: tfOrderItem,
-      customer: customerPayload,
-      restaurant: restaurantPayload,
-      cashierId,
-    };
-    // create order
-    const createOrderAndFirstOrderItemResponse: ICreateOrderResponse = await this.orderServiceClient
-      .send('createOrderAndFirstOrderItem', createOrderPayload)
-      .toPromise();
-    const { message, order, status } = createOrderAndFirstOrderItemResponse;
-
-    if (status !== HttpStatus.CREATED) {
-      throw new HttpException(
-        {
-          message,
-        },
-        status,
-      );
-    }
-    return {
-      statusCode: status,
-      message,
-      data: {
-        order,
-      },
-    };
   }
 
   async getOrderAssociatedWithCusAndRes(
     getOrderAssociatedWithCusAndResDto: GetOrderAssociatedWithCusAndResDto,
   ): Promise<GetOrderAssociatedWithCusAndResResponseDto> {
-    const getOrderAssociatedWithCusAndResResponse: ICreateOrderResponse = await this.orderServiceClient
-      .send(
-        'getOrderAssociatedWithCusAndRes',
-        getOrderAssociatedWithCusAndResDto,
-      )
-      .toPromise();
+    try {
+      const getOrderAssociatedWithCusAndResResponse: ICreateOrderResponse = await this.orderServiceClient
+        .send(
+          'getOrderAssociatedWithCusAndRes',
+          getOrderAssociatedWithCusAndResDto,
+        )
+        .pipe(
+          timeout(5000),
+          catchError((err) => {
+            if (err instanceof TimeoutError) {
+              return throwError(
+                new RequestTimeoutException(
+                  'Timeout. Order server has problem!',
+                ),
+              );
+            }
+            return throwError({ message: err });
+          }),
+        )
+        .toPromise();
 
-    const { message, order, status } = getOrderAssociatedWithCusAndResResponse;
-
-    if (status !== HttpStatus.OK) {
-      throw new HttpException(
-        {
-          message,
-        },
-        status,
-      );
-    }
-    return {
-      statusCode: status,
-      message,
-      data: {
+      const {
+        message,
         order,
-      },
-    };
+        status,
+      } = getOrderAssociatedWithCusAndResResponse;
+
+      if (status !== HttpStatus.OK) {
+        throw new HttpException(
+          {
+            message,
+          },
+          status,
+        );
+      }
+      return {
+        statusCode: status,
+        message,
+        data: {
+          order,
+        },
+      };
+    } catch (e) {
+      return {
+        statusCode: 500,
+        message: e.message,
+        data: null,
+      };
+    }
   }
 
   async addNewItemToOrder(
     addNewItemToOrderDto: AddNewItemToOrderDto,
     orderId: string,
   ): Promise<AddNewItemToOrderResponseDto> {
-    //TODO: Lấy thông tin name và price của món được gửi lên + topping nếu có
-    const getMenuItemInfoResponse: IGetMenuItemInfoResponse = await this.restaurantServiceClient
-      .send('getMenuItemInfo', {
-        orderItem: addNewItemToOrderDto.sendItem,
-      })
-      .toPromise();
+    try {
+      //TODO: Lấy thông tin name và price của món được gửi lên + topping nếu có
+      const getMenuItemInfoResponse: IGetMenuItemInfoResponse = await this.restaurantServiceClient
+        .send('getMenuItemInfo', {
+          orderItem: addNewItemToOrderDto.sendItem,
+        })
+        .pipe(
+          timeout(5000),
+          catchError((err) => {
+            if (err instanceof TimeoutError) {
+              return throwError(
+                new RequestTimeoutException(
+                  'Timeout. Order server has problem!',
+                ),
+              );
+            }
+            return throwError({ message: err });
+          }),
+        )
+        .toPromise();
 
-    if (getMenuItemInfoResponse.status !== HttpStatus.OK) {
-      throw new HttpException(
-        {
-          message: getMenuItemInfoResponse.message,
-        },
-        getMenuItemInfoResponse.status,
+      if (getMenuItemInfoResponse.status !== HttpStatus.OK) {
+        throw new HttpException(
+          {
+            message: getMenuItemInfoResponse.message,
+          },
+          getMenuItemInfoResponse.status,
+        );
+      }
+      const { menuItemToppings, menuItem } = getMenuItemInfoResponse.data;
+
+      const tfOrderItem = transformOrderItem(
+        menuItemToppings,
+        menuItem,
+        addNewItemToOrderDto.sendItem,
       );
-    }
-    const { menuItemToppings, menuItem } = getMenuItemInfoResponse.data;
 
-    const tfOrderItem = transformOrderItem(
-      menuItemToppings,
-      menuItem,
-      addNewItemToOrderDto.sendItem,
-    );
+      //TODO: Thêm món đó vào order
+      const addNewOrderItemToOrderDtoResponse: ICreateOrderResponse = await this.orderServiceClient
+        .send('addNewItemToOrder', {
+          ...addNewItemToOrderDto,
+          sendItem: tfOrderItem,
+          orderId,
+        })
+        .pipe(
+          timeout(5000),
+          catchError((err) => {
+            if (err instanceof TimeoutError) {
+              return throwError(
+                new RequestTimeoutException(
+                  'Timeout. Order server has problem!',
+                ),
+              );
+            }
+            return throwError({ message: err });
+          }),
+        )
+        .toPromise();
 
-    //TODO: Thêm món đó vào order
-    const addNewOrderItemToOrderDtoResponse: ICreateOrderResponse = await this.orderServiceClient
-      .send('addNewItemToOrder', {
-        ...addNewItemToOrderDto,
-        sendItem: tfOrderItem,
-        orderId,
-      })
-      .toPromise();
+      const { message, order, status } = addNewOrderItemToOrderDtoResponse;
 
-    const { message, order, status } = addNewOrderItemToOrderDtoResponse;
-
-    if (status !== HttpStatus.OK) {
-      throw new HttpException(
-        {
-          message,
+      if (status !== HttpStatus.OK) {
+        throw new HttpException(
+          {
+            message,
+          },
+          status,
+        );
+      }
+      return {
+        statusCode: status,
+        message,
+        data: {
+          order,
         },
-        status,
-      );
+      };
+    } catch (e) {
+      return {
+        statusCode: 500,
+        message: e.message,
+        data: null,
+      };
     }
-    return {
-      statusCode: status,
-      message,
-      data: {
-        order,
-      },
-    };
   }
 
   async reduceOrderItemQuantity(
     reduceOrderItemQuantityDto: ReduceOrderItemQuantityDto,
     orderId: string,
   ): Promise<ReduceOrderItemQuantityResponseDto> {
-    const reduceQuantityOrderItemResponse: ICreateOrderResponse = await this.orderServiceClient
-      .send('reduceOrderItemQuantity', {
-        ...reduceOrderItemQuantityDto,
-        orderId,
-      })
-      .toPromise();
-    const { message, order, status } = reduceQuantityOrderItemResponse;
-    if (status !== HttpStatus.OK) {
-      throw new HttpException(
-        {
-          message,
+    try {
+      const reduceQuantityOrderItemResponse: ICreateOrderResponse = await this.orderServiceClient
+        .send('reduceOrderItemQuantity', {
+          ...reduceOrderItemQuantityDto,
+          orderId,
+        })
+        .pipe(
+          timeout(5000),
+          catchError((err) => {
+            if (err instanceof TimeoutError) {
+              return throwError(
+                new RequestTimeoutException(
+                  'Timeout. Order server has problem!',
+                ),
+              );
+            }
+            return throwError({ message: err });
+          }),
+        )
+        .toPromise();
+      const { message, order, status } = reduceQuantityOrderItemResponse;
+      if (status !== HttpStatus.OK) {
+        throw new HttpException(
+          {
+            message,
+          },
+          status,
+        );
+      }
+      return {
+        statusCode: status,
+        message,
+        data: {
+          order,
         },
-        status,
-      );
+      };
+    } catch (e) {
+      return {
+        statusCode: 500,
+        message: e.message,
+        data: null,
+      };
     }
-    return {
-      statusCode: status,
-      message,
-      data: {
-        order,
-      },
-    };
   }
 
   async increaseOrderItemQuantity(
     increaseOrderItemQuantityDto: IncreaseOrderItemQuantityDto,
     orderId: string,
   ): Promise<IncreaseOrderItemQuantityResponseDto> {
-    const increaseOrderItemQuantityResponse: ICreateOrderResponse = await this.orderServiceClient
-      .send('increaseOrderItemQuantity', {
-        ...increaseOrderItemQuantityDto,
-        orderId,
-      })
-      .toPromise();
-    const { message, order, status } = increaseOrderItemQuantityResponse;
-    if (status !== HttpStatus.OK) {
-      throw new HttpException(
-        {
-          message,
+    try {
+      const increaseOrderItemQuantityResponse: ICreateOrderResponse = await this.orderServiceClient
+        .send('increaseOrderItemQuantity', {
+          ...increaseOrderItemQuantityDto,
+          orderId,
+        })
+        .pipe(
+          timeout(5000),
+          catchError((err) => {
+            if (err instanceof TimeoutError) {
+              return throwError(
+                new RequestTimeoutException(
+                  'Timeout. Order server has problem!',
+                ),
+              );
+            }
+            return throwError({ message: err });
+          }),
+        )
+        .toPromise();
+      const { message, order, status } = increaseOrderItemQuantityResponse;
+      if (status !== HttpStatus.OK) {
+        throw new HttpException(
+          {
+            message,
+          },
+          status,
+        );
+      }
+      return {
+        statusCode: status,
+        message,
+        data: {
+          order,
         },
-        status,
-      );
+      };
+    } catch (e) {
+      return {
+        statusCode: 500,
+        message: e.message,
+        data: null,
+      };
     }
-    return {
-      statusCode: status,
-      message,
-      data: {
-        order,
-      },
-    };
   }
 
   async removeOrderItem(
     removeOrderItemDto: RemoveOrderItemDto,
     orderId: string,
   ): Promise<RemoveOrderItemResponseDto> {
-    const removeOrderItemResponse: ICreateOrderResponse = await this.orderServiceClient
-      .send('removeOrderItem', { ...removeOrderItemDto, orderId })
-      .toPromise();
+    try {
+      const removeOrderItemResponse: ICreateOrderResponse = await this.orderServiceClient
+        .send('removeOrderItem', { ...removeOrderItemDto, orderId })
+        .pipe(
+          timeout(5000),
+          catchError((err) => {
+            if (err instanceof TimeoutError) {
+              return throwError(
+                new RequestTimeoutException(
+                  'Timeout. Order server has problem!',
+                ),
+              );
+            }
+            return throwError({ message: err });
+          }),
+        )
+        .toPromise();
 
-    const { message, order, status } = removeOrderItemResponse;
+      const { message, order, status } = removeOrderItemResponse;
 
-    if (status !== HttpStatus.OK) {
-      throw new HttpException(
-        {
-          message,
+      if (status !== HttpStatus.OK) {
+        throw new HttpException(
+          {
+            message,
+          },
+          status,
+        );
+      }
+      return {
+        statusCode: status,
+        message,
+        data: {
+          order,
         },
-        status,
-      );
+      };
+    } catch (e) {
+      return {
+        statusCode: 500,
+        message: e.message,
+        data: null,
+      };
     }
-    return {
-      statusCode: status,
-      message,
-      data: {
-        order,
-      },
-    };
   }
 
   async getAllRestaurantOrder(
     getAllRestaurantOrderDto: GetAllRestaurantOrderDto,
   ): Promise<GetAllRestaurantOrderResponseDto> {
-    const getAllRestaurantOrderResponse: IOrdersResponse = await this.orderServiceClient
-      .send('getOrdersOfRestaurant', { ...getAllRestaurantOrderDto })
-      .toPromise();
+    try {
+      const getAllRestaurantOrderResponse: IOrdersResponse = await this.orderServiceClient
+        .send('getOrdersOfRestaurant', { ...getAllRestaurantOrderDto })
+        .pipe(
+          timeout(5000),
+          catchError((err) => {
+            if (err instanceof TimeoutError) {
+              return throwError(
+                new RequestTimeoutException(
+                  'Timeout. Order server has problem!',
+                ),
+              );
+            }
+            return throwError({ message: err });
+          }),
+        )
+        .toPromise();
 
-    const { message, orders, status } = getAllRestaurantOrderResponse;
+      const { message, orders, status } = getAllRestaurantOrderResponse;
 
-    if (status !== HttpStatus.OK) {
-      throw new HttpException(
-        {
-          message,
+      if (status !== HttpStatus.OK) {
+        throw new HttpException(
+          {
+            message,
+          },
+          status,
+        );
+      }
+      return {
+        statusCode: status,
+        message,
+        data: {
+          orders,
         },
-        status,
-      );
+      };
+    } catch (e) {
+      return {
+        statusCode: 500,
+        message: e.message,
+        data: null,
+      };
     }
-    return {
-      statusCode: status,
-      message,
-      data: {
-        orders,
-      },
-    };
   }
 
   async getOrderDetail(orderId: string): Promise<GetOrderDetailResponseDto> {
-    const getAllRestaurantOrderResponse: ICreateOrderResponse = await this.orderServiceClient
-      .send('getOrderDetail', { orderId })
-      .toPromise();
+    try {
+      const getAllRestaurantOrderResponse: ICreateOrderResponse = await this.orderServiceClient
+        .send('getOrderDetail', { orderId })
+        .pipe(
+          timeout(5000),
+          catchError((err) => {
+            if (err instanceof TimeoutError) {
+              return throwError(
+                new RequestTimeoutException(
+                  'Timeout. Order server has problem!',
+                ),
+              );
+            }
+            return throwError({ message: err });
+          }),
+        )
+        .toPromise();
 
-    const { message, order, status } = getAllRestaurantOrderResponse;
+      const { message, order, status } = getAllRestaurantOrderResponse;
 
-    if (status !== HttpStatus.OK) {
-      throw new HttpException(
-        {
-          message,
+      if (status !== HttpStatus.OK) {
+        throw new HttpException(
+          {
+            message,
+          },
+          status,
+        );
+      }
+      return {
+        statusCode: status,
+        message,
+        data: {
+          order,
         },
-        status,
-      );
+      };
+    } catch (e) {
+      return {
+        statusCode: 500,
+        message: e.message,
+        data: null,
+      };
     }
-    return {
-      statusCode: status,
-      message,
-      data: {
-        order,
-      },
-    };
   }
 
   async generatePDF(): Promise<Buffer> {
@@ -444,28 +681,49 @@ export class OrderService {
     updateOrderItemQuantityDto: UpdateOrderItemQuantityDto,
     orderId: string,
   ): Promise<UpdateOrderItemQuantityResponseDto> {
-    const updateOrderItemQuantityResponse: ICreateOrderResponse = await this.orderServiceClient
-      .send('updateOrderItemQuantity', {
-        ...updateOrderItemQuantityDto,
-        orderId,
-      })
-      .toPromise();
-    const { message, order, status } = updateOrderItemQuantityResponse;
-    if (status !== HttpStatus.OK) {
-      throw new HttpException(
-        {
-          message,
+    try {
+      const updateOrderItemQuantityResponse: ICreateOrderResponse = await this.orderServiceClient
+        .send('updateOrderItemQuantity', {
+          ...updateOrderItemQuantityDto,
+          orderId,
+        })
+        .pipe(
+          timeout(5000),
+          catchError((err) => {
+            if (err instanceof TimeoutError) {
+              return throwError(
+                new RequestTimeoutException(
+                  'Timeout. Order server has problem!',
+                ),
+              );
+            }
+            return throwError({ message: err });
+          }),
+        )
+        .toPromise();
+      const { message, order, status } = updateOrderItemQuantityResponse;
+      if (status !== HttpStatus.OK) {
+        throw new HttpException(
+          {
+            message,
+          },
+          status,
+        );
+      }
+      return {
+        statusCode: status,
+        message,
+        data: {
+          order,
         },
-        status,
-      );
+      };
+    } catch (e) {
+      return {
+        statusCode: 500,
+        message: e.message,
+        data: null,
+      };
     }
-    return {
-      statusCode: status,
-      message,
-      data: {
-        order,
-      },
-    };
   }
 
   async pickCustomerAddress(
@@ -473,51 +731,85 @@ export class OrderService {
     customerAddressId: string,
     orderId: string,
   ): Promise<PickCustomerAddressResponseDto> {
-    //TODO: Update địa chỉ mặc định của customer
-    const updateDefaultCustomerAddressResponse: ICustomerAddressResponse = await this.userServiceClient
-      .send('updateDefaultCustomerAddress', {
-        customerId,
-        customerAddressId,
-      })
-      .toPromise();
-    const { address } = updateDefaultCustomerAddressResponse;
+    try {
+      //TODO: Update địa chỉ mặc định của customer
+      const updateDefaultCustomerAddressResponse: ICustomerAddressResponse = await this.userServiceClient
+        .send('updateDefaultCustomerAddress', {
+          customerId,
+          customerAddressId,
+        })
+        .pipe(
+          timeout(5000),
+          catchError((err) => {
+            if (err instanceof TimeoutError) {
+              return throwError(
+                new RequestTimeoutException(
+                  'Timeout. Order server has problem!',
+                ),
+              );
+            }
+            return throwError({ message: err });
+          }),
+        )
+        .toPromise();
+      const { address } = updateDefaultCustomerAddressResponse;
 
-    if (updateDefaultCustomerAddressResponse.status !== HttpStatus.OK) {
-      throw new HttpException(
-        {
-          message: updateDefaultCustomerAddressResponse.message,
+      if (updateDefaultCustomerAddressResponse.status !== HttpStatus.OK) {
+        throw new HttpException(
+          {
+            message: updateDefaultCustomerAddressResponse.message,
+          },
+          updateDefaultCustomerAddressResponse.status,
+        );
+      }
+      //TODO: Update lại thông tin delivery. Tính toán lại shippingFee trả về thông tin order
+      const updateDeliveryAddressResponse: ICreateOrderResponse = await this.orderServiceClient
+        .send('updateDeliveryAddress', {
+          orderId,
+          newAddress: {
+            address: address.address,
+            geom: address.geom,
+          },
+        })
+        .pipe(
+          timeout(5000),
+          catchError((err) => {
+            if (err instanceof TimeoutError) {
+              return throwError(
+                new RequestTimeoutException(
+                  'Timeout. Order server has problem!',
+                ),
+              );
+            }
+            return throwError({ message: err });
+          }),
+        )
+        .toPromise();
+      const { message, order, status } = updateDeliveryAddressResponse;
+
+      if (status !== HttpStatus.OK) {
+        throw new HttpException(
+          {
+            message,
+          },
+          status,
+        );
+      }
+
+      return {
+        statusCode: status,
+        message,
+        data: {
+          order,
         },
-        updateDefaultCustomerAddressResponse.status,
-      );
+      };
+    } catch (e) {
+      return {
+        statusCode: 500,
+        message: e.message,
+        data: null,
+      };
     }
-    //TODO: Update lại thông tin delivery. Tính toán lại shippingFee trả về thông tin order
-    const updateDeliveryAddressResponse: ICreateOrderResponse = await this.orderServiceClient
-      .send('updateDeliveryAddress', {
-        orderId,
-        newAddress: {
-          address: address.address,
-          geom: address.geom,
-        },
-      })
-      .toPromise();
-    const { message, order, status } = updateDeliveryAddressResponse;
-
-    if (status !== HttpStatus.OK) {
-      throw new HttpException(
-        {
-          message,
-        },
-        status,
-      );
-    }
-
-    return {
-      statusCode: status,
-      message,
-      data: {
-        order,
-      },
-    };
   }
 
   async confirmOrderCheckout(
@@ -525,33 +817,54 @@ export class OrderService {
     orderId: string,
     customerId: string,
   ): Promise<ConfirmOrderCheckoutResponseDto> {
-    //TODO:
-    const confirmOrderCheckout: IConfirmOrderCheckoutResponse = await this.orderServiceClient
-      .send('confirmOrderCheckout', {
-        ...confirmOrderCheckoutDto,
-        orderId,
-        customerId,
-      })
-      .toPromise();
+    try {
+      //TODO:
+      const confirmOrderCheckout: IConfirmOrderCheckoutResponse = await this.orderServiceClient
+        .send('confirmOrderCheckout', {
+          ...confirmOrderCheckoutDto,
+          orderId,
+          customerId,
+        })
+        .pipe(
+          timeout(5000),
+          catchError((err) => {
+            if (err instanceof TimeoutError) {
+              return throwError(
+                new RequestTimeoutException(
+                  'Timeout. Order server has problem!',
+                ),
+              );
+            }
+            return throwError({ message: err });
+          }),
+        )
+        .toPromise();
 
-    const { message, status, paypalOrderId } = confirmOrderCheckout;
+      const { message, status, paypalOrderId } = confirmOrderCheckout;
 
-    if (status !== HttpStatus.OK) {
-      throw new HttpException(
-        {
-          message: message,
+      if (status !== HttpStatus.OK) {
+        throw new HttpException(
+          {
+            message: message,
+          },
+          status,
+        );
+      }
+
+      return {
+        statusCode: status,
+        message,
+        data: {
+          paypalOrderId: paypalOrderId,
         },
-        status,
-      );
+      };
+    } catch (e) {
+      return {
+        statusCode: 500,
+        message: e.message,
+        data: null,
+      };
     }
-
-    return {
-      statusCode: status,
-      message,
-      data: {
-        paypalOrderId: paypalOrderId,
-      },
-    };
   }
 
   async approvePaypalOrder(
@@ -559,33 +872,54 @@ export class OrderService {
     orderId: string,
     customerId: string,
   ): Promise<ApprovePaypalOrderResponseDto> {
-    //TODO:
-    const approvePaypalOrderResponse: ICreateOrderResponse = await this.orderServiceClient
-      .send('approvePaypalOrder', {
-        ...approvePaypalOrderDto,
-        orderId,
-        customerId,
-      })
-      .toPromise();
+    try {
+      //TODO:
+      const approvePaypalOrderResponse: ICreateOrderResponse = await this.orderServiceClient
+        .send('approvePaypalOrder', {
+          ...approvePaypalOrderDto,
+          orderId,
+          customerId,
+        })
+        .pipe(
+          timeout(5000),
+          catchError((err) => {
+            if (err instanceof TimeoutError) {
+              return throwError(
+                new RequestTimeoutException(
+                  'Timeout. Order server has problem!',
+                ),
+              );
+            }
+            return throwError({ message: err });
+          }),
+        )
+        .toPromise();
 
-    const { message, status, order } = approvePaypalOrderResponse;
+      const { message, status, order } = approvePaypalOrderResponse;
 
-    if (status !== HttpStatus.OK) {
-      throw new HttpException(
-        {
-          message: message,
+      if (status !== HttpStatus.OK) {
+        throw new HttpException(
+          {
+            message: message,
+          },
+          status,
+        );
+      }
+
+      return {
+        statusCode: status,
+        message,
+        data: {
+          order: order,
         },
-        status,
-      );
+      };
+    } catch (e) {
+      return {
+        statusCode: 500,
+        message: e.message,
+        data: null,
+      };
     }
-
-    return {
-      statusCode: status,
-      message,
-      data: {
-        order: order,
-      },
-    };
   }
 
   async getListOrderOfDriver(
@@ -593,148 +927,253 @@ export class OrderService {
     callerId: string,
     getListOrderOfDriverDto: GetListOrderOfDriverDto,
   ): Promise<GetListOrderOfDriverResponseDto> {
-    const getListOrderOfDriverResponse: IOrdersResponse = await this.orderServiceClient
-      .send('getListOrderOfDriver', {
-        driverId,
-        callerId,
-        ...getListOrderOfDriverDto,
-      })
-      .toPromise();
+    try {
+      const getListOrderOfDriverResponse: IOrdersResponse = await this.orderServiceClient
+        .send('getListOrderOfDriver', {
+          driverId,
+          callerId,
+          ...getListOrderOfDriverDto,
+        })
+        .pipe(
+          timeout(5000),
+          catchError((err) => {
+            if (err instanceof TimeoutError) {
+              return throwError(
+                new RequestTimeoutException(
+                  'Timeout. Order server has problem!',
+                ),
+              );
+            }
+            return throwError({ message: err });
+          }),
+        )
+        .toPromise();
 
-    const { message, status, orders } = getListOrderOfDriverResponse;
+      const { message, status, orders } = getListOrderOfDriverResponse;
 
-    if (status !== HttpStatus.OK) {
-      throw new HttpException(
-        {
-          message: message,
+      if (status !== HttpStatus.OK) {
+        throw new HttpException(
+          {
+            message: message,
+          },
+          status,
+        );
+      }
+
+      return {
+        statusCode: status,
+        message,
+        data: {
+          orders: orders,
         },
-        status,
-      );
+      };
+    } catch (e) {
+      return {
+        statusCode: 500,
+        message: e.message,
+        data: null,
+      };
     }
-
-    return {
-      statusCode: status,
-      message,
-      data: {
-        orders: orders,
-      },
-    };
   }
 
   async getOngoingOrdersOfCustomer(
     getOngoingOrdersOfCustomerDto: GetOngoingOrdersOfCustomerDto,
   ): Promise<GetOngoingOrdersOfCustomerResponseDto> {
-    const getOngoingOrdersOfCustomer: IOrdersResponse = await this.orderServiceClient
-      .send('getOnGoingOrdersOfCustomer', {
-        ...getOngoingOrdersOfCustomerDto,
-      })
-      .toPromise();
+    try {
+      const getOngoingOrdersOfCustomer: IOrdersResponse = await this.orderServiceClient
+        .send('getOnGoingOrdersOfCustomer', {
+          ...getOngoingOrdersOfCustomerDto,
+        })
+        .pipe(
+          timeout(5000),
+          catchError((err) => {
+            if (err instanceof TimeoutError) {
+              return throwError(
+                new RequestTimeoutException(
+                  'Timeout. Order server has problem!',
+                ),
+              );
+            }
+            return throwError({ message: err });
+          }),
+        )
+        .toPromise();
 
-    const { message, status, orders } = getOngoingOrdersOfCustomer;
+      const { message, status, orders } = getOngoingOrdersOfCustomer;
 
-    if (status !== HttpStatus.OK) {
-      throw new HttpException(
-        {
-          message: message,
+      if (status !== HttpStatus.OK) {
+        throw new HttpException(
+          {
+            message: message,
+          },
+          status,
+        );
+      }
+
+      return {
+        statusCode: status,
+        message,
+        data: {
+          orders: orders,
         },
-        status,
-      );
+      };
+    } catch (e) {
+      return {
+        statusCode: 500,
+        message: e.message,
+        data: null,
+      };
     }
-
-    return {
-      statusCode: status,
-      message,
-      data: {
-        orders: orders,
-      },
-    };
   }
 
   async getDraftOrdersOfCustomer(
     getDraftOrdersOfCustomerDto: GetDraftOrdersOfCustomerDto,
   ): Promise<GetDraftOrdersOfCustomerResponseDto> {
-    const getDraftOrdersOfCustomer: IOrdersResponse = await this.orderServiceClient
-      .send('getDraftOrdersOfCustomer', {
-        ...getDraftOrdersOfCustomerDto,
-      })
-      .toPromise();
+    try {
+      const getDraftOrdersOfCustomer: IOrdersResponse = await this.orderServiceClient
+        .send('getDraftOrdersOfCustomer', {
+          ...getDraftOrdersOfCustomerDto,
+        })
+        .pipe(
+          timeout(5000),
+          catchError((err) => {
+            if (err instanceof TimeoutError) {
+              return throwError(
+                new RequestTimeoutException(
+                  'Timeout. Order server has problem!',
+                ),
+              );
+            }
+            return throwError({ message: err });
+          }),
+        )
+        .toPromise();
 
-    const { message, status, orders } = getDraftOrdersOfCustomer;
+      const { message, status, orders } = getDraftOrdersOfCustomer;
 
-    if (status !== HttpStatus.OK) {
-      throw new HttpException(
-        {
-          message: message,
+      if (status !== HttpStatus.OK) {
+        throw new HttpException(
+          {
+            message: message,
+          },
+          status,
+        );
+      }
+
+      return {
+        statusCode: status,
+        message,
+        data: {
+          orders: orders,
         },
-        status,
-      );
+      };
+    } catch (e) {
+      return {
+        statusCode: 500,
+        message: e.message,
+        data: null,
+      };
     }
-
-    return {
-      statusCode: status,
-      message,
-      data: {
-        orders: orders,
-      },
-    };
   }
 
   async getLastDraftOrderOfCustomer(
     getLastDraftOrderOfCustomerDto: GetLastDraftOrderOfCustomerDto,
   ): Promise<GetDraftOrdersOfCustomerResponseDto> {
-    const getLastDraftOrderOfCustomer: IOrdersResponse = await this.orderServiceClient
-      .send('getLastDraftOrderOfCustomer', {
-        ...getLastDraftOrderOfCustomerDto,
-      })
-      .toPromise();
+    try {
+      const getLastDraftOrderOfCustomer: IOrdersResponse = await this.orderServiceClient
+        .send('getLastDraftOrderOfCustomer', {
+          ...getLastDraftOrderOfCustomerDto,
+        })
+        .pipe(
+          timeout(5000),
+          catchError((err) => {
+            if (err instanceof TimeoutError) {
+              return throwError(
+                new RequestTimeoutException(
+                  'Timeout. Order server has problem!',
+                ),
+              );
+            }
+            return throwError({ message: err });
+          }),
+        )
+        .toPromise();
 
-    const { message, status, orders } = getLastDraftOrderOfCustomer;
+      const { message, status, orders } = getLastDraftOrderOfCustomer;
 
-    if (status !== HttpStatus.OK) {
-      throw new HttpException(
-        {
-          message: message,
+      if (status !== HttpStatus.OK) {
+        throw new HttpException(
+          {
+            message: message,
+          },
+          status,
+        );
+      }
+
+      return {
+        statusCode: status,
+        message,
+        data: {
+          orders: orders,
         },
-        status,
-      );
+      };
+    } catch (e) {
+      return {
+        statusCode: 500,
+        message: e.message,
+        data: null,
+      };
     }
-
-    return {
-      statusCode: status,
-      message,
-      data: {
-        orders: orders,
-      },
-    };
   }
 
   async getOrderHistoryOfCustomer(
     getOrderHistoryOfCustomerDto: GetOrderHistoryOfCustomerPayload,
   ): Promise<GetOrderHistoryOfCustomerResponseDto> {
-    const getOrderHistoryOfCustomer: IOrdersResponse = await this.orderServiceClient
-      .send('getOrderHistoryOfCustomer', {
-        ...getOrderHistoryOfCustomerDto,
-      })
-      .toPromise();
+    try {
+      const getOrderHistoryOfCustomer: IOrdersResponse = await this.orderServiceClient
+        .send('getOrderHistoryOfCustomer', {
+          ...getOrderHistoryOfCustomerDto,
+        })
+        .pipe(
+          timeout(5000),
+          catchError((err) => {
+            if (err instanceof TimeoutError) {
+              return throwError(
+                new RequestTimeoutException(
+                  'Timeout. Order server has problem!',
+                ),
+              );
+            }
+            return throwError({ message: err });
+          }),
+        )
+        .toPromise();
 
-    const { message, status, orders } = getOrderHistoryOfCustomer;
+      const { message, status, orders } = getOrderHistoryOfCustomer;
 
-    if (status !== HttpStatus.OK) {
-      throw new HttpException(
-        {
-          message: message,
+      if (status !== HttpStatus.OK) {
+        throw new HttpException(
+          {
+            message: message,
+          },
+          status,
+        );
+      }
+
+      return {
+        statusCode: status,
+        message,
+        data: {
+          orders: orders,
         },
-        status,
-      );
+      };
+    } catch (e) {
+      return {
+        statusCode: 500,
+        message: e.message,
+        data: null,
+      };
     }
-
-    return {
-      statusCode: status,
-      message,
-      data: {
-        orders: orders,
-      },
-    };
   }
 
   async eventPaypalOrderOccur(
@@ -750,28 +1189,49 @@ export class OrderService {
     orderId: string,
     rateRestaurantDto: RateRestaurantDto,
   ) {
-    const rateRestaurantResponse: IRatingResponse = await this.userServiceClient
-      .send('ratingRestaurant', {
-        customerId,
-        orderId,
-        ...rateRestaurantDto,
-      })
-      .toPromise();
+    try {
+      const rateRestaurantResponse: IRatingResponse = await this.userServiceClient
+        .send('ratingRestaurant', {
+          customerId,
+          orderId,
+          ...rateRestaurantDto,
+        })
+        .pipe(
+          timeout(5000),
+          catchError((err) => {
+            if (err instanceof TimeoutError) {
+              return throwError(
+                new RequestTimeoutException(
+                  'Timeout. Order server has problem!',
+                ),
+              );
+            }
+            return throwError({ message: err });
+          }),
+        )
+        .toPromise();
 
-    const { message, status } = rateRestaurantResponse;
+      const { message, status } = rateRestaurantResponse;
 
-    if (status !== HttpStatus.CREATED) {
-      throw new HttpException(
-        {
-          message: message,
-        },
-        status,
-      );
+      if (status !== HttpStatus.CREATED) {
+        throw new HttpException(
+          {
+            message: message,
+          },
+          status,
+        );
+      }
+
+      return {
+        statusCode: status,
+        message,
+      };
+    } catch (e) {
+      return {
+        statusCode: 500,
+        message: e.message,
+        data: null,
+      };
     }
-
-    return {
-      statusCode: status,
-      message,
-    };
   }
 }
