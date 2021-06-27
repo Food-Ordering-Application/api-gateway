@@ -26,6 +26,8 @@ import {
   FetchRestaurantDto,
   FetchRestaurantProfilesResponseDto,
   FetchRestaurantProfilesUnauthorizedResponseDto,
+  GeneratePosKeyDto,
+  GeneratePosKeyResponseDto,
   LoginAdminDto,
   LoginAdminResponseDto,
   LoginAdminUnauthorizedResponseDto,
@@ -66,6 +68,16 @@ export class AdminController {
   @Post('/verify-restaurant')
   async verifyRestaurant(@Body() verifyRestaurantDto: VerifyRestaurantDto) {
     return await this.adminService.verifyRestaurant(verifyRestaurantDto);
+  }
+
+  @ApiOkResponse({ type: GeneratePosKeyResponseDto })
+  @ApiBody({ type: GeneratePosKeyDto })
+  @ApiBearerAuth()
+  @UseGuards(AdminJwtAuthGuard)
+  @HttpCode(200)
+  @Post('/generate-pos-key')
+  async generatePosAppKey(@Body() generatePosKeyDto: GeneratePosKeyDto) {
+    return await this.adminService.generatePosAppKey(generatePosKeyDto);
   }
 
   @ApiOkResponse({ type: FetchRestaurantProfilesResponseDto })

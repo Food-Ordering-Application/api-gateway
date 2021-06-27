@@ -9,3 +9,6 @@ export { VerifyRestaurantUnauthorizedResponseDto } from './verify-restaurant/ver
 export { FetchRestaurantDto } from './fetch-restaurant/fetch-restaurant.dto';
 export { FetchRestaurantProfilesUnauthorizedResponseDto } from './fetch-restaurant/fetch-restaurant-unauthorized-response.dto';
 export { FetchRestaurantProfilesResponseDto } from './fetch-restaurant/fetch-restaurant-response.dto';
+
+export { GeneratePosKeyResponseDto } from './generate-pos-key/generate-pos-key-response.dto';
+export { GeneratePosKeyDto } from './generate-pos-key/generate-pos-key.dto';

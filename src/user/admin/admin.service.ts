@@ -8,7 +8,11 @@ import {
   IUserServiceFetchAdminResponse,
   IUserServiceFetchRestaurantProfilesResponse,
 } from './interfaces';
-import { FetchRestaurantDto, FetchRestaurantProfilesResponseDto } from './dto';
+import {
+  FetchRestaurantDto,
+  FetchRestaurantProfilesResponseDto,
+  GeneratePosKeyDto,
+} from './dto';
 
 @Injectable()
 export class AdminService {
@@ -18,10 +22,9 @@ export class AdminService {
     username: string,
     password: string,
   ): Promise<IAdmin> {
-    const authenticatedAdminResponse: IUserServiceFetchAdminResponse =
-      await this.userServiceClient
-        .send('getAuthenticatedAdmin', { username, password })
-        .toPromise();
+    const authenticatedAdminResponse: IUserServiceFetchAdminResponse = await this.userServiceClient
+      .send('getAuthenticatedAdmin', { username, password })
+      .toPromise();
     const { message, user, status } = authenticatedAdminResponse;
     if (status !== HttpStatus.OK) {
       throw new HttpException(
@@ -39,6 +42,23 @@ export class AdminService {
     const verifyRestaurant: ISimpleResponse = await this.userServiceClient
       .send('verifyRestaurant', { restaurantId })
       .toPromise();
+    const { status, message } = verifyRestaurant;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException({ message }, status);
+    }
+
+    return {
+      statusCode: 200,
+      message,
+    };
+  }
+
+  async generatePosAppKey(generatePosKeyDto: GeneratePosKeyDto) {
+    const { restaurantId } = generatePosKeyDto;
+    const verifyRestaurant: ISimpleResponse = await this.userServiceClient
+      .send('generatePosAppKey', { restaurantId })
+      .toPromise();
     const { status, message, data } = verifyRestaurant;
 
     if (status !== HttpStatus.OK) {
@@ -55,13 +75,12 @@ export class AdminService {
   async fetchRestaurantProfiles(
     fetchRestaurantProfilesDto: FetchRestaurantDto,
   ): Promise<FetchRestaurantProfilesResponseDto> {
-    const fetchRestaurantProfilesResponse: IUserServiceFetchRestaurantProfilesResponse =
-      await this.userServiceClient
-        .send('fetchRestaurantProfiles', {
-          page: parseInt(fetchRestaurantProfilesDto.page) || 0,
-          size: parseInt(fetchRestaurantProfilesDto.size) || 10,
-        })
-        .toPromise();
+    const fetchRestaurantProfilesResponse: IUserServiceFetchRestaurantProfilesResponse = await this.userServiceClient
+      .send('fetchRestaurantProfiles', {
+        page: parseInt(fetchRestaurantProfilesDto.page) || 0,
+        size: parseInt(fetchRestaurantProfilesDto.size) || 10,
+      })
+      .toPromise();
 
     const { status, message, data } = fetchRestaurantProfilesResponse;
     if (status !== HttpStatus.OK) {
