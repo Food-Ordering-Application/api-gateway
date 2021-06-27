@@ -97,6 +97,7 @@ export class AdminService {
       .send('fetchRestaurantProfiles', {
         page: parseInt(fetchRestaurantProfilesDto.page) || 0,
         size: parseInt(fetchRestaurantProfilesDto.size) || 10,
+        query: fetchRestaurantProfilesDto?.q,
       })
       .toPromise();
 
