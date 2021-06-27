@@ -411,8 +411,8 @@ export class DriverController {
   //! Lấy sđt, tên, ảnh khuôn mặt, biển số của driver
   @ApiOkResponse({ type: GetDriverInformationOkResponseDto })
   @ApiForbiddenResponse({ type: ForbiddenResponseDto })
-  // @ApiBearerAuth()
-  // @UseGuards(DriverJwtAuthGuard)
+  @ApiBearerAuth()
+  @UseGuards(AnyJwtAuthGuard)
   @Get('/:driverId/driver-info')
   async getDriverInformation(
     @Request() req,
