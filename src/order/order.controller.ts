@@ -1,20 +1,17 @@
 import {
-  Controller,
-  Post,
   Body,
-  Logger,
-  UseGuards,
-  HttpCode,
-  Param,
-  Header,
+  Controller,
   Get,
-  Res,
-  Query,
+  HttpCode,
+  Logger,
+  Param,
   Patch,
-  Request,
+  Post,
+  Query,
   Render,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
-import { OrderService } from './order.service';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -25,52 +22,54 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { InternalServerErrorResponseDto } from '../shared/dto/internal-server-error.dto';
 import { CustomerJwtAuthGuard } from 'src/auth/guards/jwts/jwt-auth.guard';
+import { AppAbility } from 'src/casl/casl-ability.factory';
+import { CheckPolicies } from 'src/casl/decorators/check-policy.decorator';
+import { PoliciesGuard } from 'src/casl/guards/policy.guard';
+import { Customer } from 'src/shared/classes';
+import { Action } from 'src/shared/enum/actions.enum';
+import { ForbiddenResponseDto } from 'src/user/customer/dto';
+import { InternalServerErrorResponseDto } from '../shared/dto/internal-server-error.dto';
 import {
-  CreateOrderResponseDto,
-  CreateOrderDto,
-  GetOrderAssociatedWithCusAndResResponseDto,
-  GetOrderAssociatedWithCusAndResDto,
   AddNewItemToOrderDto,
   AddNewItemToOrderResponseDto,
-  ReduceOrderItemQuantityResponseDto,
-  ReduceOrderItemQuantityDto,
-  IncreaseOrderItemQuantityResponseDto,
-  IncreaseOrderItemQuantityDto,
-  RemoveOrderItemResponseDto,
-  RemoveOrderItemDto,
-  GetAllRestaurantOrderResponseDto,
-  GetAllRestaurantOrderDto,
-  GetOrderDetailResponseDto,
-  UpdateOrderItemQuantityResponseDto,
-  UpdateOrderItemQuantityDto,
-  PickCustomerAddressResponseDto,
-  PickCustomerAddressDto,
-  ConfirmOrderCheckoutResponseDto,
-  ConfirmOrderCheckoutDto,
-  ApprovePaypalOrderResponseDto,
   ApprovePaypalOrderDto,
+  ApprovePaypalOrderResponseDto,
+  ConfirmOrderCheckoutDto,
+  ConfirmOrderCheckoutResponseDto,
+  CreateOrderDto,
+  CreateOrderResponseDto,
+  GetAllRestaurantOrderDto,
+  GetAllRestaurantOrderResponseDto,
+  GetDraftOrdersOfCustomerParams,
+  GetDraftOrdersOfCustomerResponseDto,
   GetListOrderOfDriverDto,
   GetListOrderOfDriverResponseDto,
-  GetOngoingOrdersOfCustomerResponseDto,
   GetOngoingOrdersOfCustomerParams,
-  GetDraftOrdersOfCustomerResponseDto,
-  GetDraftOrdersOfCustomerParams,
-  GetOrderHistoryOfCustomerResponseDto,
+  GetOngoingOrdersOfCustomerResponseDto,
+  GetOrderAssociatedWithCusAndResDto,
+  GetOrderAssociatedWithCusAndResResponseDto,
+  GetOrderDetailResponseDto,
+  GetOrderHistoryOfCustomerDto,
   GetOrderHistoryOfCustomerParams,
   GetOrderHistoryOfCustomerPayload,
-  GetOrderHistoryOfCustomerDto,
-  EventPaypalOrderOccurDto,
+  GetOrderHistoryOfCustomerResponseDto,
+  IncreaseOrderItemQuantityDto,
+  IncreaseOrderItemQuantityResponseDto,
+  PickCustomerAddressDto,
+  PickCustomerAddressResponseDto,
+  RateDriverDto,
+  RateDriverResponseDto,
   RateRestaurantDto,
   RateRestaurantResponseDto,
+  ReduceOrderItemQuantityDto,
+  ReduceOrderItemQuantityResponseDto,
+  RemoveOrderItemDto,
+  RemoveOrderItemResponseDto,
+  UpdateOrderItemQuantityDto,
+  UpdateOrderItemQuantityResponseDto,
 } from './dto';
-import { ForbiddenResponseDto } from 'src/user/customer/dto';
-import { PoliciesGuard } from 'src/casl/guards/policy.guard';
-import { CheckPolicies } from 'src/casl/decorators/check-policy.decorator';
-import { AppAbility } from 'src/casl/casl-ability.factory';
-import { Action } from 'src/shared/enum/actions.enum';
-import { Customer } from 'src/shared/classes';
+import { OrderService } from './order.service';
 // const fs = require('fs');
 @ApiTags('orders')
 @ApiInternalServerErrorResponse({ type: InternalServerErrorResponseDto })
@@ -380,6 +379,25 @@ export class OrderController {
       req.user.userId,
       orderId,
       rateRestaurantDto,
+    );
+  }
+
+  @ApiOkResponse({ type: RateDriverResponseDto })
+  @ApiBody({ type: RateDriverDto })
+  @ApiBearerAuth()
+  @UseGuards(CustomerJwtAuthGuard)
+  @Post('/:orderId/rate-driver')
+  async rateDriver(
+    @Request() req,
+    @Param() params,
+    @Body()
+    rateDriverDto: RateDriverDto,
+  ) {
+    const { orderId } = params;
+    return this.orderService.rateDriver(
+      req.user.userId,
+      orderId,
+      rateDriverDto,
     );
   }
 

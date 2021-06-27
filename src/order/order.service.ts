@@ -1,5 +1,3 @@
-import { RateRestaurantDto } from './dto/rate-restaurant/rate-restaurant.dto';
-import { CreateOrderPayload } from './interfaces/create-order-payload.interface';
 import {
   HttpException,
   HttpStatus,
@@ -7,57 +5,58 @@ import {
   Injectable,
   RequestTimeoutException,
 } from '@nestjs/common';
-import * as constants from '../constants';
 import { ClientProxy } from '@nestjs/microservices';
+import * as PDFDocument from 'pdfkit';
+import { throwError, TimeoutError } from 'rxjs';
+import { catchError, timeout } from 'rxjs/operators';
+import * as constants from '../constants';
+import { ICustomerAddressResponse } from '../user/customer/interfaces';
 import {
-  CreateOrderResponseDto,
-  CreateOrderDto,
-  GetOrderAssociatedWithCusAndResResponseDto,
-  GetOrderAssociatedWithCusAndResDto,
   AddNewItemToOrderDto,
   AddNewItemToOrderResponseDto,
-  ReduceOrderItemQuantityDto,
-  ReduceOrderItemQuantityResponseDto,
-  IncreaseOrderItemQuantityDto,
-  IncreaseOrderItemQuantityResponseDto,
-  RemoveOrderItemDto,
-  RemoveOrderItemResponseDto,
-  GetAllRestaurantOrderDto,
-  GetAllRestaurantOrderResponseDto,
-  GetOrderDetailResponseDto,
-  UpdateOrderItemQuantityDto,
-  UpdateOrderItemQuantityResponseDto,
-  PickCustomerAddressResponseDto,
-  ConfirmOrderCheckoutDto,
-  ConfirmOrderCheckoutResponseDto,
   ApprovePaypalOrderDto,
   ApprovePaypalOrderResponseDto,
-  GetListOrderOfDriverResponseDto,
-  GetListOrderOfDriverDto,
+  ConfirmOrderCheckoutDto,
+  ConfirmOrderCheckoutResponseDto,
+  CreateOrderDto,
+  CreateOrderResponseDto,
+  EventPaypalOrderOccurDto,
+  GetAllRestaurantOrderDto,
+  GetAllRestaurantOrderResponseDto,
   GetDraftOrdersOfCustomerDto,
-  GetOngoingOrdersOfCustomerResponseDto,
   GetDraftOrdersOfCustomerResponseDto,
+  GetLastDraftOrderOfCustomerDto,
+  GetListOrderOfDriverDto,
+  GetListOrderOfDriverResponseDto,
   GetOngoingOrdersOfCustomerDto,
+  GetOngoingOrdersOfCustomerResponseDto,
+  GetOrderAssociatedWithCusAndResDto,
+  GetOrderAssociatedWithCusAndResResponseDto,
+  GetOrderDetailResponseDto,
   GetOrderHistoryOfCustomerPayload,
   GetOrderHistoryOfCustomerResponseDto,
-  EventPaypalOrderOccurDto,
-  GetLastDraftOrderOfCustomerDto,
+  IncreaseOrderItemQuantityDto,
+  IncreaseOrderItemQuantityResponseDto,
+  PickCustomerAddressResponseDto,
+  RateDriverDto,
+  ReduceOrderItemQuantityDto,
+  ReduceOrderItemQuantityResponseDto,
+  RemoveOrderItemDto,
+  RemoveOrderItemResponseDto,
+  UpdateOrderItemQuantityDto,
+  UpdateOrderItemQuantityResponseDto,
 } from './dto';
+import { RateRestaurantDto } from './dto/rate-restaurant/rate-restaurant.dto';
+import { transformOrderItem } from './helpers/helpers';
 import {
-  ICreateOrderResponse,
-  IGetAddressResponse,
-  IOrdersResponse,
-  IGetMenuItemInfoResponse,
   IConfirmOrderCheckoutResponse,
+  ICreateOrderResponse,
+  IGetMenuItemInfoResponse,
   IGetOrderActorInfoResponse,
+  IOrdersResponse,
   IRatingResponse,
 } from './interfaces';
-import { ICustomerAddressResponse } from '../user/customer/interfaces';
-import { transformOrderItem } from './helpers/helpers';
-import { ISimpleResponse } from '../shared/interfaces/simple-response.interface';
-import * as PDFDocument from 'pdfkit';
-import { catchError, timeout } from 'rxjs/operators';
-import { throwError, TimeoutError } from 'rxjs';
+import { CreateOrderPayload } from './interfaces/create-order-payload.interface';
 @Injectable()
 export class OrderService {
   constructor(
@@ -81,11 +80,6 @@ export class OrderService {
     const { restaurantId, customerId, orderItem, cashierId } = createOrderDto;
     const isSaleChannelOrder = !!customerId;
 
-    console.log({
-      user: this.userServiceClient,
-      order: this.orderServiceClient,
-      restaurant: this.restaurantServiceClient,
-    });
     try {
       const [
         getCustomerInfoResponse,
@@ -279,7 +273,6 @@ export class OrderService {
     getOrderAssociatedWithCusAndResDto: GetOrderAssociatedWithCusAndResDto,
   ): Promise<GetOrderAssociatedWithCusAndResResponseDto> {
     try {
-      console.log({ a: this.orderServiceClient });
       const getOrderAssociatedWithCusAndResResponse: ICreateOrderResponse = await this.orderServiceClient
         .send(
           'getOrderAssociatedWithCusAndRes',
@@ -1249,7 +1242,59 @@ export class OrderService {
         {
           message: e.message,
         },
-        500,
+        e.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async rateDriver(
+    customerId: string,
+    orderId: string,
+    rateDriverDto: RateDriverDto,
+  ) {
+    try {
+      const rateDriverResponse: IRatingResponse = await this.userServiceClient
+        .send('ratingDriver', {
+          customerId,
+          orderId,
+          ...rateDriverDto,
+        })
+        .pipe(
+          timeout(5000),
+          catchError((err) => {
+            if (err instanceof TimeoutError) {
+              return throwError(
+                new RequestTimeoutException(
+                  'Timeout. Order server has problem!',
+                ),
+              );
+            }
+            return throwError({ message: err });
+          }),
+        )
+        .toPromise();
+
+      const { message, status } = rateDriverResponse;
+
+      if (status !== HttpStatus.CREATED) {
+        throw new HttpException(
+          {
+            message: message,
+          },
+          status,
+        );
+      }
+
+      return {
+        statusCode: status,
+        message,
+      };
+    } catch (e) {
+      throw new HttpException(
+        {
+          message: e.message,
+        },
+        e.status || HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }

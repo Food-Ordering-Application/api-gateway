@@ -36,6 +36,8 @@ export { GetOrderHistoryOfCustomerPayload } from './get-order-history-of-custome
 export { GetOrderHistoryOfCustomerDto } from './get-order-history-of-customer/get-order-history-of-customer.dto';
 export { PaypalResource } from './paypal-order-resource.dto';
 export { EventPaypalOrderOccurDto } from './event-paypal-order-occur.dto';
+export { RateDriverDto } from './rate-driver/rate-driver.dto';
+export { RateDriverResponseDto } from './rate-driver/rate-driver-response.dto';
 export { GetLastDraftOrderOfCustomerDto } from './get-last-draft-order-of-customer/get-last-draft-order-of-customer.dto';
 export { RateRestaurantDto } from './rate-restaurant/rate-restaurant.dto';
 export { RateRestaurantResponseDto } from './rate-restaurant/rate-restaurant-response.dto';
