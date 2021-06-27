@@ -411,21 +411,21 @@ export class DriverController {
   //! Lấy sđt, tên, ảnh khuôn mặt, biển số của driver
   @ApiOkResponse({ type: GetDriverInformationOkResponseDto })
   @ApiForbiddenResponse({ type: ForbiddenResponseDto })
-  @ApiBearerAuth()
-  @UseGuards(DriverJwtAuthGuard)
+  // @ApiBearerAuth()
+  // @UseGuards(DriverJwtAuthGuard)
   @Get('/:driverId/driver-info')
   async getDriverInformation(
     @Request() req,
     @Param() params,
   ): Promise<GetDriverInformationOkResponseDto> {
     const { driverId } = params;
-    if (driverId.toString() !== req.user.userId) {
-      return {
-        statusCode: HttpStatus.FORBIDDEN,
-        message: 'Forbidden',
-        data: null,
-      };
-    }
+    // if (driverId.toString() !== req.user.userId) {
+    //   return {
+    //     statusCode: HttpStatus.FORBIDDEN,
+    //     message: 'Forbidden',
+    //     data: null,
+    //   };
+    // }
 
     return this.driverService.getDriverInformation(driverId);
   }
