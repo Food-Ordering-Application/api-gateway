@@ -1,4 +1,3 @@
-import { IVerifyRestaurantResponseData } from './../../interfaces/verify-restaurant-response-data';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class VerifyRestaurantResponseDto {
@@ -9,11 +8,4 @@ export class VerifyRestaurantResponseDto {
     type: 'string',
   })
   message: string;
-
-  @ApiProperty({
-    example: {
-      posAppKey: '1234-1234-1234',
-    },
-  })
-  data: IVerifyRestaurantResponseData;
 }
