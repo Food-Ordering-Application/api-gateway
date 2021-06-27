@@ -12,3 +12,6 @@ export { FetchRestaurantProfilesResponseDto } from './fetch-restaurant/fetch-res
 
 export { GeneratePosKeyResponseDto } from './generate-pos-key/generate-pos-key-response.dto';
 export { GeneratePosKeyDto } from './generate-pos-key/generate-pos-key.dto';
+
+export { RemovePosDeviceResponseDto } from './remove-pos-device/remove-pos-device-response.dto';
+export { RemovePosDeviceDto } from './remove-pos-device/remove-pos-device.dto';

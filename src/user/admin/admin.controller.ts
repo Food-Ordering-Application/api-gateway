@@ -31,6 +31,8 @@ import {
   LoginAdminDto,
   LoginAdminResponseDto,
   LoginAdminUnauthorizedResponseDto,
+  RemovePosDeviceDto,
+  RemovePosDeviceResponseDto,
   VerifyRestaurantDto,
   VerifyRestaurantResponseDto,
   VerifyRestaurantUnauthorizedResponseDto,
@@ -78,6 +80,16 @@ export class AdminController {
   @Post('/generate-pos-key')
   async generatePosAppKey(@Body() generatePosKeyDto: GeneratePosKeyDto) {
     return await this.adminService.generatePosAppKey(generatePosKeyDto);
+  }
+
+  @ApiOkResponse({ type: RemovePosDeviceResponseDto })
+  @ApiBody({ type: RemovePosDeviceDto })
+  @ApiBearerAuth()
+  @UseGuards(AdminJwtAuthGuard)
+  @HttpCode(200)
+  @Post('/remove-pos-device')
+  async removePosDevice(@Body() removePosDeviceDto: RemovePosDeviceDto) {
+    return await this.adminService.removePosDevice(removePosDeviceDto);
   }
 
   @ApiOkResponse({ type: FetchRestaurantProfilesResponseDto })

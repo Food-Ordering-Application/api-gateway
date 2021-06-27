@@ -12,6 +12,7 @@ import {
   FetchRestaurantDto,
   FetchRestaurantProfilesResponseDto,
   GeneratePosKeyDto,
+  RemovePosDeviceDto,
 } from './dto';
 
 @Injectable()
@@ -56,10 +57,10 @@ export class AdminService {
 
   async generatePosAppKey(generatePosKeyDto: GeneratePosKeyDto) {
     const { restaurantId } = generatePosKeyDto;
-    const verifyRestaurant: ISimpleResponse = await this.userServiceClient
+    const generatePosAppKey: ISimpleResponse = await this.userServiceClient
       .send('generatePosAppKey', { restaurantId })
       .toPromise();
-    const { status, message, data } = verifyRestaurant;
+    const { status, message, data } = generatePosAppKey;
 
     if (status !== HttpStatus.OK) {
       throw new HttpException({ message }, status);
@@ -69,6 +70,23 @@ export class AdminService {
       statusCode: 200,
       message,
       data,
+    };
+  }
+
+  async removePosDevice(removePosDeviceDto: RemovePosDeviceDto) {
+    const { restaurantId } = removePosDeviceDto;
+    const removePosDevice: ISimpleResponse = await this.userServiceClient
+      .send('removePosDevice', { restaurantId })
+      .toPromise();
+    const { status, message } = removePosDevice;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException({ message }, status);
+    }
+
+    return {
+      statusCode: 200,
+      message,
     };
   }
 
