@@ -61,6 +61,11 @@ export class GetOrderHistoryOfCustomerResponseDto {
               amount: 120000,
             },
           },
+          feedback: {
+            orderId: '20a173f3-2d22-46f6-9a2e-a82c600e1647',
+            rate: 5,
+            message: 'Ngon!',
+          },
         },
         {
           id: '20a173f3-2d22-46f6-9a2e-a82c600e1647',
@@ -111,6 +116,7 @@ export class GetOrderHistoryOfCustomerResponseDto {
               amount: 120000,
             },
           },
+          feedback: null,
         },
       ],
     },
