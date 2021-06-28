@@ -38,6 +38,7 @@ import {
   FetchToppingItemByMenuResponseDto,
   FetchToppingItemByMenuUnauthorizedResponseDto,
   FetchToppingItemQuery,
+  GetToppingItemDetailResponseDto,
   UpdateMenuItemToppingsOfCurrentToppingItemDto,
   UpdateMenuItemToppingsOfCurrentToppingItemNotFoundResponseDto,
   UpdateMenuItemToppingsOfCurrentToppingItemResponseDto,
@@ -174,6 +175,35 @@ export class ToppingItemController {
       };
     }
     return await this.toppingItemService.deleteToppingItem(
+      toppingItem,
+      merchantId,
+      restaurant,
+      menu,
+    );
+  }
+
+  // Delete topping item
+  @ApiOkResponse({ type: GetToppingItemDetailResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(MerchantJwtAuthGuard)
+  @Get(':toppingItemId')
+  async getToppingItemDetail(
+    @Request() req: MerchantJwtRequest,
+    @Param('merchantId') merchant,
+    @Param('restaurantId') restaurant,
+    @Param('toppingItemId') toppingItem,
+    @Param('menuId') menu,
+  ): Promise<GetToppingItemDetailResponseDto> {
+    const { user } = req;
+    const { merchantId } = user;
+    if (merchantId !== merchant) {
+      return {
+        statusCode: 403,
+        message: 'Unauthorized',
+        data: null,
+      };
+    }
+    return await this.toppingItemService.getToppingItemDetail(
       toppingItem,
       merchantId,
       restaurant,

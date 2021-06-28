@@ -14,3 +14,4 @@ export { FetchMenuItemToppingsOfCurrentToppingItemUnauthorizedResponseDto } from
 export { UpdateMenuItemToppingsOfCurrentToppingItemNotFoundResponseDto } from './update-menu-item-toppings-of-current-topping-item/update-menu-item-toppings-of-current-topping-item-not-found-response.dto';
 export { UpdateMenuItemToppingsOfCurrentToppingItemResponseDto } from './update-menu-item-toppings-of-current-topping-item/update-menu-item-toppings-of-current-topping-item-response.dto';
 export { UpdateMenuItemToppingsOfCurrentToppingItemDto } from './update-menu-item-toppings-of-current-topping-item/update-menu-item-toppings-of-current-topping-item.dto';
+export { GetToppingItemDetailResponseDto } from './get-topping-item-detail/get-topping-item-detail-response.dto';
