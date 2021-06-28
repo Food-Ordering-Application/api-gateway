@@ -10,3 +10,6 @@ export { UpdateMenuItemNotFoundResponseDto } from './update-menu-item/update-men
 export { UpdateMenuItemResponseDto } from './update-menu-item/update-menu-item-response.dto';
 export { UpdateMenuItemDto } from './update-menu-item/update-menu-item.dto';
 export { GetMenuItemDetailResponseDto } from './get-menu-item-detail/get-menu-item-detail-response.dto';
+export { GetMenuItemToppingsOfCurrentMenuItemResponseDto } from './get-menu-item-topping-of-current-menu-item/get-menu-item-topping-of-current-menu-item-response.dto';
+export { UpdateMenuItemToppingsOfCurrentMenuItemResponseDto } from './update-menu-item-toppings-of-current-topping-item/update-menu-item-toppings-of-current-menu-item-response.dto';
+export { UpdateMenuItemToppingsOfCurrentMenuItemDto } from './update-menu-item-toppings-of-current-topping-item/update-menu-item-toppings-of-current-menu-item.dto';

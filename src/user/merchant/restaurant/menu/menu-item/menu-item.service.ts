@@ -9,8 +9,11 @@ import {
   FetchMenuItemByMenuResponseDto,
   FetchMenuItemQuery,
   GetMenuItemDetailResponseDto,
+  GetMenuItemToppingsOfCurrentMenuItemResponseDto,
   UpdateMenuItemDto,
   UpdateMenuItemResponseDto,
+  UpdateMenuItemToppingsOfCurrentMenuItemDto,
+  UpdateMenuItemToppingsOfCurrentMenuItemResponseDto,
 } from './dto';
 import {
   IRestaurantServiceCreateMenuItemResponse,
@@ -165,6 +168,64 @@ export class MenuItemService {
       statusCode: HttpStatus.OK,
       message,
       data,
+    };
+  }
+
+  async fetchMenuItemToppingsOfCurrentMenuItem(
+    merchantId: string,
+    restaurantId: string,
+    menuId: string,
+    toppingItemId: string,
+  ): Promise<GetMenuItemToppingsOfCurrentMenuItemResponseDto> {
+    const fetchMenuItemToppingsOfCurrentMenuItemResponse: ISimpleResponse = await this.menuItemServiceClient
+      .send('fetchMenuItemToppingsOfCurrentMenuItem', {
+        merchantId,
+        restaurantId,
+        menuId,
+        toppingItemId,
+      })
+      .toPromise();
+
+    const {
+      status,
+      message,
+      data,
+    } = fetchMenuItemToppingsOfCurrentMenuItemResponse;
+    if (status !== HttpStatus.OK) {
+      throw new HttpException({ message }, status);
+    }
+    return {
+      statusCode: 200,
+      message,
+      data,
+    };
+  }
+
+  async updateMenuToppingsOfCurrentMenuItem(
+    toppingItemId: string,
+    merchantId: string,
+    restaurantId: string,
+    menuId: string,
+    updateToppingItemDto: UpdateMenuItemToppingsOfCurrentMenuItemDto,
+  ): Promise<UpdateMenuItemToppingsOfCurrentMenuItemResponseDto> {
+    const updateMenuItemToppingsOfCurrentMenuItemResponse: ISimpleResponse = await this.menuItemServiceClient
+      .send('updateMenuItemToppingsOfCurrentMenuItem', {
+        toppingItemId,
+        merchantId,
+        restaurantId,
+        menuId,
+        data: updateToppingItemDto,
+      })
+      .toPromise();
+
+    const { status, message } = updateMenuItemToppingsOfCurrentMenuItemResponse;
+    if (status !== HttpStatus.OK) {
+      throw new HttpException({ message }, status);
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message,
     };
   }
 }

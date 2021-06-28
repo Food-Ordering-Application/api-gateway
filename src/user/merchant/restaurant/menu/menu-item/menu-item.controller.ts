@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
   Request,
   UseGuards,
@@ -31,9 +32,12 @@ import {
   DeleteMenuItemResponseDto,
   FetchMenuItemQuery,
   GetMenuItemDetailResponseDto,
+  GetMenuItemToppingsOfCurrentMenuItemResponseDto,
   UpdateMenuItemDto,
   UpdateMenuItemNotFoundResponseDto,
   UpdateMenuItemResponseDto,
+  UpdateMenuItemToppingsOfCurrentMenuItemDto,
+  UpdateMenuItemToppingsOfCurrentMenuItemResponseDto,
 } from './dto';
 import {
   CreateMenuItemConflictResponseDto,
@@ -203,6 +207,67 @@ export class MenuItemController {
       merchantId,
       restaurant,
       menu,
+    );
+  }
+
+  @ApiOkResponse({ type: GetMenuItemToppingsOfCurrentMenuItemResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(MerchantJwtAuthGuard)
+  @Get(':menuItemId/topping-item')
+  async fetchMenuItemToppingsOfCurrentMenuItem(
+    @Request() req: MerchantJwtRequest,
+    @Param('merchantId') merchant: string,
+    @Param('restaurantId') restaurant: string,
+    @Param('menuId') menu: string,
+    @Param('menuItemId') menuItemId: string,
+  ): Promise<GetMenuItemToppingsOfCurrentMenuItemResponseDto> {
+    const { user } = req;
+    const { merchantId } = user;
+    if (merchantId !== merchant) {
+      return {
+        statusCode: 403,
+        message: 'Unauthorized',
+        data: null,
+      };
+    }
+    return await this.menuItemService.fetchMenuItemToppingsOfCurrentMenuItem(
+      merchantId,
+      restaurant,
+      menu,
+      menuItemId,
+    );
+  }
+
+  // Update menu item toppings
+  @ApiOkResponse({
+    type: UpdateMenuItemToppingsOfCurrentMenuItemResponseDto,
+  })
+  @ApiBody({ type: UpdateMenuItemToppingsOfCurrentMenuItemDto })
+  @ApiBearerAuth()
+  @UseGuards(MerchantJwtAuthGuard)
+  @Put(':menuItemId/topping-item')
+  async updateMenuToppingsOfCurrentMenuItem(
+    @Request() req: MerchantJwtRequest,
+    @Param('merchantId') merchant,
+    @Param('restaurantId') restaurant,
+    @Param('menuId') menu,
+    @Param('menuItemId') menuItemId,
+    @Body() updateToppingItemDto: UpdateMenuItemToppingsOfCurrentMenuItemDto,
+  ): Promise<UpdateMenuItemToppingsOfCurrentMenuItemResponseDto> {
+    const { user } = req;
+    const { merchantId } = user;
+    if (merchantId !== merchant) {
+      return {
+        statusCode: 403,
+        message: 'Unauthorized',
+      };
+    }
+    return await this.menuItemService.updateMenuToppingsOfCurrentMenuItem(
+      menuItemId,
+      merchantId,
+      restaurant,
+      menu,
+      updateToppingItemDto,
     );
   }
 }
