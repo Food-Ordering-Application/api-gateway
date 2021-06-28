@@ -175,14 +175,14 @@ export class MenuItemService {
     merchantId: string,
     restaurantId: string,
     menuId: string,
-    toppingItemId: string,
+    menuItemId: string,
   ): Promise<GetMenuItemToppingsOfCurrentMenuItemResponseDto> {
     const fetchMenuItemToppingsOfCurrentMenuItemResponse: ISimpleResponse = await this.menuItemServiceClient
       .send('fetchMenuItemToppingsOfCurrentMenuItem', {
         merchantId,
         restaurantId,
         menuId,
-        toppingItemId,
+        menuItemId,
       })
       .toPromise();
 
@@ -202,7 +202,7 @@ export class MenuItemService {
   }
 
   async updateMenuToppingsOfCurrentMenuItem(
-    toppingItemId: string,
+    menuItemId: string,
     merchantId: string,
     restaurantId: string,
     menuId: string,
@@ -210,7 +210,7 @@ export class MenuItemService {
   ): Promise<UpdateMenuItemToppingsOfCurrentMenuItemResponseDto> {
     const updateMenuItemToppingsOfCurrentMenuItemResponse: ISimpleResponse = await this.menuItemServiceClient
       .send('updateMenuItemToppingsOfCurrentMenuItem', {
-        toppingItemId,
+        menuItemId,
         merchantId,
         restaurantId,
         menuId,
