@@ -9,3 +9,4 @@ export { FetchMenuItemQuery } from './fetch-menu-item/fetch-menu-item.dto';
 export { UpdateMenuItemNotFoundResponseDto } from './update-menu-item/update-menu-item-not-found-response.dto';
 export { UpdateMenuItemResponseDto } from './update-menu-item/update-menu-item-response.dto';
 export { UpdateMenuItemDto } from './update-menu-item/update-menu-item.dto';
+export { GetMenuItemDetailResponseDto } from './get-menu-item-detail/get-menu-item-detail-response.dto';

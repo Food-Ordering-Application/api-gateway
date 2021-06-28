@@ -8,12 +8,14 @@ import {
   DeleteMenuItemResponseDto,
   FetchMenuItemByMenuResponseDto,
   FetchMenuItemQuery,
+  GetMenuItemDetailResponseDto,
   UpdateMenuItemDto,
   UpdateMenuItemResponseDto,
 } from './dto';
 import {
   IRestaurantServiceCreateMenuItemResponse,
   IRestaurantServiceFetchMenuItemByMenuResponse,
+  IRestaurantServiceGetMenuItemDetailResponse,
 } from './interfaces';
 
 @Injectable()
@@ -136,6 +138,33 @@ export class MenuItemService {
         size,
         total,
       },
+    };
+  }
+
+  async getMenuItemDetail(
+    menuItemId: string,
+    merchantId: string,
+    restaurantId: string,
+    menuId: string,
+  ): Promise<GetMenuItemDetailResponseDto> {
+    const getMenuItemDetailResponse: IRestaurantServiceGetMenuItemDetailResponse = await this.menuItemServiceClient
+      .send('getMenuItemDetail', {
+        menuItemId,
+        merchantId,
+        restaurantId,
+        menuId,
+      })
+      .toPromise();
+
+    const { status, message, data } = getMenuItemDetailResponse;
+    if (status !== HttpStatus.OK) {
+      throw new HttpException({ message }, status);
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message,
+      data,
     };
   }
 }

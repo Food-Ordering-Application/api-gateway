@@ -30,6 +30,7 @@ import {
   DeleteMenuItemNotFoundResponseDto,
   DeleteMenuItemResponseDto,
   FetchMenuItemQuery,
+  GetMenuItemDetailResponseDto,
   UpdateMenuItemDto,
   UpdateMenuItemNotFoundResponseDto,
   UpdateMenuItemResponseDto,
@@ -168,6 +169,36 @@ export class MenuItemController {
       };
     }
     return await this.menuItemService.deleteMenuItem(
+      menuItem,
+      merchantId,
+      restaurant,
+      menu,
+    );
+  }
+
+  @ApiOkResponse({ type: GetMenuItemDetailResponseDto })
+  @ApiNotFoundResponse({ type: DeleteMenuItemNotFoundResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(MerchantJwtAuthGuard)
+  @Get(':menuItemId')
+  async getMenuItemDetail(
+    @Request() req: MerchantJwtRequest,
+    @Param('merchantId') merchant,
+    @Param('restaurantId') restaurant,
+    @Param('menuItemId') menuItem,
+    @Param('menuId') menu,
+  ): Promise<GetMenuItemDetailResponseDto> {
+    const { user } = req;
+    const { merchantId } = user;
+    if (merchantId !== merchant) {
+      return {
+        statusCode: 403,
+        message: 'Unauthorized',
+        data: null,
+      };
+    }
+
+    return await this.menuItemService.getMenuItemDetail(
       menuItem,
       merchantId,
       restaurant,
