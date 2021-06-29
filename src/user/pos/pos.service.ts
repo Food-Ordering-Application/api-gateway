@@ -118,7 +118,7 @@ export class PosService {
           restaurantId,
           menuId,
           page: parseInt(fetchDto.page) || 0,
-          size: parseInt(fetchDto.size) || 50,
+          size: parseInt(fetchDto.size) || 200,
           search: '',
         })
         .toPromise();
