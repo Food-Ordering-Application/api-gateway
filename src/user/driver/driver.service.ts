@@ -258,7 +258,7 @@ export class DriverService {
     withdrawMoneyToPaypalAccountDto: WithdrawMoneyToPaypalAccountDto,
     driverId: string,
     callerId: string,
-  ): Promise<WithdrawMoneyToPaypalAccountOkResponseDto> {
+  ) {
     const withdrawMoneyToPaypalAccountResponse: ISimpleResponse =
       await this.userServiceClient
         .send('withdrawMoneyToPaypalAccount', {
@@ -268,20 +268,20 @@ export class DriverService {
         })
         .toPromise();
 
-    const { message, status } = withdrawMoneyToPaypalAccountResponse;
+    const { message, status, reason } = withdrawMoneyToPaypalAccountResponse;
 
-    if (status !== HttpStatus.OK) {
-      throw new HttpException(
-        {
-          message: message,
-        },
-        status,
-      );
-    }
+    // if (status !== HttpStatus.OK) {
+    //   return {
+    //     statusCode: status,
+    //     message,
+    //     reason,
+    //   };
+    // }
 
     return {
       statusCode: status,
       message,
+      reason: reason,
     };
   }
 
