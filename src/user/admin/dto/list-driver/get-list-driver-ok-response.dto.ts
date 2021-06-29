@@ -11,9 +11,37 @@ export class GetListDriverOkResponseDto {
   message: string;
   @ApiProperty({
     example: {
-      drivers: [],
+      drivers: [
+        {
+          id: 'someid',
+          phoneNumber: '0123456789',
+          email: 'somemeail',
+          name: 'somename',
+          city: 'some',
+          dateOfBirth: 'some',
+          IDNumber: 'some',
+          identityCardImageUrl: 'some',
+          driverLicenseImageUrl: 'some',
+          vehicleRegistrationCertificateImageUrl: 'some',
+          isVerified: true,
+          isBanned: false,
+        },
+        {
+          id: 'someid',
+          phoneNumber: '0123456789',
+          email: 'somemeail',
+          name: 'somename',
+          city: 'some',
+          dateOfBirth: 'some',
+          IDNumber: 'some',
+          identityCardImageUrl: 'some',
+          driverLicenseImageUrl: 'some',
+          vehicleRegistrationCertificateImageUrl: 'some',
+          isVerified: true,
+          isBanned: false,
+        },
+      ],
     },
-    type: 'string',
   })
   data: IDriversData;
 }
