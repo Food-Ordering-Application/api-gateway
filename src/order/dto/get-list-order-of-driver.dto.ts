@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsDateString,
   IsInt,
+  IsNumberString,
   IsOptional,
   IsString,
   Max,
@@ -18,11 +19,11 @@ export class GetListOrderOfDriverDto {
   query: string;
 
   @ApiProperty({ example: 2, required: true })
-  @IsString()
+  @IsNumberString()
   page: string;
 
   @ApiProperty({ example: 25, required: true })
-  @IsString()
+  @IsNumberString()
   size: string;
 
   @ApiProperty({

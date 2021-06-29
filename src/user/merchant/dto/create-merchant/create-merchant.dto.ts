@@ -18,7 +18,7 @@ export class CreateMerchantDto {
   @ApiProperty({ minLength: 6, example: '123123', required: true })
   @MinLength(8)
   @MaxLength(50)
-  // @Matches('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})')
+  @Matches('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})')
   @IsString()
   password: string;
 

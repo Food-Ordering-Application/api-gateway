@@ -3,8 +3,8 @@ import { IsString, Matches, MaxLength, MinLength } from 'class-validator';
 
 export class LoginMerchantDto {
   @ApiProperty({ example: 'merchant123', uniqueItems: true, required: true })
-  @MinLength(6)
-  @MaxLength(30)
+  // @MinLength(6)
+  // @MaxLength(30)
   @IsString()
   username: string;
 

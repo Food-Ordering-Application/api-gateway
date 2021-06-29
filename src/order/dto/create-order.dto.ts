@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString, ValidateNested } from 'class-validator';
+import { IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { OrderItem } from './index';
 
@@ -31,7 +31,7 @@ export class CreateOrderDto {
     example: '50e26c95-383b-4cb2-a97c-1547433c6d3a',
     required: true,
   })
-  @IsString()
+  @IsUUID()
   restaurantId: string;
 
   @ApiProperty({
@@ -39,7 +39,7 @@ export class CreateOrderDto {
     nullable: true,
     required: false,
   })
-  @IsString()
+  @IsUUID()
   @IsOptional()
   customerId: string;
 
@@ -48,7 +48,7 @@ export class CreateOrderDto {
     nullable: true,
     required: false,
   })
-  @IsString()
+  @IsUUID()
   @IsOptional()
   cashierId: string;
 }

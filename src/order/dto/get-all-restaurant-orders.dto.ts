@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEnum,
   IsNumber,
+  IsNumberString,
   IsOptional,
   IsString,
   IsUUID,
@@ -28,7 +29,7 @@ export class GetAllRestaurantOrderDto {
     example: 2,
     required: true,
   })
-  @IsString()
+  @IsNumberString()
   pageNumber: string;
 
   @ApiProperty({

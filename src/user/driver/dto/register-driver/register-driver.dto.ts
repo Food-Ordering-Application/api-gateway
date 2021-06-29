@@ -3,6 +3,7 @@ import {
   IsEmail,
   IsPhoneNumber,
   IsString,
+  Matches,
   MaxLength,
   MinLength,
 } from 'class-validator';
@@ -12,6 +13,9 @@ export class RegisterDriverDto {
   @IsPhoneNumber('VN')
   phoneNumber: string;
   @ApiProperty({ example: 'daylapasscuatui', required: true })
+  @MinLength(8)
+  @MaxLength(50)
+  @Matches('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})')
   @IsString()
   password: string;
   @ApiProperty({ example: 'thachdau16t@gmail.com', required: true })
@@ -21,7 +25,7 @@ export class RegisterDriverDto {
   email: string;
   @ApiProperty({ example: 'Vu Vinh Hien', required: true })
   @MinLength(6)
-  @MaxLength(30)
+  @MaxLength(50)
   @IsString()
   name: string;
   @ApiProperty({ example: 'TPHCM', required: true })

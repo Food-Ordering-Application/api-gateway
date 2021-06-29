@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
+import { IsNumberString, IsOptional, IsString } from 'class-validator';
 import { EGetListDriverAccountTransaction } from '../../enums';
 
 export class GetListAccountTransactionDriverDto {
@@ -12,11 +12,11 @@ export class GetListAccountTransactionDriverDto {
   query: string;
 
   @ApiProperty({ example: 2, required: true })
-  @IsString()
+  @IsNumberString()
   page: string;
 
   @ApiProperty({ example: 25, required: true })
-  @IsString()
+  @IsNumberString()
   size: string;
 
   @ApiProperty({
