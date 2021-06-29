@@ -840,7 +840,7 @@ export class OrderService {
             customerId,
           })
           .pipe(
-            timeout(5000),
+            timeout(10000),
             catchError((err) => {
               if (err instanceof TimeoutError) {
                 return throwError(
