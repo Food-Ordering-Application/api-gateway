@@ -1,7 +1,7 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsString, IsUUID } from 'class-validator';
 
 export class OrderItemTopping {
-  @IsString()
+  @IsUUID()
   toppingItemId?: string;
 
   @IsNumber()

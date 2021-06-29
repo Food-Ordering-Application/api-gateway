@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { PaymentMethod } from '../enums';
 
 export class ConfirmOrderCheckoutDto {
@@ -16,7 +16,7 @@ export class ConfirmOrderCheckoutDto {
     enum: PaymentMethod,
     required: true,
   })
-  @IsString()
+  @IsEnum(PaymentMethod)
   paymentMethod: string;
 
   @ApiProperty({

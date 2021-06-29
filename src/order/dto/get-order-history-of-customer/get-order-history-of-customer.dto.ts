@@ -5,6 +5,7 @@ import {
   IsDateString,
   IsNotEmpty,
   IsString,
+  Matches,
 } from 'class-validator';
 import { OrderHistoryFilter } from 'src/order/enums';
 export class GetOrderHistoryOfCustomerDto {
