@@ -1,20 +1,31 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsString } from 'class-validator';
+import {
+  IsEmail,
+  IsPhoneNumber,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 export class RegisterDriverDto {
   @ApiProperty({ example: '0123456789', uniqueItems: true, required: true })
-  @IsString()
+  @IsPhoneNumber('VN')
   phoneNumber: string;
   @ApiProperty({ example: 'daylapasscuatui', required: true })
   @IsString()
   password: string;
   @ApiProperty({ example: 'thachdau16t@gmail.com', required: true })
-  @IsString()
+  @MinLength(6)
+  @MaxLength(100)
+  @IsEmail()
   email: string;
   @ApiProperty({ example: 'Vu Vinh Hien', required: true })
+  @MinLength(6)
+  @MaxLength(30)
   @IsString()
   name: string;
   @ApiProperty({ example: 'TPHCM', required: true })
+  @MaxLength(30)
   @IsString()
   city: string;
   @ApiProperty({ example: '2021-05-30', required: true })
@@ -30,6 +41,7 @@ export class RegisterDriverDto {
   @IsString()
   avatar: string;
   @ApiProperty({ example: 'DD64LQSRDC2UN', required: true })
+  @MaxLength(20)
   @IsString()
   merchantIdInPaypal: string;
   @ApiProperty({ example: 'somelink.jpg', required: true })

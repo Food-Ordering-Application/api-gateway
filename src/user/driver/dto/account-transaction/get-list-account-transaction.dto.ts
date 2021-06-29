@@ -1,15 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsDateString,
-  IsInt,
-  IsOptional,
-  IsString,
-  Max,
-} from 'class-validator';
-import {
-  EGeneralTransactionStatus,
-  EGetListDriverAccountTransaction,
-} from '../../enums';
+import { IsOptional, IsString } from 'class-validator';
+import { EGetListDriverAccountTransaction } from '../../enums';
 
 export class GetListAccountTransactionDriverDto {
   @ApiProperty({

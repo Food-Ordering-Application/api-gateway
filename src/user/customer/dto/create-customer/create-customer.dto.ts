@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumberString, IsPhoneNumber, IsString } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsPhoneNumber, IsString } from 'class-validator';
 
 export class CreateCustomerDto {
   @ApiProperty({ example: '0123456789', uniqueItems: true, required: true })

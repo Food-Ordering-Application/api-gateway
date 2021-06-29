@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString } from 'class-validator';
+import { IsEmail, IsString, IsUUID } from 'class-validator';
 
 export class UpdateCustomerPasswordDto {
   @ApiProperty({
     example: '0c1df8c8-40b1-41b4-a897-702e09f1fd60',
     required: true,
   })
-  @IsString()
+  @IsUUID()
   customerId: string;
 
   @ApiProperty({
