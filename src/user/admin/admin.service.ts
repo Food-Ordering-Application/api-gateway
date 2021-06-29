@@ -5,6 +5,7 @@ import { USER_SERVICE } from 'src/constants';
 import { VerifyRestaurantDto } from './dto/verify-restaurant/verify-restaurant.dto';
 import {
   IAdmin,
+  IDriversResponse,
   IUserServiceFetchAdminResponse,
   IUserServiceFetchRestaurantProfilesResponse,
 } from './interfaces';
@@ -14,6 +15,8 @@ import {
   GeneratePosKeyDto,
   RemovePosDeviceDto,
 } from './dto';
+import { GetListDriverDto } from './dto/list-driver/get-list-driver.dto';
+import { GetListDriverOkResponseDto } from './dto/list-driver/get-list-driver-ok-response.dto';
 
 @Injectable()
 export class AdminService {
@@ -23,9 +26,10 @@ export class AdminService {
     username: string,
     password: string,
   ): Promise<IAdmin> {
-    const authenticatedAdminResponse: IUserServiceFetchAdminResponse = await this.userServiceClient
-      .send('getAuthenticatedAdmin', { username, password })
-      .toPromise();
+    const authenticatedAdminResponse: IUserServiceFetchAdminResponse =
+      await this.userServiceClient
+        .send('getAuthenticatedAdmin', { username, password })
+        .toPromise();
     const { message, user, status } = authenticatedAdminResponse;
     if (status !== HttpStatus.OK) {
       throw new HttpException(
@@ -93,13 +97,14 @@ export class AdminService {
   async fetchRestaurantProfiles(
     fetchRestaurantProfilesDto: FetchRestaurantDto,
   ): Promise<FetchRestaurantProfilesResponseDto> {
-    const fetchRestaurantProfilesResponse: IUserServiceFetchRestaurantProfilesResponse = await this.userServiceClient
-      .send('fetchRestaurantProfiles', {
-        page: parseInt(fetchRestaurantProfilesDto.page) || 0,
-        size: parseInt(fetchRestaurantProfilesDto.size) || 10,
-        query: fetchRestaurantProfilesDto?.q,
-      })
-      .toPromise();
+    const fetchRestaurantProfilesResponse: IUserServiceFetchRestaurantProfilesResponse =
+      await this.userServiceClient
+        .send('fetchRestaurantProfiles', {
+          page: parseInt(fetchRestaurantProfilesDto.page) || 0,
+          size: parseInt(fetchRestaurantProfilesDto.size) || 10,
+          query: fetchRestaurantProfilesDto?.q,
+        })
+        .toPromise();
 
     const { status, message, data } = fetchRestaurantProfilesResponse;
     if (status !== HttpStatus.OK) {
@@ -113,6 +118,38 @@ export class AdminService {
         results,
         size,
         total,
+      },
+    };
+  }
+
+  //! Lấy danh sách tài xế
+  async getListDriver(
+    adminId: string,
+    getListDriverDto: GetListDriverDto,
+  ): Promise<GetListDriverOkResponseDto> {
+    const getListDriverResponse: IDriversResponse = await this.userServiceClient
+      .send('getListDriver', {
+        ...getListDriverDto,
+        adminId,
+      })
+      .toPromise();
+
+    const { message, status, drivers } = getListDriverResponse;
+
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: message,
+        },
+        status,
+      );
+    }
+
+    return {
+      statusCode: status,
+      message,
+      data: {
+        drivers: drivers,
       },
     };
   }

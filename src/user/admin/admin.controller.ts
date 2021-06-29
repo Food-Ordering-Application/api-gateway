@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpCode,
+  Param,
   Post,
   Query,
   Request,
@@ -11,6 +12,7 @@ import {
 import {
   ApiBearerAuth,
   ApiBody,
+  ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiQuery,
@@ -19,6 +21,7 @@ import {
 } from '@nestjs/swagger';
 import { AuthService } from 'src/auth/auth.service';
 import { InternalServerErrorResponseDto } from 'src/shared/dto/internal-server-error.dto';
+import { ForbiddenResponseDto } from '../customer/dto';
 import { AdminJwtAuthGuard } from './../../auth/guards/jwts/admin-jwt-auth.guard';
 import { AdminLocalAuthGuard } from './../../auth/guards/locals/admin-local-auth.guard';
 import { AdminService } from './admin.service';
@@ -37,6 +40,8 @@ import {
   VerifyRestaurantResponseDto,
   VerifyRestaurantUnauthorizedResponseDto,
 } from './dto';
+import { GetListDriverOkResponseDto } from './dto/list-driver/get-list-driver-ok-response.dto';
+import { GetListDriverDto } from './dto/list-driver/get-list-driver.dto';
 
 @ApiTags('admin')
 @ApiInternalServerErrorResponse({ type: InternalServerErrorResponseDto })
@@ -106,5 +111,20 @@ export class AdminController {
     return await this.adminService.fetchRestaurantProfiles(
       fetchRestaurantProfilesDto,
     );
+  }
+
+  //! Lấy danh sách tài xế
+  @ApiOkResponse({ type: GetListDriverOkResponseDto })
+  @ApiForbiddenResponse({ type: ForbiddenResponseDto })
+  @ApiQuery({ type: GetListDriverDto })
+  @ApiBearerAuth()
+  @UseGuards(AdminJwtAuthGuard)
+  @Get('/list-driver')
+  async getListDriver(
+    @Request() req,
+    @Query()
+    getListDriverDto: GetListDriverDto,
+  ): Promise<GetListDriverOkResponseDto> {
+    return this.adminService.getListDriver(req.user.adminId, getListDriverDto);
   }
 }

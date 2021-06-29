@@ -5,3 +5,5 @@ export { IVerifyRestaurantResponseData } from './verify-restaurant-response-data
 export { IFetchRestaurantData } from './fetch-restaurant-data.interface';
 export { IRestaurantProfile } from './restaurant-profile.interface';
 export { IUserServiceFetchRestaurantProfilesResponse } from './user-service-fetch-restaurant-profiles-response.interface';
+export { IDriversResponse } from './drivers-response.interface';
+export { IDriversData } from './drivers-data.interface';
