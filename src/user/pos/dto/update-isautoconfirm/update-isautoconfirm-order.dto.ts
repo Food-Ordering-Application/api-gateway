@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { IsString, IsUUID } from 'class-validator';
 import { ETrueFalse } from '../../../../shared/enum';
 
 export class UpdateIsAutoConfirmOrderDto {
@@ -14,6 +14,6 @@ export class UpdateIsAutoConfirmOrderDto {
     example: 'fef41594-94b8-469e-82c9-ea8b244693b9',
     required: true,
   })
-  @IsString()
+  @IsUUID()
   restaurantId: string;
 }
