@@ -26,10 +26,9 @@ export class AdminService {
     username: string,
     password: string,
   ): Promise<IAdmin> {
-    const authenticatedAdminResponse: IUserServiceFetchAdminResponse =
-      await this.userServiceClient
-        .send('getAuthenticatedAdmin', { username, password })
-        .toPromise();
+    const authenticatedAdminResponse: IUserServiceFetchAdminResponse = await this.userServiceClient
+      .send('getAuthenticatedAdmin', { username, password })
+      .toPromise();
     const { message, user, status } = authenticatedAdminResponse;
     if (status !== HttpStatus.OK) {
       throw new HttpException(
@@ -97,14 +96,13 @@ export class AdminService {
   async fetchRestaurantProfiles(
     fetchRestaurantProfilesDto: FetchRestaurantDto,
   ): Promise<FetchRestaurantProfilesResponseDto> {
-    const fetchRestaurantProfilesResponse: IUserServiceFetchRestaurantProfilesResponse =
-      await this.userServiceClient
-        .send('fetchRestaurantProfiles', {
-          page: parseInt(fetchRestaurantProfilesDto.page) || 0,
-          size: parseInt(fetchRestaurantProfilesDto.size) || 10,
-          query: fetchRestaurantProfilesDto?.q,
-        })
-        .toPromise();
+    const fetchRestaurantProfilesResponse: IUserServiceFetchRestaurantProfilesResponse = await this.userServiceClient
+      .send('fetchRestaurantProfiles', {
+        page: parseInt(fetchRestaurantProfilesDto.page) || 0,
+        size: parseInt(fetchRestaurantProfilesDto.size) || 10,
+        query: fetchRestaurantProfilesDto?.q,
+      })
+      .toPromise();
 
     const { status, message, data } = fetchRestaurantProfilesResponse;
     if (status !== HttpStatus.OK) {
@@ -134,7 +132,7 @@ export class AdminService {
       })
       .toPromise();
 
-    const { message, status, drivers } = getListDriverResponse;
+    const { message, status, drivers, total } = getListDriverResponse;
 
     if (status !== HttpStatus.OK) {
       throw new HttpException(
@@ -150,6 +148,7 @@ export class AdminService {
       message,
       data: {
         drivers: drivers,
+        total,
       },
     };
   }
