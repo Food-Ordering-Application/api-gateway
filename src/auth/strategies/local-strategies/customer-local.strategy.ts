@@ -18,6 +18,7 @@ export class CustomerLocalStrategy extends PassportStrategy(
     if (!user) {
       throw new UnauthorizedException();
     }
+    delete user.password;
     return user;
   }
 }
