@@ -22,7 +22,7 @@ export class GeoController {
   @ApiOkResponse({ type: GetDistrictsResponseDto })
   @ApiBearerAuth()
   @ApiBody({ type: GetDistrictsDto })
-  @UseGuards(AnyJwtAuthGuard)
+  // @UseGuards(AnyJwtAuthGuard)
   @HttpCode(200)
   @Post('/get-districts')
   async getDistrictsOfCity(
@@ -34,7 +34,7 @@ export class GeoController {
   @ApiOkResponse({ type: GetCityResponseDto })
   @ApiBearerAuth()
   @ApiBody({ type: GetCityDto })
-  @UseGuards(AnyJwtAuthGuard)
+  // @UseGuards(AnyJwtAuthGuard)
   @HttpCode(200)
   @Post('/get-city')
   async getCityFromLocation(
@@ -45,7 +45,7 @@ export class GeoController {
 
   @ApiOkResponse({ type: GetCitiesResponseDto })
   @ApiBearerAuth()
-  @UseGuards(AnyJwtAuthGuard)
+  // @UseGuards(AnyJwtAuthGuard)
   @HttpCode(200)
   @Post('/get-cities')
   async getAllCities(): Promise<GetCitiesResponseDto> {
