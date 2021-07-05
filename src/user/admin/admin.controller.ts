@@ -127,4 +127,19 @@ export class AdminController {
   ): Promise<GetListDriverOkResponseDto> {
     return this.adminService.getListDriver(req.user.adminId, getListDriverDto);
   }
+
+  // //! Lấy danh sách merchant
+  // @ApiOkResponse({ type: GetListDriverOkResponseDto })
+  // @ApiForbiddenResponse({ type: ForbiddenResponseDto })
+  // @ApiQuery({ type: GetListDriverDto })
+  // @ApiBearerAuth()
+  // @UseGuards(AdminJwtAuthGuard)
+  // @Get('/list-driver')
+  // async getListDriver(
+  //   @Request() req,
+  //   @Query()
+  //   getListDriverDto: GetListDriverDto,
+  // ): Promise<GetListDriverOkResponseDto> {
+  //   return this.adminService.getListDriver(req.user.adminId, getListDriverDto);
+  // }
 }

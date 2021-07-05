@@ -39,6 +39,7 @@ import {
   ConfirmOrderCheckoutResponseDto,
   CreateOrderDto,
   CreateOrderResponseDto,
+  EventPaymentZALOPAYDto,
   GetAllRestaurantOrderDto,
   GetAllRestaurantOrderResponseDto,
   GetDraftOrdersOfCustomerParams,
@@ -68,6 +69,7 @@ import {
   RemoveOrderItemResponseDto,
   UpdateOrderItemQuantityDto,
   UpdateOrderItemQuantityResponseDto,
+  UpdateZALOPAYPaymentStatusResponseDto,
 } from './dto';
 import { OrderService } from './order.service';
 // const fs = require('fs');
@@ -234,32 +236,6 @@ export class OrderController {
       };
     });
   }
-  // @Get('/:orderId/invoice')
-  // @HttpCode(201)
-  // @Header('Content-Type', 'application/pdf')
-  // @Header('Content-Disposition', 'attachment; filename=invoice.pdf')
-  // async pdf() {
-  //   const buffer = await this.orderService.generatePDF();
-  //   fs.writeFile('invoice.pdf', buffer, function (err) {
-  //     if (err) throw err;
-  //     console.log('Saved!');
-  //   });
-  //   //   return buffer;
-  //   return fs.createReadStream('invoice.pdf');
-  // }
-  // async getOrderInvoice(@Param() params: { orderId: string }) {
-  //   // const { orderId } = params;
-  //   // return this.orderService.getOrderDetail(orderId).then((result) => {
-  //   //   const { data } = result;
-  //   //   const { order } = data;
-  //   //   return {
-  //   //     orderId: order.id,
-  //   //     order: order,
-  //   //   };
-  //   // });
-  //   const buffer = await this.orderService.generatePDF();
-  //   return buffer;
-  // }
 
   /* Update số lượng của 1 orderItem */
   @ApiOkResponse({ type: UpdateOrderItemQuantityResponseDto })
@@ -508,5 +484,39 @@ export class OrderController {
   ) {
     console.log('Body', eventPaypalOrderOccurDto);
     this.orderService.eventPaypalOrderOccur(eventPaypalOrderOccurDto);
+  }
+
+  //! Sự kiện thanh toán thành công của ZALOPAY
+  @Post('/:orderId/payment-result')
+  async eventPaymentZALOPAY(
+    @Body()
+    eventPaymentZALOPAYDto: EventPaymentZALOPAYDto,
+    @Param() params,
+  ) {
+    console.log('Body', eventPaymentZALOPAYDto);
+    const { orderId } = params;
+    return this.orderService.eventPaymentZALOPAY(
+      eventPaymentZALOPAYDto,
+      orderId,
+    );
+  }
+
+  //! Frontend gọi để update trạng thái payment ZALOPAY
+  @ApiOkResponse({ type: UpdateZALOPAYPaymentStatusResponseDto })
+  @ApiForbiddenResponse({
+    type: ForbiddenResponseDto,
+  })
+  @ApiBearerAuth()
+  @UseGuards(CustomerJwtAuthGuard)
+  @Patch('/:orderId/update-zalopay-payment')
+  async updateZALOPAYPaymentStatus(
+    @Request() req,
+    @Param() params,
+  ): Promise<UpdateZALOPAYPaymentStatusResponseDto> {
+    const { orderId } = params;
+    return this.orderService.updateZALOPAYPaymentStatus(
+      orderId,
+      req.user.userId,
+    );
   }
 }

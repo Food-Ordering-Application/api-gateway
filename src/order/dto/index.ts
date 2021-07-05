@@ -41,3 +41,5 @@ export { RateDriverResponseDto } from './rate-driver/rate-driver-response.dto';
 export { GetLastDraftOrderOfCustomerDto } from './get-last-draft-order-of-customer/get-last-draft-order-of-customer.dto';
 export { RateRestaurantDto } from './rate-restaurant/rate-restaurant.dto';
 export { RateRestaurantResponseDto } from './rate-restaurant/rate-restaurant-response.dto';
+export { EventPaymentZALOPAYDto } from './event-payment-zalopay.dto';
+export { UpdateZALOPAYPaymentStatusResponseDto } from './update-zalopay-payment-status/update-zalopay-payment-response.dto';
