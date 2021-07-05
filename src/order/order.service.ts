@@ -857,7 +857,7 @@ export class OrderService {
           )
           .toPromise();
 
-      const { message, status, paypalOrderId } = confirmOrderCheckout;
+      const { message, status, paypalOrderId, orderUrl } = confirmOrderCheckout;
 
       if (status !== HttpStatus.OK) {
         throw new HttpException(
@@ -868,13 +868,23 @@ export class OrderService {
         );
       }
 
-      return {
-        statusCode: status,
-        message,
-        data: {
-          paypalOrderId: paypalOrderId,
-        },
-      };
+      if (paypalOrderId) {
+        return {
+          statusCode: status,
+          message,
+          data: {
+            paypalOrderId: paypalOrderId,
+          },
+        };
+      } else if (orderUrl) {
+        return {
+          statusCode: status,
+          message,
+          data: {
+            orderUrl: orderUrl,
+          },
+        };
+      }
     } catch (e) {
       throw new HttpException(
         {
