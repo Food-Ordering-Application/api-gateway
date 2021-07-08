@@ -22,6 +22,20 @@ export class GetSomeRestaurantResponseDto {
             longitude: 106.669695864843,
           },
           isOpening: true,
+          menuItems: [
+            {
+              price: 40000,
+              imageUrl: 'http://lorempixel.com/640/480',
+              name: 'Mì cay',
+              id: 'e82c236b-f27e-4e09-b089-9542674e4ea7',
+            },
+            {
+              price: 40000,
+              imageUrl: 'http://lorempixel.com/640/480',
+              name: 'Mì cay',
+              id: '749bae27-4f9d-4504-a951-23fd5418bf6f',
+            },
+          ],
         },
       ],
     },
