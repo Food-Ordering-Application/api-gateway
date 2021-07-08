@@ -160,4 +160,13 @@ export class RestaurantController {
       size,
     });
   }
+
+  @ApiOkResponse({ type: GetSomeRestaurantResponseDto })
+  @HttpCode(200)
+  @Post('/search')
+  searchRestaurant(
+    @Body() getSomeRestaurantDto: GetSomeRestaurantDto,
+  ): Promise<GetSomeRestaurantResponseDto> {
+    return this.restaurantService.searchRestaurant(getSomeRestaurantDto);
+  }
 }

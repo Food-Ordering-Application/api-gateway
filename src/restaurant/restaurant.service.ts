@@ -56,6 +56,28 @@ export class RestaurantService {
     };
   }
 
+  async searchRestaurant(
+    getSomeRestaurantDto: GetSomeRestaurantDto,
+  ): Promise<GetSomeRestaurantResponseDto> {
+    const getSomeRestaurantResponse: IRestaurantsResponse = await this.restaurantServiceClient
+      .send('searchRestaurant', getSomeRestaurantDto)
+      .toPromise();
+    const { data, message, status } = getSomeRestaurantResponse;
+    if (status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message,
+        },
+        status,
+      );
+    }
+    return {
+      statusCode: 200,
+      message: message,
+      data,
+    };
+  }
+
   async getRestaurantInformation(
     restaurantId: string,
     customerId: string,
